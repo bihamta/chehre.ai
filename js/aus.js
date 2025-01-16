@@ -27,20 +27,40 @@ const au_trial = {
         const randomAU = getRandomAUImage(); // Get the image path
         const auName = randomAU.split('/').pop().split('.')[0].replace(/-/g, ' ');
         return `
+        <style>
+            #camera-preview {
+                border: 2px solid black;
+                width: 400px;
+                height: 300px;
+                transform: scaleX(-1); /* Mirror the video preview */
+            }
+
+            #recorded-video {
+                border: 2px solid black;
+                width: 400px;
+                height: 300px;
+                transform: scaleX(-1); /* Mirror the video preview */
+            }
+            #recorded-video::-webkit-media-controls-panel {
+                transform: scaleX(-1);
+            }
+
+        </style>
         <p><strong>Instruction:</strong></p>
         <p>Please record yourself mimicking the expression shown below. Ensure your entire face is visible in the camera.</p>
         <p>Expression to perform:<strong>${auName}</strong></p>
         <p><img src="${randomAU}" alt="AU"  style="height:100px;"></p>
-        <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px; transform: scaleX(-1)"></video>
+        <video id="camera-preview" autoplay playsinline"></video>
         <div>
             <button id="start-recording" style="margin: 10px; padding: 10px 20px;">Start Recording</button>
             <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">Stop Recording</button>
         </div>
         <div id="playback-container" style="display: none;">
-            <video id="recorded-video" controls style="border: 2px solid black; width: 400px; height: 300px; transform: scaleX(-1);"></video>
+            <video id="recorded-video" controls "></video>
             <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
         </div>
-        <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`;
+        <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`
+        ;
     },
     recording_duration: null,
 
@@ -56,6 +76,7 @@ const au_trial = {
             const playbackContainer = document.getElementById('playback-container');
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
+
 
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })

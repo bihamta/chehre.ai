@@ -25,13 +25,13 @@ const timeline = [];
 
 // Add trials to the timeline
 timeline.push(welcome)
-timeline.push(consent)
+// timeline.push(consent)
 timeline.push(init_camera)
-timeline.push(age);
-timeline.push(gender);
-timeline.push(country_of_birth);
-timeline.push(medi1, medi2, medi3, medi4, medi5)
-timeline.push(neutral_trial)
+// timeline.push(age);
+// timeline.push(gender);
+// timeline.push(country_of_birth);
+// timeline.push(medi1, medi2, medi3, medi4, medi5)
+// timeline.push(neutral_trial)
 timeline.push(au_trial);
 timeline.push(emoji_trial)
 timeline.push(honesty)

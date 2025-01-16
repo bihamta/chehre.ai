@@ -22,6 +22,25 @@ const emoji_trial = {
     stimulus: function () {
         const randomEmoji = getRandomEmojiImage();
         return `
+            <style>
+                #camera-preview {
+                    border: 2px solid black;
+                    width: 400px;
+                    height: 300px;
+                    transform: scaleX(-1); /* Mirror the video preview */
+                }
+
+                #recorded-video {
+                    border: 2px solid black;
+                    width: 400px;
+                    height: 300px;
+                    transform: scaleX(-1); /* Mirror the video preview */
+                }
+                #recorded-video::-webkit-media-controls-panel {
+                    transform: scaleX(-1);
+                }
+
+            </style>
             <p>Please record yourself performing the expression or action shown by the emoji below. Ensure your entire face is visible in the camera while performing.</p>
             <p>Reference emoji:</p>
             <p><img src="${randomEmoji}" alt="Emoji" style="width:50px; height:50px;"></p>

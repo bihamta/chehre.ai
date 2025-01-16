@@ -15,6 +15,24 @@ const neutral_trial = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
         return `
+        <style>
+        #camera-preview {
+            border: 2px solid black;
+            width: 400px;
+            height: 300px;
+            transform: scaleX(-1); /* Mirror the video preview */
+        }
+
+        #recorded-video {
+            border: 2px solid black;
+            width: 400px;
+            height: 300px;
+            transform: scaleX(-1); /* Mirror the video preview */
+        }
+        #recorded-video::-webkit-media-controls-panel {
+            transform: scaleX(-1);
+        }
+        </style>
         <p><strong>Instruction:</strong></p>
         <p>Please record yourself with a neutral expression. Keep your head still and avoid making any facial expressions. Slowly look around (left, right, up, and down) for 5 seconds.</p>
         <p>Ensure your entire face is visible in the camera during the recording.</p>

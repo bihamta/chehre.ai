@@ -25,9 +25,9 @@ const timeline = [];
 
 // Add trials to the timeline
 timeline.push(welcome)
-// timeline.push(consent)
-// timeline.push(age);
-// timeline.push(gender);
+timeline.push(consent)
+timeline.push(age);
+timeline.push(gender);
 // timeline.push(country_of_birth);
 // timeline.push(medi1, medi2, medi3, medi4, medi5)
 timeline.push(init_camera)

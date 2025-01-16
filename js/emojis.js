@@ -34,7 +34,6 @@ const emoji_trial = {
                     border: 2px solid black;
                     width: 400px;
                     height: 300px;
-                    transform: scaleX(-1); /* Mirror the video preview */
                 }
             </style>
             <p>Please record yourself performing the expression or action shown by the emoji below. Ensure your entire face is visible in the camera while performing.</p>

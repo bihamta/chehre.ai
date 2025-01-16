@@ -1,6 +1,6 @@
 const emojiImages = [
-    "https://github.com/bihamta/chehre.ai/blob/main/emojis/face-with-tongue_1f61b.png",
-    "https://github.com/bihamta/chehre.ai/blob/main/emojis/smiling-face-with-hearts_1f970.png"
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-hearts_1f970.png"
 ];
 
 // Function to randomly select an emoji

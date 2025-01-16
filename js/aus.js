@@ -1,8 +1,8 @@
 let globalStream = null;
 
 const AUImages = [
-    "https://github.com/bihamta/chehre.ai/blob/main/aus/AU5.gif",
-    ".https://github.com/bihamta/chehre.ai/blob/main/aus/AU7-lid-tightener.gif"
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/blob/main/aus/AU5.gif",
+    "https://raw.githubusercontent.com/chehre.ai/blob/main/aus/AU7-lid-tightener.gif"
 ];
 
 // Function to randomly select an AU
@@ -90,7 +90,7 @@ const au_trial = {
                         };
 
                         mediaRecorder.onstop = function () {
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/webm' });
+                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
                             chunks = [];
                             const videoURL = URL.createObjectURL(lastRecordingBlob);
                             recordedVideo.src = videoURL;

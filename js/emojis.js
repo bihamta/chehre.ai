@@ -90,7 +90,7 @@ const emoji_trial = {
 
                         mediaRecorder.onstop = function () {
                             // Store the last recorded Blob
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/webm' });
+                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
                             chunks = []; // Reset chunks for the next recording
 
                             // Create a preview of the recorded video

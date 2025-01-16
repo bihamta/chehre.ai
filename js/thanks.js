@@ -25,4 +25,21 @@ const honesty = {
     }
 };
 
-export { honesty }
+
+const goodbye = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: `
+        <h2>Thank You!</h2>
+        <p>Your participation in this study is greatly appreciated.</p>
+        <p>If you'd like to receive a follow-up or have any questions, please provide your email below.</p>
+    `,
+    html: `
+        <p>If you have further inquiries, feel free to contact us at <a href="mailto:bazari@sfu.ca">bazari@sfu.ca</a> or <a href="mailto:angelica@sfu.ca">angelica@sfu.ca</a> .</p>
+    `,
+    button_label: "Finish",
+    on_finish: function(data) {
+        jsPsych.abortExperiment("You may close this window now.");
+    }
+};
+
+export { honesty, goodbye}

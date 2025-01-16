@@ -72,12 +72,7 @@ const neutral_trial = {
                         videoElement.srcObject = stream;
 
                         // Set up MediaRecorder
-                        const options = { mimeType: 'video/webm; codecs=vp8' };
-                        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                            options.mimeType = 'video/mp4'; // Fallback to MP4 if WebM is unsupported
-                        }
-                        mediaRecorder = new MediaRecorder(stream, options);
-                        // mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder = new MediaRecorder(stream);
 
                         // Capture video data
                         mediaRecorder.ondataavailable = function (event) {
@@ -86,7 +81,7 @@ const neutral_trial = {
 
                         mediaRecorder.onstop = function () {
                             // Store the last recorded Blob
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/webm' });
+                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
                             
                             chunks = []; // Reset chunks for the next recording
 

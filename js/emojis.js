@@ -37,7 +37,7 @@ const emoji_trial = {
                     transform: scaleX(-1); /* Mirror the video preview */
                 }
                 #recorded-video::-webkit-media-controls-panel {
-                    transform: scaleX(1);
+                    transform: scaleX(-1);
                 }
 
             </style>
@@ -50,7 +50,7 @@ const emoji_trial = {
                 <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">Stop Recording</button>
             </div>
             <div id="playback-container" style="display: none;">
-                <video id="recorded-video" controls style="border: 2px solid black; width: 400px; height: 300px;"></video>
+                <video id="recorded-video" controls "></video>
                 <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
             </div>
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
@@ -72,7 +72,6 @@ const emoji_trial = {
             const playbackContainer = document.getElementById('playback-container');
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
-            const continueButton = document.getElementById('continue-button');
 
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
@@ -101,7 +100,11 @@ const emoji_trial = {
                             playbackContainer.style.display = 'block';
 
                             // Stop the video stream
-                            stream.getTracks().forEach(track => track.stop());
+                            if (stream) {
+                                console.log(stream)
+                                stream.getTracks().forEach(track => track.stop());
+                                console.log('Camera stopped.');
+                            }
                         };
                     })
                     .catch(error => {
@@ -126,12 +129,16 @@ const emoji_trial = {
                 console.log('Recording stopped');
 
                 // Hide the camera preview and Start Recording button
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    console.log('Camera stopped after stop button click.');
+                }
                 videoElement.style.display = 'none';
                 startButton.style.display = 'none'; // Ensure Start Recording button is hidden
                 stopButton.style.display = 'none'; // Hide Stop Recording button
 
                 // Show playback container
-                playbackContainer.style.display = 'block';
+                // playbackContainer.style.display = 'block';
             });
 
             // Add event listener for rerecord button

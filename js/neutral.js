@@ -22,15 +22,12 @@ const neutral_trial = {
             height: 300px;
             transform: scaleX(-1); /* Mirror the video preview */
         }
-
+        
         #recorded-video {
             border: 2px solid black;
             width: 400px;
             height: 300px;
-            transform: scaleX(-1); /* Mirror the video preview */
-        }
-        #recorded-video::-webkit-media-controls-panel {
-            transform: scaleX(-1);
+            // transform: scaleX(-1); /* Mirror the video preview */
         }
         </style>
         <p><strong>Instruction:</strong></p>
@@ -45,7 +42,7 @@ const neutral_trial = {
         </div>
         <div id="playback-container" style="display: none;">
             <p>Playback your video to ensure it matches the instructions.</p>
-            <video id="recorded-video" controls style="border: 2px solid black; width: 400px; height: 300px;"></video>
+            <video id="recorded-video" controls></video>
             <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
         </div>`;
     },

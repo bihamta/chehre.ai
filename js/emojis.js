@@ -1,6 +1,6 @@
 const emojiImages = [
-    "../emojis/face-with-tongue_1f61b.png",
-    "../emojis/smiling-face-with-hearts_1f970.png"
+    "https://github.com/bihamta/chehre.ai/blob/main/emojis/face-with-tongue_1f61b.png",
+    "https://github.com/bihamta/chehre.ai/blob/main/emojis/smiling-face-with-hearts_1f970.png"
 ];
 
 // Function to randomly select an emoji
@@ -37,7 +37,7 @@ const emoji_trial = {
                     transform: scaleX(-1); /* Mirror the video preview */
                 }
                 #recorded-video::-webkit-media-controls-panel {
-                    transform: scaleX(-1);
+                    transform: scaleX(1);
                 }
 
             </style>

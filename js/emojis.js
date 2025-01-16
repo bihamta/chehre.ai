@@ -36,10 +36,6 @@ const emoji_trial = {
                     height: 300px;
                     transform: scaleX(-1); /* Mirror the video preview */
                 }
-                #recorded-video::-webkit-media-controls-panel {
-                    transform: scaleX(-1);
-                }
-
             </style>
             <p>Please record yourself performing the expression or action shown by the emoji below. Ensure your entire face is visible in the camera while performing.</p>
             <p>Reference emoji:</p>
@@ -51,6 +47,8 @@ const emoji_trial = {
             </div>
             <div id="playback-container" style="display: none;">
                 <video id="recorded-video" controls "></video>
+            </div>
+            <div>
                 <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
             </div>
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
@@ -94,6 +92,7 @@ const emoji_trial = {
 
                             // Create a preview of the recorded video
                             const videoURL = URL.createObjectURL(lastRecordingBlob);
+                            const recordedVideo = document.getElementById('recorded-video');
                             recordedVideo.src = videoURL;
 
                             // Show playback container
@@ -138,7 +137,7 @@ const emoji_trial = {
                 stopButton.style.display = 'none'; // Hide Stop Recording button
 
                 // Show playback container
-                // playbackContainer.style.display = 'block';
+                playbackContainer.style.display = 'block';
             });
 
             // Add event listener for rerecord button

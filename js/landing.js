@@ -1,34 +1,34 @@
 var questionnaire = {
     type: jsPsychInstructions,
     pages: [
-        '1/5' +
+        'Step 1 of 4' +
         '<br>' +
-        'Demograohic Questionnaire and Mindfulness Questionnaire'
+        'Please complete the Demographic and Mindfulness Questionnaires.'
     ],
     show_clickable_nav: true
 }
 var facialdynamics = {
     type: jsPsychInstructions,
     pages: [
-        '2/5' +
+        'Step 2 of 4' +
         '<br>' +
-        'Eye Gaze + Facial Muscle Movement Recording'
+        'We will now record Eye Gaze and Facial Muscle Movements.'
     ],
     show_clickable_nav: true
 }
 var emoji = {
     type: jsPsychInstructions,
     pages: [
-        '3/5' +
+        'Step 3 of 4' +
         '<br>' +
-        'Perform Emojis'
+        'Please proceed to perform the Emojis task.'
     ],
     show_clickable_nav: true
 }
 var scenarios = {
     type: jsPsychInstructions,
     pages: [
-        '4/5' +
+        'Step 4 of 5' +
         '<br>' +
         'Perform Emojis'
     ],
@@ -37,10 +37,10 @@ var scenarios = {
 var thank = {
     type: jsPsychInstructions,
     pages: [
-        '5/5' +
+        'Step 4 of 4' +
         '<br>' +
-        'One last quick question!'
+        'Please answer one final question.'
     ],
 }
 
-export {emoji, questionnaire, facialdynamics}
+export {emoji, questionnaire, facialdynamics, thank}

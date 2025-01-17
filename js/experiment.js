@@ -41,6 +41,7 @@ timeline.push(emoji)
 for (let i = 0; i < 2; i++) {
     timeline.push(emoji_trial)
 }
+timeline.push(thank)
 timeline.push(honesty, goodbye)
 
 

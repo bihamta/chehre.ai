@@ -4,7 +4,10 @@ h1{
 h2{
     color: rgb(21, 92, 125);
 }
-
+h3{
+    color: rgb(21, 92, 125);
+    text-align: left;
+}
 .jspsych-btn:hover {
     background-color: rgb(127, 191, 221); /* Light background on hover */
     color: #2a2a2b; /* Change text color on hover */
@@ -23,6 +26,14 @@ p{
     text-align: center;
     margin: 0 auto;
 }
+.jspsych-btn#jspsych-instructions-back{
+    margin: auto;
+    display: inline-block;
+}
+.jspsych-btn#jspsych-instructions-next{
+    margin: auto;
+    display: inline-block;
+}
 form{
     padding: 20px;
 }
@@ -30,4 +41,17 @@ img.emoji{
     display: block;
     text-align: center;
     margin: 0 auto;
+}
+p.jspsych-survey-multi-choice-text{
+    color: rgb(21, 92, 125);
+}
+
+#start-recording .fa-play {
+    color: green;  /* Green color for the Start Recording icon */
+}
+#stop-recording .fa-stop {
+    color: red;  /* Red color for the Stop Recording icon */
+}
+#rerecord-button .fa-redo {
+    color: green;
 }

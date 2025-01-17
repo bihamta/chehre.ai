@@ -1,7 +1,9 @@
+import { addExitButton } from './utils.js';
+
 const medi1 = {
     type: jsPsychSurveyMultiChoice,
     preamble: `
-    <p id="instruction">Answer this question about meditation:</p>
+    <p id="instruction">Answer this question about meditation and mindfulness:</p>
     <p style="font-weight: bold; color: green;">Note:</p>
     <p style="font-style: italic; color: darkgray;">
         Formal practice is when you set aside time to engage in meditation. 
@@ -17,15 +19,23 @@ const medi1 = {
         },
         {
             prompt: "Is your formal meditation yoga?",
-            options: ["Yes", "No"],
+            options: ["Yes", "No", "N/A"],
             required: true
         }
-    ]
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    },
+    on_finish: function(data) {
+        // Store the answer to medi1 (whether formal meditation was practiced)
+        data.medi1_response = data.response.Q0;
+        console.log(data.medi1_response)
+    }
 };
 
 const medi2 = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<p id="instruction">Answer the following question about the frequency of your formal meditation practice.</p>`,
+    // preamble: `<p id="instruction">Answer the following question about the frequency of your formal meditation practice.</p>`,
     questions: [
         {
             prompt: "How often do you engage in formal meditation?",
@@ -40,12 +50,15 @@ const medi2 = {
             ],
             required: true
         }
-    ]
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    }
 };
 
 const medi3 = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<p id="instruction">Answer the following question about the duration of your formal meditation practice.</p>`,
+    // preamble: `<p id="instruction">Answer the following question about the duration of your formal meditation practice.</p>`,
     questions: [
         {
             prompt: "How long have you been engaging in formal meditation?",
@@ -58,16 +71,18 @@ const medi3 = {
             ],
             required: true
         }
-    ]
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    }
 };
 
 const medi4 = {
     type: jsPsychSurveyHtmlForm,
-    preamble: `<p>Answer this question about today's formal meditation practice:</p>`,
+    // preamble: `<p>Answer this question about today's formal meditation practice:</p>`,
     html: `
-        <div style="font-size: 16px;">
-            <label for="meditation-today" style="font-weight: bold; color: #4CAF50;">5. Did you practice formal meditation today?</label><br><br>
-            
+            <p class="jspsych-survey-multi-choice-text survey-multi-choice">Did you practice formal meditation today?</p><br><br>
+            <p>    
             <input type="radio" id="yes" name="meditation-today" value="yes" onclick="document.getElementById('minutes-input').style.display = 'block';" required>
             <label for="yes">Yes (Please indicate how many minutes)</label>
             <br>
@@ -76,9 +91,12 @@ const medi4 = {
             
             <input type="radio" id="no" name="meditation-today" value="no" onclick="document.getElementById('minutes-input').style.display = 'none';">
             <label for="no">No</label>
-        </div>
+        </p>
     `,
     button_label: "Submit",
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    },
     on_finish: function(data) {
         console.log(data.response); // Logs the response including the minutes if applicable
     }
@@ -87,7 +105,7 @@ const medi4 = {
 
 const medi5 = {
     type: jsPsychSurveyLikert,
-    preamble: `<p style="font-weight: bold; color: #4CAF50;">6. Please use the descriptions provided to indicate how true the below statements are of you.</p>
+    preamble: `<p  <p class="jspsych-survey-multi-choice-text survey-multi-choice"> Please use the descriptions provided to indicate how true the below statements are of you.</p>
             <p style="font-style: italic; color: darkgray;">Select the option which represents your own opinion of what is generally true for you.</p>`,
     questions: [
         {
@@ -166,9 +184,29 @@ const medi5 = {
             required: true
         }
     ],
-    randomize_question_order: false // Keeps the question order fixed
+    randomize_question_order: false, // Keeps the question order fixed
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    }
 };
 
 
+// Conditionally add medi2, medi3, and medi4, or skip to medi5
+const medi = {
+timeline: [
+    medi1,
+    {
+    timeline: [medi2, medi3, medi4], 
+    conditional_function: function() {
+        // Only show medi2, medi3, and medi4 if the answer to medi1 was "Yes"
+        const medi1_response = jsPsych.data.get().last(1).select('medi1_response').values[0];
+        console.log(medi1_response)
+        return medi1_response === "Yes";  // Check if the answer was "Yes"
+        }
+    },
+    medi5
+]
+}
+// Always add medi5 to the timeline (it runs if medi1 was "No")
 
-export { medi1, medi2, medi3, medi4, medi5 };
+export { medi };

@@ -1,3 +1,5 @@
+import { addExitButton } from './utils.js';
+
 const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-hearts_1f970.png"
@@ -41,13 +43,18 @@ const emoji_trial = {
             <p><img src="${randomEmoji}" alt="Emoji" style="display: block; margin: 0 auto; width:50px; height:50px;"></p>
             <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
             <div>
-                <button id="start-recording" style="margin: 10px; padding: 10px 20px;">Start Recording</button>
-                <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">Stop Recording</button>
+                <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
+                <i class="fas fa-play"></i> Start Recording</button>
+                
+                <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">
+                <i class="fas fa-stop"></i> Stop Recording</button>
             </div>
             <div id="playback-container" style="display: none;">
                 <video id="recorded-video" controls "></video>
                 <br>
-                <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
+                <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
+                <i class="fas fa-redo"></i> Re-record
+                </button>
             </div>
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
         `;
@@ -56,7 +63,8 @@ const emoji_trial = {
 
     // Declare the variable `lastRecordingBlob` at the trial level
     on_load: function () {
-        
+        addExitButton();  // Call the function to add the Exit button
+
         let chunks = []; // Array to hold the current recording's data
         let mediaRecorder;
         let stream;
@@ -107,6 +115,8 @@ const emoji_trial = {
                     .catch(error => {
                         console.error('Error accessing camera:', error);
                     });
+                    document.getElementById('finish-trial').disabled = true;
+
             }
 
             // Initialize the camera on load
@@ -136,6 +146,8 @@ const emoji_trial = {
 
                 // Show playback container
                 playbackContainer.style.display = 'block';
+                document.getElementById('finish-trial').disabled = false;
+
             });
 
             // Add event listener for rerecord button
@@ -171,6 +183,8 @@ const emoji_trial = {
                 });
                 const responseData = await response.json();
                 console.log('Video uploaded successfully:', responseData);
+                document.getElementById('finish-trial').disabled = false;
+
             } catch (error) {
                 console.error('Error uploading video:', error);
             }

@@ -1,3 +1,4 @@
+import { addExitButton } from "./utils.js";
 let globalStream = null;
 
 const AUImages = [
@@ -32,6 +33,7 @@ const au_trial = {
                 border: 2px solid black;
                 width: 400px;
                 height: 300px;
+                transform: scaleX(-1); /* Mirror the video preview */
             }
 
             #recorded-video {
@@ -44,22 +46,27 @@ const au_trial = {
         <p><strong>Instruction:</strong></p>
         <p>Please record yourself mimicking the expression shown below. Ensure your entire face is visible in the camera.</p>
         <p>Expression to perform:<strong>${auName}</strong></p>
-        <p><img src="${randomAU}" alt="AU"  style="height:100px;"></p>
+        <p><img src="${randomAU}" alt="AU"  style="height:100px; display: block; margin: 0 auto; "></p>
         <video id="camera-preview" autoplay playsinline"></video>
         <div>
-            <button id="start-recording" style="margin: 10px; padding: 10px 20px;">Start Recording</button>
-            <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">Stop Recording</button>
+            <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
+            <i class="fas fa-play"></i> Start Recording</button>
+
+            <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">
+            <i class="fas fa-stop"></i> Stop Recording</button>
         </div>
         <div id="playback-container" style="display: none;">
             <video id="recorded-video" controls "></video>
-            <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
+            <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
+                <i class="fas fa-redo"></i> Re-record
+            </button>
         </div>
-        <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`
-        ;
+        <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`;
     },
     recording_duration: null,
 
     on_load: function () {
+        addExitButton();  // Call the function to add the Exit button
         let chunks = [];
         let mediaRecorder;
         let stream;
@@ -104,6 +111,8 @@ const au_trial = {
                     .catch(error => {
                         console.error('Error accessing camera:', error);
                     });
+                    document.getElementById('finish-trial').disabled = true;
+
             }
 
             initializeCamera();
@@ -117,6 +126,8 @@ const au_trial = {
             });
 
             stopButton.addEventListener('click', () => {
+                document.getElementById('finish-trial').disabled = false;
+
                 mediaRecorder.stop();
                 console.log('Recording stopped');
 
@@ -134,6 +145,8 @@ const au_trial = {
             });
 
             rerecordButton.addEventListener('click', () => {
+                document.getElementById('finish-trial').disabled = false;
+
                 playbackContainer.style.display = 'none';
                 recordedVideo.src = '';
                 chunks = [];
@@ -161,6 +174,8 @@ const au_trial = {
                 });
                 const responseData = await response.json();
                 console.log('Video uploaded successfully:', responseData);
+                document.getElementById('finish-trial').disabled = false;
+
             } catch (error) {
                 console.error('Error uploading video:', error);
             }

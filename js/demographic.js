@@ -1,3 +1,4 @@
+import { addExitButton } from './utils.js';
 const countryList = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", 
     "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
@@ -35,7 +36,7 @@ const countryList = [
 
 const age = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
+    // preamble: `<h2 id="instruction">Please answer the following demographic questions.</h2>`,
     questions: [
         {
             prompt: "What is your age group?",
@@ -45,42 +46,71 @@ const age = {
             ],
             required: true
         }
-    ]
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    }
 };
 
 const gender = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
+    // preamble: ``,
     questions: [
         {
             prompt: "What is your gender identity?",
             options: ["Woman", "Man", "Other", "Prefer not to say"],
             required: true
         }
-    ]
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    }
 };
 
 const countryOptions = countryList.map(country => `<option value="${country}">${country}</option>`).join("");
 
-// Create the dropdown trial
-const country_of_birth = {
-    type: jsPsychSurveyHtmlForm,
-    preamble: '<p>Please select your country of birth:</p>',
-    html: `
-        <div>
-            <label>Country of Birth:</label>
-            <select id="country" name="country" required >
-                <option value="">Select your country</option>
-                ${countryOptions} <!-- Dynamically inserted options -->
-            </select>
-        </div>
-    `,
-    button_label: "Submit",
+const country = {
+    type: jsPsychSurveyMultiChoice,
+    // preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
+    questions: [
+        {
+            prompt: "Please indicate whether you were born in Canada.",
+            options: ["Yes", "No"],
+            required: true
+        }
+    ],
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    },
     on_finish: function(data) {
-        console.log(data.response); // Logs the selected country
+        // Store the answer to medi1 (whether formal meditation was practiced)
+        data.medi1_response = data.response.Q0;
     }
 };
 
+// Create the dropdown trial
+const country_of_birth = {
+    type: jsPsychSurveyHtmlForm,
+    // preamble: '<p>Please select your country of birth:</p>',
+    html: `
+        <div>
+            <p class="jspsych-survey-multi-choice-text">Country of Birth:</p>
+            <select id="country" name="country" required >
+                <option value="">Select your country</option><br>
+                ${countryOptions}
+            </select>
+            <br><br>            
+        </div>
+    `,
+    button_label: "Submit",
+    on_load: function() {
+        addExitButton();  // Call the function to add the Exit button
+    },
+    on_finish: function(data) {
+        console.log(data.response); // Logs the selected country
+    },
+};
 
-export {age, gender, country_of_birth };
+
+export {country, age, gender, country_of_birth };
 

@@ -1,3 +1,5 @@
+import { addExitButton } from './utils.js';
+
 var init_camera = {
     type: jsPsychInitializeCamera
 };
@@ -35,19 +37,23 @@ const neutral_trial = {
         <p>Click "Start Recording" to begin, and "Stop Recording" to end. If your recording doesn't follow the instructions, click "Rerecord."</p>
         <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
         <div>
-            <button id="start-recording" style="margin: 10px; padding: 10px 20px;">Start Recording</button>
-            <button id="stop-recording" style="margin: 10px; padding: 10px 20px; display: none;">Stop Recording</button>
-            <span id="timer" style="font-size: 20px; margin-left: 20px; display: none;">5</span>
+            <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
+            <i class="fas fa-play"></i> Start Recording</button>
+            <div id="recording_status" style="display: none;">Recording Now...</div>
+            <span id="timer" style="font-size: 20px; display: none;">5</span>
         </div>
         <div id="playback-container" style="display: none;">
             <p>Playback your video to ensure it matches the instructions.</p>
             <video id="recorded-video" controls></video>
             <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
-        </div>`;
+        </div>
+        `;
     },
-    recording_duration: null, // No automatic duration; controlled manually
+    recording_duration: null,
+
 
     on_load: function () {
+        addExitButton();  // Call the function to add the Exit button
         let chunks = []; // Array to hold the current recording's data
         let mediaRecorder;
         let stream;
@@ -55,7 +61,7 @@ const neutral_trial = {
         setTimeout(() => {
             const videoElement = document.getElementById('camera-preview');
             const startButton = document.getElementById('start-recording');
-            const stopButton = document.getElementById('stop-recording');
+            const recordingStatus = document.getElementById('recording_status');
             const timerElement = document.getElementById('timer');
             const playbackContainer = document.getElementById('playback-container');
             const recordedVideo = document.getElementById('recorded-video');
@@ -96,6 +102,9 @@ const neutral_trial = {
                     .catch(error => {
                         console.error('Error accessing camera:', error);
                     });
+                    document.getElementById('finish-trial').disabled = true;
+
+
             }
 
             // Initialize the camera on load
@@ -107,7 +116,7 @@ const neutral_trial = {
                 mediaRecorder.start();
                 console.log('Recording started');
                 startButton.style.display = 'none'; // Hide start button
-                stopButton.style.display = 'inline-block'; // Show stop button
+                recordingStatus.style.display = 'inline-block'; // Show timer
                 timerElement.style.display = 'inline-block'; // Show timer
 
                 let countdown = 5;
@@ -121,12 +130,13 @@ const neutral_trial = {
                         clearInterval(countdownInterval);
                         mediaRecorder.stop();
                         console.log('Recording stopped automatically after 5 seconds');
+                        document.getElementById('finish-trial').disabled = false;
 
                         // Hide the camera preview and buttons
                         videoElement.style.display = 'none';
                         startButton.style.display = 'none';
-                        stopButton.style.display = 'none';
                         timerElement.style.display = 'none';
+                        recordingStatus.style.display = 'none';
 
                         // Show playback container
                         playbackContainer.style.display = 'block';
@@ -134,24 +144,9 @@ const neutral_trial = {
                 }, 1000);
             });
 
-            stopButton.addEventListener('click', () => {
-                
-                mediaRecorder.stop();
-                console.log('Recording stopped manually');
-                
-
-                // Hide the camera preview and buttons
-                videoElement.style.display = 'none';
-                startButton.style.display = 'none';
-                stopButton.style.display = 'none';
-                timerElement.style.display = 'none';
-
-                // Show playback container
-                playbackContainer.style.display = 'block';
-            });
-
             // Add event listener for rerecord button
             rerecordButton.addEventListener('click', () => {
+                document.getElementById('finish-trial').disabled = false;
                 // Reset UI elements to recording state
                 playbackContainer.style.display = 'none'; // Hide playback container
                 recordedVideo.src = ''; // Clear the previous video
@@ -189,6 +184,7 @@ const neutral_trial = {
         } else {
             console.log('No video was recorded.');
         }
+        
     }
 };
 export { neutral_trial, init_camera };

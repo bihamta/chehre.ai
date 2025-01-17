@@ -4,7 +4,7 @@ function addExitButton() {
 
     const exitButton = document.createElement("button");
     exitButton.innerHTML = "Exit";
-    exitButton.style.position = "fixed"; // Position the button on the screen
+    // exitButton.style.position = "fixed"; // Position the button on the screen
     exitButton.style.right = "10px"; // Place the button 10px from the right side
     exitButton.style.bottom = "10px"; // Place the button 10px from the bottom
     exitButton.style.margin = "10px";

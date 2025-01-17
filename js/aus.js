@@ -47,7 +47,7 @@ const au_trial = {
         <p>Please record yourself mimicking the expression shown below. Ensure your entire face is visible in the camera.</p>
         <p>Expression to perform:<strong>${auName}</strong></p>
         <p><img src="${randomAU}" alt="AU"  style="height:100px; display: block; margin: 0 auto; "></p>
-        <video id="camera-preview" autoplay playsinline"></video>
+        <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
         <div>
             <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
             <i class="fas fa-play"></i> Start Recording</button>

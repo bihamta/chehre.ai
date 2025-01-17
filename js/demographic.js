@@ -84,7 +84,7 @@ const country = {
     },
     on_finish: function(data) {
         // Store the answer to medi1 (whether formal meditation was practiced)
-        data.medi1_response = data.response.Q0;
+        data.country_response = data.response.Q0;
     }
 };
 
@@ -111,6 +111,66 @@ const country_of_birth = {
     },
 };
 
+const ethnicity = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+    {
+        prompt: "What is the region of origin or cultural identity of your ancestors? Please consider the countries or regions associated with your grandparents or great-grandparents. If your ancestry includes multiple origins, select all that apply.",
+        options: [
+        "North Africa",
+        "Africa (not including North African countries)",
+        "Central America",
+        "South America",
+        "Eastern Europe",
+        "Western Europe",
+        "Middle East or West Asia",
+        "East Asia",
+        "Central Asia",
+        "South Asia",
+        "Southeast Asia",
+        "Polynesia or Pacific Islands",
+        "Indigenous groups (in North America)",
+        "Indigenous groups (in Oceania)",
+        "Other (Please specify)"
+        ],
+        required: true, // Ensures the user selects at least one option
+    }
+    ],
+};
 
-export {country, age, gender, country_of_birth };
+const marital = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+    {
+    prompt: "What is your current marital status?",
+    options: [
+        "Married",
+        "Common law",
+        "Divorced or Separated",
+        "Widowed",
+        "Dating",
+        "Single"
+    ],
+    required: true, // Ensures the user selects one option
+    }
+],
+};
+
+const demog = {
+    timeline: [
+        age, gender, country,
+        {
+        timeline: [country_of_birth], 
+        conditional_function: function() {
+            const country_response = jsPsych.data.get().last(1).select('country_response').values[0];
+            console.log(country_response)
+            return country_response === "No";  // Check if the answer was "Yes"
+            }
+        },
+        ethnicity, 
+        marital
+    ]
+}
+
+export {demog};
 

@@ -4,7 +4,7 @@ import {consent} from './consent.js'
 
 import { thank, emoji, facialdynamics, questionnaire } from './landing.js';
 // Questionnaire
-import {country, age, gender, country_of_birth } from './demographic.js';
+import {demog } from './demographic.js';
 import {medi} from './mindfulness.js';
 
 // Video Recordings 1
@@ -28,10 +28,7 @@ const timeline = [];
 timeline.push(welcome);
 timeline.push(questionnaire);
 timeline.push(consent);
-timeline.push(age);
-timeline.push(gender);
-timeline.push(country);
-timeline.push(country_of_birth);
+timeline.push(demog);
 timeline.push(medi)
 timeline.push(facialdynamics)
 timeline.push(init_camera)

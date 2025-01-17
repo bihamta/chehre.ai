@@ -38,7 +38,7 @@ const emoji_trial = {
             </style>
             <p>Please record yourself performing the expression or action shown by the emoji below. Ensure your entire face is visible in the camera while performing.</p>
             <p>Reference emoji:</p>
-            <p><img src="${randomEmoji}" alt="Emoji" style="width:50px; height:50px;"></p>
+            <p><img src="${randomEmoji}" alt="Emoji" style="display: block; margin: 0 auto; width:50px; height:50px;"></p>
             <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
             <div>
                 <button id="start-recording" style="margin: 10px; padding: 10px 20px;">Start Recording</button>
@@ -46,8 +46,7 @@ const emoji_trial = {
             </div>
             <div id="playback-container" style="display: none;">
                 <video id="recorded-video" controls "></video>
-            </div>
-            <div>
+                <br>
                 <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
             </div>
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>

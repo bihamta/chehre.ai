@@ -1,141 +1,33 @@
-/* Mobile CSS for jsPsych Experiment */
-#welcome-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    font-family: Arial, sans-serif;
+h1{
+    color: rgb(21, 92, 125);
+}
+h2{
+    color: rgb(21, 92, 125);
 }
 
-#start-experiment {
-    margin-top: 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.jspsych-btn:hover {
+    background-color: rgb(127, 191, 221); /* Light background on hover */
+    color: #2a2a2b; /* Change text color on hover */
+    border-color: #66696d; /* Change border color on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a shadow effect */
+}
+.jspsych-content {
+    padding: 10px;
 }
 
-#start-experiment:hover {
-    background-color: #45a049;
+p{
+    text-align: left;
 }
-/* Prevent scrolling */
-html, body {
-    overflow: hidden;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-p {
-    font-size: 16px;
-    line-height: 1.5em;
-    margin: auto;
-    padding: 0;
-}
-/* Instruction Text */
-p#instruction{
-    font-size: 16px;
-    line-height: 1.5em;
-    margin: auto;
-    padding: 0;
-    color:#7cb8b1;
-}
-
-/* Buttons */
-button, .jspsych-btn {
-    font-size: 16px;
-    padding: 10px 20px;
-    background-color: #95dcd4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-button:hover, .jspsych-btn:hover {
-    background-color: #7cb8b1;
-}
-
-/* Video Container */
-video {
-    border: 2px solid black;
-    width: 90%; /* Responsive width */
-    max-width: 400px;
-    height: auto; /* Maintain aspect ratio */
+.jspsych-btn.jspsych-btn{
     display: block;
-    margin: 10px auto;
-}
-
-/* Instructions */
-#camera-preview, #preview-preview {
-    width: 100%;
-    max-width: 400px;
-    height: auto; /* Maintain aspect ratio */
-}
-
-/* Arrows or Prompts */
-p[style*="font-size:48px;"] {
-    font-size: 24px;
-    color: red;
-    margin-bottom: 10px;
-}
-
-/* Responsive Adjustments */
-@media screen and (max-width: 600px) {
-    p {
-        font-size: 14px;
-    }
-
-    button, .jspsych-btn {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    video {
-        width: 100%;
-        max-width: 320px;
-    }
-
-    #camera-preview, #preview-preview {
-        max-width: 320px;
-    }
-}
-
-/* Center Elements */
-div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     margin: 0 auto;
-    width: 100%;
-    height: 100%; /* Ensure the div fills the screen height */
 }
-
-/* Error Messages */
-.error {
-    color: red;
-    font-weight: bold;
+form{
+    padding: 20px;
 }
-.jspsych-display-element {
-    font-family: "Open Sans", "Arial", sans-serif;
-    font-size: 16px;
-    line-height: 1em;
+img.emoji{
+    display: block;
+    text-align: center;
+    margin: 0 auto;
 }

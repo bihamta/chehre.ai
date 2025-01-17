@@ -35,7 +35,7 @@ const countryList = [
 
 const age = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<p id="instruction">Please answer the demographic questions.</p>`,
+    preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
     questions: [
         {
             prompt: "What is your age group?",
@@ -50,7 +50,7 @@ const age = {
 
 const gender = {
     type: jsPsychSurveyMultiChoice,
-    preamble: `<p id="instruction">Please answer the demographic questions.</p>`,
+    preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
     questions: [
         {
             prompt: "What is your gender identity?",

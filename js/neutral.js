@@ -13,6 +13,7 @@ function blobToBase64(blob) {
     });
 }
 let lastRecordingBlob = null;
+let recorder = null
 const neutral_trial = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
@@ -70,40 +71,52 @@ const neutral_trial = {
             const rerecordButton = document.getElementById('rerecord-button');
 
             function initializeCamera() {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                    .then(userStream => {
-                        stream = userStream;
-                        videoElement.srcObject = stream;
-
-                        // Set up MediaRecorder
-                        mediaRecorder = new MediaRecorder(stream);
-
-                        // Capture video data
-                        mediaRecorder.ondataavailable = function (event) {
-                            chunks.push(event.data); // Save current recording chunks
-                        };
-
-                        mediaRecorder.onstop = function () {
-                            // Store the last recorded Blob
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
-                            
-                            chunks = []; // Reset chunks for the next recording
-
-                            // Create a preview of the recorded video
-                            const videoURL = URL.createObjectURL(lastRecordingBlob);
-                            const recordedVideo = document.getElementById('recorded-video');
-                            recordedVideo.src = videoURL;
-
-                            // Show playback container
-                            playbackContainer.style.display = 'block';
-
-                            // Stop the video stream
-                            stream.getTracks().forEach(track => track.stop());
-                        };
-                    })
-                    .catch(error => {
-                        console.error('Error accessing camera:', error);
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                }).then(function(stream) {
+                    recorder = RecordRTC(stream, {
+                        type: 'video'
                     });
+                    videoElement.muted = true;
+                    videoElement.volume = 0;
+                    videoElement.srcObject = stream;
+                    recorder.camera = stream;
+                });
+                // navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+                //     .then(userStream => {
+                //         stream = userStream;
+                //         videoElement.srcObject = stream;
+
+                //         // Set up MediaRecorder
+                //         mediaRecorder = new MediaRecorder(stream);
+
+                //         // Capture video data
+                //         mediaRecorder.ondataavailable = function (event) {
+                //             chunks.push(event.data); // Save current recording chunks
+                //         };
+
+                //         mediaRecorder.onstop = function () {
+                //             // Store the last recorded Blob
+                //             lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
+                            
+                //             chunks = []; // Reset chunks for the next recording
+
+                //             // Create a preview of the recorded video
+                //             const videoURL = URL.createObjectURL(lastRecordingBlob);
+                //             const recordedVideo = document.getElementById('recorded-video');
+                //             recordedVideo.src = videoURL;
+
+                //             // Show playback container
+                //             playbackContainer.style.display = 'block';
+
+                //             // Stop the video stream
+                //             stream.getTracks().forEach(track => track.stop());
+                //         };
+                //     })
+                //     .catch(error => {
+                //         console.error('Error accessing camera:', error);
+                //     });
                     document.getElementById('finish-trial').disabled = true;
 
 
@@ -115,7 +128,7 @@ const neutral_trial = {
             // Add event listeners for start and stop buttons
             startButton.addEventListener('click', () => {
                 chunks = []; // Clear previous chunks to ensure only the latest recording is saved
-                mediaRecorder.start();
+                recorder.startRecording();
                 console.log('Recording started');
                 startButton.style.display = 'none'; // Hide start button
                 recordingStatus.style.display = 'inline-block'; // Show timer
@@ -130,7 +143,15 @@ const neutral_trial = {
 
                     if (countdown <= 0) {
                         clearInterval(countdownInterval);
-                        mediaRecorder.stop();
+                        recorder.stopRecording(function() {
+                            let blob = recorder.getBlob();
+                            recordedVideo.src = URL.createObjectURL(blob);
+                            recorder.camera.stop();
+                            recorder.destroy();
+                            recorder = null;
+                            lastRecordingBlob = blob
+                        });
+                        
                         console.log('Recording stopped automatically after 5 seconds');
                         document.getElementById('finish-trial').disabled = false;
 
@@ -158,7 +179,7 @@ const neutral_trial = {
                 // Restart the camera preview
                 videoElement.style.display = 'block';
                 startButton.style.display = 'inline-block'; // Show Start Recording button
-                stopButton.style.display = 'none'; // Ensure Stop Recording button is hidden
+                // stopButton.style.display = 'none'; // Ensure Stop Recording button is hidden
 
                 // Reinitialize camera and MediaRecorder
                 initializeCamera();

@@ -19,6 +19,7 @@ function blobToBase64(blob) {
     });
 }
 let lastRecordingBlob = null;
+let recorder = null;
 const emoji_trial = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
@@ -78,43 +79,55 @@ const emoji_trial = {
             const rerecordButton = document.getElementById('rerecord-button');
 
             function initializeCamera() {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                    .then(userStream => {
-                        stream = userStream;
-                        videoElement.srcObject = stream;
-
-                        // Set up MediaRecorder
-                        mediaRecorder = new MediaRecorder(stream);
-
-                        // Capture video data
-                        mediaRecorder.ondataavailable = function (event) {
-                            chunks.push(event.data); // Save current recording chunks
-                        };
-
-                        mediaRecorder.onstop = function () {
-                            // Store the last recorded Blob
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
-                            chunks = []; // Reset chunks for the next recording
-
-                            // Create a preview of the recorded video
-                            const videoURL = URL.createObjectURL(lastRecordingBlob);
-                            const recordedVideo = document.getElementById('recorded-video');
-                            recordedVideo.src = videoURL;
-
-                            // Show playback container
-                            playbackContainer.style.display = 'block';
-
-                            // Stop the video stream
-                            if (stream) {
-                                console.log(stream)
-                                stream.getTracks().forEach(track => track.stop());
-                                console.log('Camera stopped.');
-                            }
-                        };
-                    })
-                    .catch(error => {
-                        console.error('Error accessing camera:', error);
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                }).then(function(stream) {
+                    recorder = RecordRTC(stream, {
+                        type: 'video'
                     });
+                    videoElement.muted = true;
+                    videoElement.volume = 0;
+                    videoElement.srcObject = stream;
+                    recorder.camera = stream;
+                });
+                // navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+                //     .then(userStream => {
+                //         stream = userStream;
+                //         videoElement.srcObject = stream;
+
+                //         // Set up MediaRecorder
+                //         mediaRecorder = new MediaRecorder(stream);
+
+                //         // Capture video data
+                //         mediaRecorder.ondataavailable = function (event) {
+                //             chunks.push(event.data); // Save current recording chunks
+                //         };
+
+                //         mediaRecorder.onstop = function () {
+                //             // Store the last recorded Blob
+                //             lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
+                //             chunks = []; // Reset chunks for the next recording
+
+                //             // Create a preview of the recorded video
+                //             const videoURL = URL.createObjectURL(lastRecordingBlob);
+                //             const recordedVideo = document.getElementById('recorded-video');
+                //             recordedVideo.src = videoURL;
+
+                //             // Show playback container
+                //             playbackContainer.style.display = 'block';
+
+                //             // Stop the video stream
+                //             if (stream) {
+                //                 console.log(stream)
+                //                 stream.getTracks().forEach(track => track.stop());
+                //                 console.log('Camera stopped.');
+                //             }
+                //         };
+                //     })
+                //     .catch(error => {
+                //         console.error('Error accessing camera:', error);
+                //     });
                     document.getElementById('finish-trial').disabled = true;
 
             }
@@ -125,14 +138,22 @@ const emoji_trial = {
             // Add event listeners for start and stop buttons
             startButton.addEventListener('click', () => {
                 chunks = []; // Clear previous chunks to ensure only the latest recording is saved
-                mediaRecorder.start();
+                // mediaRecorder.start();
+                recorder.startRecording();
                 console.log('Recording started');
                 startButton.style.display = 'none'; // Hide start button
                 stopButton.style.display = 'inline-block'; // Show stop button
             });
 
             stopButton.addEventListener('click', () => {
-                mediaRecorder.stop();
+                recorder.stopRecording(function() {
+                    let blob = recorder.getBlob();
+                    recordedVideo.src = URL.createObjectURL(blob);
+                    recorder.camera.stop();
+                    recorder.destroy();
+                    recorder = null;
+                    lastRecordingBlob = blob;
+                });
                 console.log('Recording stopped');
 
                 // Hide the camera preview and Start Recording button
@@ -183,7 +204,7 @@ const emoji_trial = {
                 });
                 const responseData = await response.json();
                 console.log('Video uploaded successfully:', responseData);
-                document.getElementById('finish-trial').disabled = false;
+                // document.getElementById('finish-trial').disabled = false;
 
             } catch (error) {
                 console.error('Error uploading video:', error);

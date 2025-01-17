@@ -21,6 +21,7 @@ function blobToBase64(blob) {
     });
 }
 let lastRecordingBlob = null;
+let recorder = null;
 const au_trial = {
     type: jsPsychHtmlVideoResponse,
 
@@ -81,37 +82,49 @@ const au_trial = {
 
 
             function initializeCamera() {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                    .then(userStream => {
-                        stream = userStream;
-                        videoElement.srcObject = stream;
-
-                        mediaRecorder = new MediaRecorder(stream);
-                        mediaRecorder.ondataavailable = function (event) {
-                            chunks.push(event.data);
-                        };
-
-                        mediaRecorder.onstop = function () {
-                            lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
-                            chunks = [];
-                            const videoURL = URL.createObjectURL(lastRecordingBlob);
-                            const recordedVideo = document.getElementById('recorded-video');
-                            recordedVideo.src = videoURL;
-
-                            playbackContainer.style.display = 'block';
-
-                            // Stop the camera feed after recording finishes
-                            if (stream) {
-                                console.log(stream)
-                                stream.getTracks().forEach(track => track.stop());
-                                console.log('Camera stopped.');
-                            }
-                        };
-                    })
-                    .catch(error => {
-                        console.error('Error accessing camera:', error);
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                }).then(function(stream) {
+                    recorder = RecordRTC(stream, {
+                        type: 'video'
                     });
-                    document.getElementById('finish-trial').disabled = true;
+                    videoElement.muted = true;
+                    videoElement.volume = 0;
+                    videoElement.srcObject = stream;
+                    recorder.camera = stream;
+                });
+                // navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+                //     .then(userStream => {
+                //         stream = userStream;
+                //         videoElement.srcObject = stream;
+
+                //         mediaRecorder = new MediaRecorder(stream);
+                //         mediaRecorder.ondataavailable = function (event) {
+                //             chunks.push(event.data);
+                //         };
+
+                // mediaRecorder.onstop = function () {
+                // lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
+                // chunks = [];
+                // const videoURL = URL.createObjectURL(lastRecordingBlob);
+                // const recordedVideo = document.getElementById('recorded-video');
+            
+
+                // playbackContainer.style.display = 'block';
+
+                // Stop the camera feed after recording finishes
+                // if (stream) {
+                //     console.log(stream)
+                //     stream.getTracks().forEach(track => track.stop());
+                //     console.log('Camera stopped.');
+                // }
+                // };
+            // })
+            // .catch(error => {
+            //     console.error('Error accessing camera:', error);
+            // });
+            document.getElementById('finish-trial').disabled = true;
 
             }
 
@@ -119,7 +132,8 @@ const au_trial = {
 
             startButton.addEventListener('click', () => {
                 chunks = [];
-                mediaRecorder.start();
+                // mediaRecorder.start();
+                recorder.startRecording();
                 console.log('Recording started');
                 startButton.style.display = 'none';
                 stopButton.style.display = 'inline-block';
@@ -128,7 +142,15 @@ const au_trial = {
             stopButton.addEventListener('click', () => {
                 document.getElementById('finish-trial').disabled = false;
 
-                mediaRecorder.stop();
+                recorder.stopRecording(function() {
+                    let blob = recorder.getBlob();
+                    recordedVideo.src = URL.createObjectURL(blob);
+                    recorder.camera.stop();
+                    recorder.destroy();
+                    recorder = null;
+                    lastRecordingBlob = blob;
+                });
+                
                 console.log('Recording stopped');
 
                 // Stop camera immediately when user stops recording
@@ -174,7 +196,7 @@ const au_trial = {
                 });
                 const responseData = await response.json();
                 console.log('Video uploaded successfully:', responseData);
-                document.getElementById('finish-trial').disabled = false;
+                // document.getElementById('finish-trial').disabled = false;
 
             } catch (error) {
                 console.error('Error uploading video:', error);

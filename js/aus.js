@@ -32,7 +32,6 @@ const au_trial = {
                 border: 2px solid black;
                 width: 400px;
                 height: 300px;
-                transform: scaleX(-1); /* Mirror the video preview */
             }
 
             #recorded-video {

@@ -33,7 +33,10 @@ timeline.push(medi1, medi2, medi3, medi4, medi5)
 timeline.push(init_camera)
 timeline.push(neutral_trial)
 timeline.push(au_trial);
-timeline.push(emoji_trial)
+for (let i = 0; i < 5; i++) {
+    timeline.push(emoji_trial)
+}
+
 timeline.push(honesty, goodbye)
 
 

@@ -44,8 +44,10 @@ const neutral_trial = {
         </div>
         <div id="playback-container" style="display: none;">
             <p>Playback your video to ensure it matches the instructions.</p>
-            <video id="recorded-video" controls></video>
-            <button id="rerecord-button" style="margin-top: 10px; padding: 10px 20px;">Rerecord</button>
+            <video id="recorded-video" controls></video><br>
+            <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
+            <i class="fas fa-redo"></i> Re-record
+        </button>
         </div>
         `;
     },

@@ -50,7 +50,7 @@ const emoji_trial = {
                 <i class="fas fa-stop"></i> Stop Recording</button>
             </div>
             <div id="playback-container" style="display: none;">
-                <video id="recorded-video" controls "></video>
+                <video id="recorded-video" controls "></video><br>
                 <br>
                 <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
                 <i class="fas fa-redo"></i> Re-record
@@ -159,7 +159,7 @@ const emoji_trial = {
                 lastRecordingBlob = null; // Clear the last recorded Blob
 
                 // Restart the camera preview
-                videoElement.style.display = 'block';
+                videoElement.style.display = 'inline-block';
                 startButton.style.display = 'inline-block'; // Show Start Recording button
                 stopButton.style.display = 'none'; // Ensure Stop Recording button is hidden
 

@@ -56,7 +56,7 @@ const au_trial = {
             <i class="fas fa-stop"></i> Stop Recording</button>
         </div>
         <div id="playback-container" style="display: none;">
-            <video id="recorded-video" controls "></video>
+            <video id="recorded-video" controls "></video><br>
             <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
                 <i class="fas fa-redo"></i> Re-record
             </button>
@@ -152,7 +152,7 @@ const au_trial = {
                 chunks = [];
                 lastRecordingBlob = null;
 
-                videoElement.style.display = 'block';
+                videoElement.style.display = 'inline-block';
                 startButton.style.display = 'inline-block';
                 stopButton.style.display = 'none';
 

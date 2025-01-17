@@ -28,30 +28,60 @@
 
 
     <script >
-        const participantId = uuid();
-        console.log(participantId); // Logs the generated UUID
-
+        window.surveyId = uuid();  // Generate a unique surveyId for this survey response
+        window.participantId = uuid(); 
+        console.log(window.surveyId)
+        // Send surveyId and participantId to DynamoDB at the start
+        fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                surveyId: surveyId,  // Send surveyId
+                participantId: participantId // Send participantId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Survey initialized:', data);
+        })
+        .catch(error => {
+            console.error('Error initializing survey:', error);
+        });
+        
         const jsPsych = initJsPsych({
 
             on_finish: function() {
                 console.log('Experiment finished.');
+                
+                // Collect all the data from the jsPsych experiment
                 let allData = jsPsych.data.get().json();
-                // Log the data to the console (or you can save it to a file or send it to a server)
-                console.log(allData);
+                
+                // Add the surveyId and participantId to the data to link it with the video
+                const payload = {
+                    surveyId: surveyId,  // Include the surveyId to link responses to the correct survey
+                    participantId: participantId,  // Include participantId
+                    responses: allData  // Include the survey responses
+                };
+    
+                console.log('Survey Data to be sent:', payload);
+    
+                // Send the full survey data (including responses) to the API Gateway
                 fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(allData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
+                    body: JSON.stringify(payload)  // Send the entire payload with surveyId, participantId, and responses
+                })
+                .then(response => response.json())
+                .then(data => {
                     console.log('Survey response saved:', data);
-                    })
-                    .catch(error => {
+                })
+                .catch(error => {
                     console.error('Error:', error);
-                    });
+                });
             }
         });
     </script>

@@ -2,7 +2,7 @@ import { addExitButton } from "./utils.js";
 let globalStream = null;
 
 const AUImages = [
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
+    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Eyes-Closed.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Puckerer.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Outer-Brow-Raiser.gif",
@@ -33,12 +33,18 @@ const AUImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Nose-Wrinkler.gif",
 ];
 
-// Function to randomly select an AU
-function getRandomAUImage() {
-    const randomIndex = Math.floor(Math.random() * AUImages.length);
-    const randomAU = AUImages[randomIndex];
-    return AUImages[randomIndex];
+// Shuffle the emoji array once
+// Track the unused emojis
+let unusedAUs = [...AUImages]; // Make a copy of the original array
+
+// Function to shuffle the array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
 }
+
 function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -53,7 +59,16 @@ const au_trial = {
     type: jsPsychHtmlVideoResponse,
 
     stimulus: function () {
-        const randomAU = getRandomAUImage(); // Get the image path
+        shuffleArray(unusedAUs);
+
+        // Pick the first emoji from the shuffled unused emojis
+        const randomAU = unusedAUs.pop(); // Get and remove the last emoji from the array
+
+        // If there are no emojis left, reset the unusedEmojis array
+        if (unusedAUs.length === 0) {
+            unusedAUs = [...AUImages]; // Reset to the full array
+            shuffleArray(unusedAUs); // Shuffle again
+        }
         const auName = randomAU.split('/').pop().split('.')[0].replace(/-/g, ' ');
         return `
         <style>
@@ -234,6 +249,9 @@ const au_trial = {
     }
 };
 
-
-export { au_trial };
+let au_trials = [];
+for (let i = 0; i < 10; i++) {
+    au_trials.push(au_trial);
+}
+export { au_trials };
 

@@ -21,7 +21,26 @@ var emoji = {
     pages: [
         'Step 2 of 5' +
         '<br>' +
-        'Please proceed to perform the Emojis task.'
+        'Please proceed to perform the Emojis task.' +
+        '<br>' +
+        'Make sure that your hands are not visible in the camera frame.' +
+        '<br>' +
+        'Start with a neutral face and then perform the expression shown by the emoji.' +
+        '<br>' +
+        'Try to maintain a consistent distance from the camera.'
+    ],
+    show_clickable_nav: true
+}
+var emoji_reminder = {
+    type: jsPsychInstructions,
+    pages: [
+        'Just a reminder!' +
+        '<br>' +
+        'Make sure that your hands are not visible in the camera frame.' +
+        '<br>' +
+        'Start with a neutral face and then perform the expression shown by the emoji.' +
+        '<br>' +
+        'Try to maintain a consistent distance from the camera.'
     ],
     show_clickable_nav: true
 }
@@ -44,4 +63,4 @@ var thank = {
     show_clickable_nav: true
 }
 
-export {emoji, questionnaire, demographic, facialdynamics, thank}
+export {emoji, questionnaire, demographic, facialdynamics, thank, emoji_reminder}

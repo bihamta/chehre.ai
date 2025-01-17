@@ -2,15 +2,15 @@
 import {welcome} from './welcome.js';
 import {consent} from './consent.js'
 
-import { thank, emoji, facialdynamics, questionnaire, demographic } from './landing.js';
+import { thank, emoji, facialdynamics, questionnaire, demographic, emoji_reminder } from './landing.js';
 // Questionnaire
 import {demog } from './demographic.js';
 import {medi} from './mindfulness.js';
 
 // Video Recordings 1
 import {init_camera, neutral_trial } from './neutral.js';
-import {emoji_trial} from './emojis.js';
-import {au_trial} from './aus.js';
+import {emojiTrials} from './emojis.js';
+import {au_trials} from './aus.js';
 
 // Video Recordings 2 - Scenario Prompts
 // import
@@ -19,7 +19,7 @@ import {au_trial} from './aus.js';
 import { goodbye, honesty } from './thanks.js';
 
 
-
+console.log(window.surveyId)
 // jsPsych.getProgress()
 
 const timeline = [];
@@ -29,18 +29,13 @@ timeline.push(welcome);
 timeline.push(consent);
 timeline.push(questionnaire);
 timeline.push(medi)
-timeline.push(facialdynamics)
 timeline.push(init_camera)
-timeline.push(neutral_trial)
 timeline.push(emoji)
-for (let i = 0; i < 5; i++) {
-    timeline.push(emoji_trial)
-}
-for (let i = 0; i < 5; i++) {
-    timeline.push(au_trial);
-}
-
-timeline.push(demographic);
+timeline.push(emojiTrials)
+timeline.push(facialdynamics)
+timeline.push(neutral_trial)
+timeline.push(au_trials);
+timeline.push(demographic)
 timeline.push(demog)
 timeline.push(thank)
 timeline.push(honesty, goodbye)

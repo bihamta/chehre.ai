@@ -189,26 +189,86 @@ const neutral_trial = {
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
-
+        const videoUrl = []
         // Ensure `lastRecordingBlob` exists in the scope
         if (lastRecordingBlob) {
-            const videoData = await blobToBase64(lastRecordingBlob);
+            const videoData = await blobToBase64(lastRecordingBlob); // Convert video to base64
+            const videoType = lastRecordingBlob.type;  // e.g., 'video/webm', 'video/mp4'
+
+            // Generate a dynamic video file extension based on the MIME type
+            const videoExtension = videoType.split('/')[1];
+
             try {
+                // Get the surveyId from the global scope (ensure it's defined earlier)
+                const surveyId = window.surveyId;  // Or however you have it set globally
+                const trial_name = "neutral"
+                const videoKey = `videos/${surveyId}_${trial_name}.${videoExtension}`;
+
+                
+                // Step 1: Upload video to S3 (through the Lambda endpoint that handles S3)
                 const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ video: videoData })
+                    body: JSON.stringify({
+                        video: videoData,  // Video data as base64 string
+                        surveyId: surveyId,  // Include surveyId in the request body
+                        key: videoKey,  // Pass the custom video name as key
+                        contentType: videoType 
+                    })
                 });
+    
                 const responseData = await response.json();
                 console.log('Video uploaded successfully:', responseData);
+    
+                // Step 2: Update DynamoDB with the S3 video URL (after the upload is successful)
+                if (responseData && responseData.videoUrl) {
+                    videoUrl.push(responseData.videoUrl); // Assuming the Lambda response includes the video URL
+    
+                    const updateResponse = await fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            surveyId: surveyId,  // Send the surveyId to DynamoDB
+                            participantId: participantId,  // Send participantId to DynamoDB
+                            videoUrl: videoUrl,  // Send the uploaded video URL to DynamoDB
+                            key: videoKey,
+                            contentType: videoType
+                        })
+                    });
+    
+                    const updateData = await updateResponse.json();
+                    console.log('DynamoDB updated with video URL (Trial 1):', updateData);
+                }
             } catch (error) {
-                console.error('Error uploading video:', error);
+                console.error('Error uploading video or updating survey:', error);
             }
         } else {
             console.log('No video was recorded.');
         }
+    }};
+    
+//     on_finish: async function () {
+//         console.log('Trial finished. Uploading the last recording...');
+//         const surveyId = window.surveyId;
+//         // Ensure `lastRecordingBlob` exists in the scope
+//         if (lastRecordingBlob) {
+//             const videoData = await blobToBase64(lastRecordingBlob);
+//             try {
+//                 const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
+//                     method: 'POST',
+//                     headers: { 'Content-Type': 'application/json' },
+//                     body: JSON.stringify({ video: videoData })
+//                 });
+//                 const responseData = await response.json();
+//                 console.log('Video uploaded successfully:', responseData);
+//             } catch (error) {
+//                 console.error('Error uploading video:', error);
+//             }
+//         } else {
+//             console.log('No video was recorded.');
+//         }
         
-    }
-};
+//     }
+// };
 export { neutral_trial, init_camera };
 

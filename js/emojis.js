@@ -21,11 +21,18 @@ const emojiImages = [
     
 ];
 
-// Function to randomly select an emoji
-function getRandomEmojiImage() {
-    const randomIndex = Math.floor(Math.random() * emojiImages.length);
-    return emojiImages[randomIndex];
+// Shuffle the emoji array once
+// Track the unused emojis
+let unusedEmojis = [...emojiImages]; // Make a copy of the original array
+
+// Function to shuffle the array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
 }
+
 function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -39,7 +46,17 @@ let recorder = null;
 const emoji_trial = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
-        const randomEmoji = getRandomEmojiImage();
+        // Shuffle the unused emojis array
+        shuffleArray(unusedEmojis);
+
+        // Pick the first emoji from the shuffled unused emojis
+        const randomEmoji = unusedEmojis.pop(); // Get and remove the last emoji from the array
+
+        // If there are no emojis left, reset the unusedEmojis array
+        if (unusedEmojis.length === 0) {
+            unusedEmojis = [...emojiImages]; // Reset to the full array
+            shuffleArray(unusedEmojis); // Shuffle again
+        }
         return `
             <style>
                 #camera-preview {
@@ -230,8 +247,9 @@ const emoji_trial = {
         }
     }
 };
-
-
-
-export { emoji_trial };
+let emojiTrials = [];
+for (let i = 0; i < 10; i++) {
+    emojiTrials.push(emoji_trial);
+}
+export { emojiTrials };
 

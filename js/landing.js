@@ -41,6 +41,7 @@ var thank = {
         '<br>' +
         'Please answer one final question.'
     ],
+    show_clickable_nav: true
 }
 
 export {emoji, questionnaire, facialdynamics, thank}

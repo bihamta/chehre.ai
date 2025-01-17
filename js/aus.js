@@ -1,8 +1,8 @@
 let globalStream = null;
 
 const AUImages = [
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/blob/main/aus/AU5.gif",
-    "https://raw.githubusercontent.com/chehre.ai/blob/main/aus/AU7-lid-tightener.gif"
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/AU5.gif",
+    "https://raw.githubusercontent.com/chehre.ai/main/aus/AU7-lid-tightener.gif"
 ];
 
 // Function to randomly select an AU

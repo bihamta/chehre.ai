@@ -2,7 +2,7 @@
 import {welcome} from './welcome.js';
 import {consent} from './consent.js'
 
-import { thank, emoji, facialdynamics, questionnaire } from './landing.js';
+import { thank, emoji, facialdynamics, questionnaire, demographic } from './landing.js';
 // Questionnaire
 import {demog } from './demographic.js';
 import {medi} from './mindfulness.js';
@@ -26,18 +26,21 @@ const timeline = [];
 
 // Add trials to the timeline
 timeline.push(welcome);
-timeline.push(questionnaire);
 timeline.push(consent);
-timeline.push(demog);
+timeline.push(questionnaire);
 timeline.push(medi)
 timeline.push(facialdynamics)
 timeline.push(init_camera)
 timeline.push(neutral_trial)
-timeline.push(au_trial);
+for (let i = 0; i < 2; i++) {
+    timeline.push(au_trial);
+}
 timeline.push(emoji)
 for (let i = 0; i < 2; i++) {
     timeline.push(emoji_trial)
 }
+timeline.push(demographic);
+timeline.push(demog)
 timeline.push(thank)
 timeline.push(honesty, goodbye)
 

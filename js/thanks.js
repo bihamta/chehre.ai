@@ -1,12 +1,13 @@
 const honesty = {
     type: jsPsychSurveyHtmlForm,
     preamble: `
-        <p>Please provide an honest rating (1-5) of the quality of data provided, with a brief explanation of your rating.</p>
+        <p class="jspsych-survey-multi-choice-text">Please provide an honest rating (1-5) of the quality of data provided, with a brief explanation of your rating.</p>
         <p>Your honest answer helps us to evaluate the source of variability in data, and/or exclude responses, with no impact on you as the respondent.</p>
+        <p id="note" style="bold";>(1 = poor, 5 = excellent)</p>
     `,
     html: `
         <div>
-            <label for="rating">Please rate the quality of your data (1-5):</label><br>
+            <label for="rating">Please rate the quality of your data:</label><br>
             <input type="radio" id="rating1" name="rating" value="1" required> 1
             <input type="radio" id="rating2" name="rating" value="2" required> 2
             <input type="radio" id="rating3" name="rating" value="3" required> 3

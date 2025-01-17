@@ -60,3 +60,9 @@ p.jspsych-survey-multi-choice-text{
 p#thanks{
     text-align: center;
 }
+
+p#note{
+    text-align: center;
+    color:rgb(21, 92, 125);
+    font-weight: bold;
+}

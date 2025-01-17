@@ -2,7 +2,7 @@ import { addExitButton } from "./utils.js";
 let globalStream = null;
 
 const AUImages = [
-    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Eyes-Closed.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Puckerer.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Outer-Brow-Raiser.gif",
@@ -250,7 +250,7 @@ const au_trial = {
 };
 
 let au_trials = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 30; i++) {
     au_trials.push(au_trial);
 }
 export { au_trials };

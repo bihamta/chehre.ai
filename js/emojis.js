@@ -1,25 +1,41 @@
 import { addExitButton } from './utils.js';
 
 const emojiImages = [
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/shaking-face_1fae8.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/expressionless-face_1f611.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-halo_1f607.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-in-clouds_1f636-200d-1f32b-fe0f.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-heart-eyes_1f60d.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-hearts_1f970.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-without-mouth_1f636.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/squinting-face-with-tongue_1f61d.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/grinning-squinting-face_1f606.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/star-struck_1f929.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/money-mouth-face_1f911.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/thinking-face_1f914.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/nauseated-face_1f922.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/woozy-face_1f974.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/sleeping-face_1f634.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-blowing-a-kiss_1f618.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/sleepy-face_1f62a.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-in-clouds_1f636-200d-1f32b-fe0f.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-halo_1f607.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-screaming-in-fear_1f631.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-heart-eyes_1f60d.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-monocle_1f9d0.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-hearts_1f970.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-rolling-eyes_1f644.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-tear_1f972.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smirking-face_1f60f.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/squinting-face-with-tongue_1f61d.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/star-struck_1f929.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-without-mouth_1f636.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/thinking-face_1f914.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/grimacing-face_1f62c.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/unamused-face_1f612.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/grinning-squinting-face_1f606.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/woozy-face_1f974.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/kissing-face-with-closed-eyes_1f61a.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/yawning-face_1f971.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/money-mouth-face_1f911.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/zany-face_1f92a.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/sleepy-face_1f62a.png"
-    
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/nauseated-face_1f922.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/zipper-mouth-face_1f910.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/partying-face_1f973.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-spiral-eyes_1f635-200d-1f4ab.png",  // Added missing emoji
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-steam-from-nose_1f624.png",       // Added missing emoji
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png"                 // Added missing emoji
 ];
+
 
 // Shuffle the emoji array once
 // Track the unused emojis
@@ -248,7 +264,7 @@ const emoji_trial = {
     }
 };
 let emojiTrials = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 30; i++) {
     emojiTrials.push(emoji_trial);
 }
 export { emojiTrials };

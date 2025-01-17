@@ -1,4 +1,4 @@
-import { addExitButton } from './utils.js';
+import { addExitButton, uploadSurveyData } from './utils.js';
 const countryList = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", 
     "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
@@ -106,9 +106,6 @@ const country_of_birth = {
     on_load: function() {
         addExitButton();  // Call the function to add the Exit button
     },
-    on_finish: function(data) {
-        console.log(data.response); // Logs the selected country
-    },
 };
 
 const ethnicity = {
@@ -153,7 +150,7 @@ const marital = {
     ],
     required: true, // Ensures the user selects one option
     }
-],
+    ],
 };
 
 const demog = {

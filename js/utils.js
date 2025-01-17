@@ -35,4 +35,20 @@ function addExitButton() {
         exitButton.style.backgroundColor = "rgb(182, 133, 133)"; // Original pink color when not hovered
     });
 }
-export {addExitButton}
+
+
+async function uploadSurveyData(surveyData) {
+    try {
+        console.log(surveyData)
+        const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(surveyData)
+        });
+        const responseData = await response.json();
+        console.log('Survey data uploaded successfully:', responseData);
+    } catch (error) {
+        console.error('Error uploading survey data:', error);
+    }
+}
+export {addExitButton, uploadSurveyData}

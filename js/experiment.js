@@ -20,27 +20,27 @@ import { goodbye, honesty } from './thanks.js';
 
 
 
-jsPsych.getProgress()
+// jsPsych.getProgress()
 
 const timeline = [];
 
 // Add trials to the timeline
 timeline.push(welcome);
-timeline.push(consent);
-timeline.push(questionnaire);
-timeline.push(medi)
-timeline.push(facialdynamics)
+// timeline.push(consent);
+// timeline.push(questionnaire);
+// timeline.push(medi)
+// timeline.push(facialdynamics)
 timeline.push(init_camera)
-timeline.push(neutral_trial)
-for (let i = 0; i < 2; i++) {
-    timeline.push(au_trial);
-}
+// timeline.push(neutral_trial)
+// for (let i = 0; i < 2; i++) {
+    // timeline.push(au_trial);
+// }
 timeline.push(emoji)
-for (let i = 0; i < 2; i++) {
+// for (let i = 0; i < 2; i++) {
     timeline.push(emoji_trial)
-}
-timeline.push(demographic);
-timeline.push(demog)
+// }
+// timeline.push(demographic);
+// timeline.push(demog)
 timeline.push(thank)
 timeline.push(honesty, goodbye)
 

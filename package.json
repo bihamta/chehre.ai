@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/bihamta/chehre.ai#readme",
   "dependencies": {
-    "jspsych": "^8.2.0"
+    "jspsych": "^8.2.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "lite-server": "^2.6.1"

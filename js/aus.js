@@ -195,7 +195,7 @@ const au_trial = {
                     body: JSON.stringify({ video: videoData })
                 });
                 const responseData = await response.json();
-                console.log('Video uploaded successfully:', responseData);
+                // console.log('Video uploaded successfully:', responseData);
                 // document.getElementById('finish-trial').disabled = false;
 
             } catch (error) {

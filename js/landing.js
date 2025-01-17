@@ -10,7 +10,7 @@ var questionnaire = {
 var facialdynamics = {
     type: jsPsychInstructions,
     pages: [
-        'Step 2 of 5' +
+        'Step 3 of 5' +
         '<br>' +
         'We will now record Eye Gaze and Facial Muscle Movements.'
     ],
@@ -19,7 +19,7 @@ var facialdynamics = {
 var emoji = {
     type: jsPsychInstructions,
     pages: [
-        'Step 3 of 5' +
+        'Step 2 of 5' +
         '<br>' +
         'Please proceed to perform the Emojis task.'
     ],

@@ -2,8 +2,35 @@ import { addExitButton } from "./utils.js";
 let globalStream = null;
 
 const AUImages = [
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/AU5.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/AU7-lid-tightener.gif"
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Eyes-Closed.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Puckerer.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Outer-Brow-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Upper-Lid-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Inner-Brow-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Stretcher.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Slit.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Blink.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Jaw-Drop.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Suck.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Squint.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Brow-Lowerer.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lid-Droop.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Tightener.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Upper-Lip-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Cheek-Puffer.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lid-Tightener.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lips-part.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Wink.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Cheek-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Puller.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lower-Lip-Depressor.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Chin-Raiser.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Funneler.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Mouth-Stretch.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Dimpler.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Pressor.gif",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Nose-Wrinkler.gif",
 ];
 
 // Function to randomly select an AU

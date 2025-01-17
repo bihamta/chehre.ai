@@ -2,7 +2,7 @@
 import {welcome} from './welcome.js';
 import {consent} from './consent.js'
 
-import { emoji, facialdynamics, questionnaire } from './landing.js';
+import { thank, emoji, facialdynamics, questionnaire } from './landing.js';
 // Questionnaire
 import {country, age, gender, country_of_birth } from './demographic.js';
 import {medi} from './mindfulness.js';

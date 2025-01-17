@@ -2,7 +2,7 @@ let globalStream = null;
 
 const AUImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/AU5.gif",
-    "https://raw.githubusercontent.com/chehre.ai/main/aus/AU7-lid-tightener.gif"
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/AU7-lid-tightener.gif"
 ];
 
 // Function to randomly select an AU
@@ -89,6 +89,7 @@ const au_trial = {
                             lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
                             chunks = [];
                             const videoURL = URL.createObjectURL(lastRecordingBlob);
+                            const recordedVideo = document.getElementById('recorded-video');
                             recordedVideo.src = videoURL;
 
                             playbackContainer.style.display = 'block';
@@ -129,6 +130,8 @@ const au_trial = {
                 videoElement.style.display = 'none';
                 startButton.style.display = 'none';
                 stopButton.style.display = 'none';
+
+                playbackContainer.style.display = 'block';
             });
 
             rerecordButton.addEventListener('click', () => {

@@ -6,9 +6,20 @@ var init_camera = {
 
 function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get base64 data only
+        // Create a new FileReader
+        let reader = new FileReader();
+
+        // Once reading is finished, handle the result
+        reader.onloadend = function() {
+            // Get the base64 string (remove the data URL prefix)
+            const base64String = reader.result.split(',')[1]; // Remove the 'data:video/webm;base64,' or 'data:audio/mp3;base64,' prefix
+            resolve(base64String);  // Resolve with base64 string
+        };
+
+        // If there's an error reading, reject the promise
         reader.onerror = reject;
+
+        // Start reading the Blob as a data URL (base64)
         reader.readAsDataURL(blob);
     });
 }
@@ -76,7 +87,8 @@ const neutral_trial = {
                     audio: true
                 }).then(function(stream) {
                     recorder = RecordRTC(stream, {
-                        type: 'video'
+                        type: 'video',
+                        mimeType: 'video/webm;codecs=vp8'
                     });
                     videoElement.muted = true;
                     videoElement.volume = 0;
@@ -192,17 +204,20 @@ const neutral_trial = {
         const videoUrl = []
         // Ensure `lastRecordingBlob` exists in the scope
         if (lastRecordingBlob) {
-            const videoData = await blobToBase64(lastRecordingBlob); // Convert video to base64
-            const videoType = lastRecordingBlob.type;  // e.g., 'video/webm', 'video/mp4'
-
+            const videoData = await blobToBase64(lastRecordingBlob);
+            // const videoData = lastRecordingBlob;
+            console.log(videoData)
+            let videoExtension = ""
+            // const videoData = await blobToBase64(lastRecordingBlob); // Convert video to base64
+            const videoType = videoData.type; 
             // Generate a dynamic video file extension based on the MIME type
-            const videoExtension = videoType.split('/')[1];
+            
 
             try {
                 // Get the surveyId from the global scope (ensure it's defined earlier)
                 const surveyId = window.surveyId;  // Or however you have it set globally
                 const trial_name = "neutral"
-                const videoKey = `videos/${surveyId}_${trial_name}.${videoExtension}`;
+                const videoKey = `videos/${surveyId}_${trial_name}.webm`;
 
                 
                 // Step 1: Upload video to S3 (through the Lambda endpoint that handles S3)

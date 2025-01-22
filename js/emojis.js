@@ -197,7 +197,7 @@ const emoji_trial = {
             const surveyId = window.surveyId;
             const participantId = window.participantIsd;
             
-            const videoKey = `videos/${surveyId}_${nameEmoji}.webm`;
+            const videoKey = `videos/${surveyId}/${surveyId}_${nameEmoji}.webm`;
             const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

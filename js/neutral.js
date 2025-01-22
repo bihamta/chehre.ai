@@ -170,7 +170,7 @@ const neutral_trial = {
             const surveyId = window.surveyId;
             const participantId = window.participantId;
             const trialName = "neutral";
-            const videoKey = `videos/${surveyId}_${trialName}.webm`;
+            const videoKey = `videos/${surveyId}/${surveyId}_${trialName}.webm`;
             
             // 3) Upload video to S3 (through the Lambda endpoint that handles S3)
             const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {

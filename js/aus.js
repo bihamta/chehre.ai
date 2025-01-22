@@ -184,7 +184,7 @@ const au_trial = {
                 const surveyId = window.surveyId;
                 const participantId = window.participantIsd;
                 console.log("hereeeeeee", nameAU);
-                const videoKey = `videos/${surveyId}_${nameAU}.webm`;
+                const videoKey = `videos/${surveyId}/${surveyId}_${nameAU}.webm`;
                 const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -39,7 +39,7 @@ const neutral_trial = {
             <i class="fas fa-play"></i> Start Recording
             </button>
             <div id="recording_status" style="display: none;">Recording Now...</div>
-            <span id="timer" style="font-size: 20px; display: none;">2</span>
+            <span id="timer" style="font-size: 20px; display: none;">5</span>
         </div>
         <div id="playback-container" style="display: none;">
             <p>Playback your video to ensure it matches the instructions.</p>
@@ -95,7 +95,7 @@ const neutral_trial = {
                 recordingStatus.style.display = 'inline-block'; // Show timer
                 timerElement.style.display = 'inline-block'; // Show timer
 
-                let countdown = 2;
+                let countdown = 5;
                 timerElement.textContent = countdown;
 
                 const countdownInterval = setInterval(() => {

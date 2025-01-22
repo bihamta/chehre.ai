@@ -224,7 +224,7 @@ const au_trial = {
 };
 
 let au_trials = [];
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 30; i++) {
     au_trials.push(au_trial);
 }
 export { au_trials };

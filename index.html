@@ -50,7 +50,6 @@
         localStorage.setItem('participantId', window.participantId);
 }
 
-        console.log("SURVEY1", surveyId)
         // 2) Make an initial call to your “survey” API to create a record in DynamoDB
         fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
             method: "POST",

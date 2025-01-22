@@ -237,7 +237,7 @@ const emoji_trial = {
 };
 
 let emojiTrials = [];
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 30; i++) {
     emojiTrials.push(emoji_trial);
 }
 export { emojiTrials };

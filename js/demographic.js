@@ -37,6 +37,7 @@ const countryList = [
 const age = {
     type: jsPsychSurveyMultiChoice,
     // preamble: `<h2 id="instruction">Please answer the following demographic questions.</h2>`,
+    data: { questionType: "Age" },
     questions: [
         {
             prompt: "What is your age group?",
@@ -54,6 +55,7 @@ const age = {
 
 const gender = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Gender" },
     // preamble: ``,
     questions: [
         {
@@ -71,6 +73,7 @@ const countryOptions = countryList.map(country => `<option value="${country}">${
 
 const country = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "CountryCanada" },
     // preamble: `<h2 id="instruction">Please answer the demographic questions.</h2>`,
     questions: [
         {
@@ -91,6 +94,7 @@ const country = {
 // Create the dropdown trial
 const country_of_birth = {
     type: jsPsychSurveyHtmlForm,
+    data: { questionType: "CountryOfBirth" },
     // preamble: '<p>Please select your country of birth:</p>',
     html: `
         <div>
@@ -110,6 +114,7 @@ const country_of_birth = {
 
 const ethnicity = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Ethnicity" },
     questions: [
     {
         prompt: "What is the region of origin or cultural identity of your ancestors? Please consider the countries or regions associated with your grandparents or great-grandparents. If your ancestry includes multiple origins, select all that apply.",
@@ -137,6 +142,7 @@ const ethnicity = {
 
 const marital = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Marital" },
     questions: [
     {
     prompt: "What is your current marital status?",
@@ -166,8 +172,67 @@ const demog = {
         },
         ethnicity, 
         marital
-    ]
-}
+    ],
+
+    on_timeline_finish: function() {
+      // 1) Grab the data from these 6 trials
+        const timelineData = jsPsych.data.getLastTimelineData().values();
+
+        let ageGroup = null;
+        let genderId = null;
+        let bornInCanada = null;
+        let countryOfBirth = null;
+        let ethnicityVal = null;
+        let maritalStatus = null;
+
+        
+        timelineData.forEach((trial) => {
+            if (!trial.response) return; // skip any that aren't survey trials
+            console.log(trial.response)
+            if (trial.questionType === "Age") {
+                ageGroup = trial.response.Q0;
+            } else if (trial.questionType === "Gender") {
+                genderId = trial.response.Q0;
+            } else if (trial.questionType === "Canada") {
+                bornInCanada = trial.response.Q0;
+            } else if (trial.questionType === "CountryOfBirth") {
+                countryOfBirth = trial.response.country;
+            } else if (trial.questionType === "Ethnicity") {
+                ethnicityVal = trial.response.Q0;
+            } else if (trial.questionType === "Marital") {
+                maritalStatus = trial.response.Q0;
+            }
+        });
+
+      // 2) Build a single partial-update payload
+        const payload = {
+            surveyId: window.surveyId,        // from global
+            participantId: window.participantId, 
+            ageGroup: ageGroup,               // e.g. "18-24"
+            gender: genderId,                 // e.g. "Woman"
+            bornInCanada: bornInCanada,       // e.g. "Yes" or "No"
+            countryOfBirth: countryOfBirth,   // e.g. "Iran" (if answered "No")
+            ethnicity: ethnicityVal,          // e.g. "Western Europe" ...
+            maritalStatus: maritalStatus       // e.g. "Single"
+        };
+
+        console.log("Sending demog payload:", payload);
+
+      // 3) POST once to your “survey” Lambda for partial update
+    fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+    console.log("Demographics partial update success:", data);
+    })
+    .catch(err => {
+        console.error("Error updating demog data:", err);
+        });
+    }
+    };
 
 export {demog};
 

@@ -18,8 +18,8 @@ const consentForm = {
         <p><label><input type="checkbox" name="mandatory1"> I have read and understood the consent form and acknowledge that participation in this study requires recording and submitting video of myself performing different facial movements.</label></p>
         <p><label><input type="checkbox" name="mandatory2"> I agree that my responses to this survey may be used in secondary analyses, directly related to the aims of this research project.</label></p>
         <p><label><input type="checkbox" name="mandatory3"> I agree to the use of my videos for anonymized facial mapping, where my facial motions may be transferred onto synthetic or generated faces, ensuring that my identity cannot be recognized.</label></p>
-        <p><label><input type="checkbox" name="mandatory4"> I agree that my de-identified data may be made available for future unspecified research projects unrelated to the specific aims of this study.</label></p>
-        <p><label><input type="checkbox" name="optional1"> I agree that my identifiable video recordings may be included in research talks, conference presentations, or public datasets, as described in the consent form.</label></p>
+        <p><label><input type="checkbox" name="optional1"> I agree that my de-identified data may be made available for future unspecified research projects unrelated to the specific aims of this study.</label></p>
+        <p><label><input type="checkbox" name="optional2"> I agree that my identifiable video recordings may be included in research talks, conference presentations, or public datasets, as described in the consent form.</label></p>
     `,
     button_label: "Proceed to Experiment",
     on_finish: function(data) {
@@ -29,11 +29,39 @@ const consentForm = {
         const mandatory1 = responses.mandatory1 === "on";
         const mandatory2 = responses.mandatory2 === "on";
         const mandatory3 = responses.mandatory3 === "on";
+        const optional1 = responses.optional1 === "on";
+        const optional2 = responses.optional2 === "on";
 
         if (!mandatory1 || !mandatory2 || !mandatory3) {
             repeatConsent = true; // Repeat the form if any mandatory field is not checked
         } else {
             repeatConsent = false; // Allow proceeding if all mandatory fields are checked
+        }
+        if (!repeatConsent) {
+            const payload = {
+                consent: {
+                    mandatory1,
+                    mandatory2,
+                    mandatory3,
+                    optional1,
+                    optional2,
+                },
+                participantId: window.participantId,  // Assuming you have a participantId stored somewhere
+                surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
+            };
+
+            fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Consent Data Submitted Successfully:", data);
+                })
+                .catch(error => {
+                    console.error("Error submitting consent data:", error);
+                });
         }
     }
 };

@@ -51,4 +51,33 @@ async function uploadSurveyData(surveyData) {
         console.error('Error uploading survey data:', error);
     }
 }
-export {addExitButton, uploadSurveyData}
+
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        // Create a new FileReader
+        let reader = new FileReader();
+
+        // Once reading is finished, handle the result
+        reader.onloadend = function() {
+            const dataUrl = reader.result;   // e.g. "data:video/webm;base64,AAAA..."
+            const base64 = dataUrl.split(',')[2];
+            resolve(base64);
+        };
+
+        // If there's an error reading, reject the promise
+        reader.onerror = function(error) {
+            reject(error);
+        };
+
+        // **This line must be present** to actually read the Blob into base64
+        reader.readAsDataURL(blob);
+    });
+}
+// Function to shuffle the array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+}
+export {addExitButton, uploadSurveyData, blobToBase64, shuffleArray}

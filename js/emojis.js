@@ -1,4 +1,4 @@
-import { addExitButton } from './utils.js';
+import { addExitButton, blobToBase64, shuffleArray } from './utils.js';
 
 const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
@@ -7,7 +7,7 @@ const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/sleeping-face_1f634.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-blowing-a-kiss_1f618.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/sleepy-face_1f62a.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-in-clouds_1f636-200d-1f32b-fe0f.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-in-clouds_1f636.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-halo_1f607.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-screaming-in-fear_1f631.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/smiling-face-with-heart-eyes_1f60d.png",
@@ -31,9 +31,9 @@ const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/nauseated-face_1f922.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/zipper-mouth-face_1f910.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/partying-face_1f973.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-spiral-eyes_1f635-200d-1f4ab.png",  // Added missing emoji
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-steam-from-nose_1f624.png",       // Added missing emoji
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png"                 // Added missing emoji
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-spiral-eyes_1f635-200d-1f4ab.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-steam-from-nose_1f624.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-tongue_1f61b.png"
 ];
 
 
@@ -41,24 +41,12 @@ const emojiImages = [
 // Track the unused emojis
 let unusedEmojis = [...emojiImages]; // Make a copy of the original array
 
-// Function to shuffle the array
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    }
-}
 
-function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get base64 data only
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-}
+
 let lastRecordingBlob = null;
 let recorder = null;
+let nameEmoji = '';
+
 const emoji_trial = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
@@ -67,7 +55,7 @@ const emoji_trial = {
 
         // Pick the first emoji from the shuffled unused emojis
         const randomEmoji = unusedEmojis.pop(); // Get and remove the last emoji from the array
-
+        nameEmoji = randomEmoji.split("_")[1].split('.png')[0]
         // If there are no emojis left, reset the unusedEmojis array
         if (unusedEmojis.length === 0) {
             unusedEmojis = [...emojiImages]; // Reset to the full array
@@ -109,15 +97,11 @@ const emoji_trial = {
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
         `;
     },
-    recording_duration: null, // No automatic duration; controlled manually
+    recording_duration: null,
 
-    // Declare the variable `lastRecordingBlob` at the trial level
+    
     on_load: function () {
-        addExitButton();  // Call the function to add the Exit button
-
-        let chunks = []; // Array to hold the current recording's data
-        let mediaRecorder;
-        let stream;
+        addExitButton();
 
         setTimeout(() => {
             const videoElement = document.getElementById('camera-preview');
@@ -133,50 +117,15 @@ const emoji_trial = {
                     audio: true
                 }).then(function(stream) {
                     recorder = RecordRTC(stream, {
-                        type: 'video'
+                        type: 'video',
+                        mimeType: 'video/webm;codecs=vp8'
                     });
                     videoElement.muted = true;
                     videoElement.volume = 0;
                     videoElement.srcObject = stream;
                     recorder.camera = stream;
-                });
-                // navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                //     .then(userStream => {
-                //         stream = userStream;
-                //         videoElement.srcObject = stream;
-
-                //         // Set up MediaRecorder
-                //         mediaRecorder = new MediaRecorder(stream);
-
-                //         // Capture video data
-                //         mediaRecorder.ondataavailable = function (event) {
-                //             chunks.push(event.data); // Save current recording chunks
-                //         };
-
-                //         mediaRecorder.onstop = function () {
-                //             // Store the last recorded Blob
-                //             lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
-                //             chunks = []; // Reset chunks for the next recording
-
-                //             // Create a preview of the recorded video
-                //             const videoURL = URL.createObjectURL(lastRecordingBlob);
-                //             const recordedVideo = document.getElementById('recorded-video');
-                //             recordedVideo.src = videoURL;
-
-                //             // Show playback container
-                //             playbackContainer.style.display = 'block';
-
-                //             // Stop the video stream
-                //             if (stream) {
-                //                 console.log(stream)
-                //                 stream.getTracks().forEach(track => track.stop());
-                //                 console.log('Camera stopped.');
-                //             }
-                //         };
-                //     })
-                //     .catch(error => {
-                //         console.error('Error accessing camera:', error);
-                //     });
+                })
+                .catch((err) => console.error('Error accessing camera:', err));
                     document.getElementById('finish-trial').disabled = true;
 
             }
@@ -186,46 +135,42 @@ const emoji_trial = {
 
             // Add event listeners for start and stop buttons
             startButton.addEventListener('click', () => {
-                chunks = []; // Clear previous chunks to ensure only the latest recording is saved
-                // mediaRecorder.start();
                 recorder.startRecording();
                 console.log('Recording started');
-                startButton.style.display = 'none'; // Hide start button
-                stopButton.style.display = 'inline-block'; // Show stop button
+                startButton.style.display = 'none';
+                stopButton.style.display = 'inline-block';
             });
 
             stopButton.addEventListener('click', () => {
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
                     recordedVideo.src = URL.createObjectURL(blob);
-                    recorder.camera.stop();
+                    if (recorder.camera) {
+                        recorder.camera.stop();
+                    }
+                    lastRecordingBlob = blob;
                     recorder.destroy();
                     recorder = null;
-                    lastRecordingBlob = blob;
                 });
                 console.log('Recording stopped');
 
                 // Hide the camera preview and Start Recording button
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    console.log('Camera stopped after stop button click.');
-                }
                 videoElement.style.display = 'none';
-                startButton.style.display = 'none'; // Ensure Start Recording button is hidden
-                stopButton.style.display = 'none'; // Hide Stop Recording button
+                startButton.style.display = 'none';
+                stopButton.style.display = 'none'; 
 
                 // Show playback container
                 playbackContainer.style.display = 'block';
                 document.getElementById('finish-trial').disabled = false;
-
             });
 
             // Add event listener for rerecord button
             rerecordButton.addEventListener('click', () => {
+                document.getElementById('finish-trial').disabled = false;
                 // Reset UI elements to recording state
                 playbackContainer.style.display = 'none'; // Hide playback container
                 recordedVideo.src = ''; // Clear the previous video
-                chunks = []; // Reset recorded chunks
+
                 lastRecordingBlob = null; // Clear the last recorded Blob
 
                 // Restart the camera preview
@@ -241,30 +186,58 @@ const emoji_trial = {
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
-
         // Ensure `lastRecordingBlob` exists in the scope
-        if (lastRecordingBlob) {
-            const videoData = await blobToBase64(lastRecordingBlob);
+        if (!lastRecordingBlob) {
+            console.log('No video was recorded.');
+            return;
+        }
             try {
-                const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
+                const base64 = await blobToBase64(lastRecordingBlob);
+            // 2) Build a key for S3
+            const surveyId = window.surveyId;
+            const participantId = window.participantIsd;
+            
+            const videoKey = `videos/${surveyId}_${nameEmoji}.webm`;
+            const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    surveyId: surveyId,
+                    participantId: participantId,
+                    video: base64,
+                    contentType: 'video/webm',
+                    key: videoKey
+                })
+            });
+            const uploadData = await uploadResponse.json();
+                // 4) Update DynamoDB with the S3 video URL (after the upload is successful)
+            if (uploadData && uploadData.videoUrl) {
+                const newEmojiVideoURLs = uploadData.videoUrl; // Assuming the Lambda response includes the video URL
+                console.log(newEmojiVideoURLs)
+                const videoPath = newEmojiVideoURLs.split('videos/').pop();
+                const result = `videos/${videoPath}`;
+
+                const updateResponse = await fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ video: videoData })
+                    body: JSON.stringify({
+                        surveyId: surveyId,
+                        participantId: participantId,
+                        newEmojiVideoURLs: result
+                    })
                 });
-                const responseData = await response.json();
-                console.log('Video uploaded successfully:', responseData);
-                // document.getElementById('finish-trial').disabled = false;
 
-            } catch (error) {
-                console.error('Error uploading video:', error);
+                const updateData = await updateResponse.json();
+                console.log('DynamoDB updated with emoji video URL:', nameEmoji, updateData);
             }
-        } else {
-            console.log('No video was recorded.');
+        } catch (error) {
+            console.error('Error uploading video or updating survey:', error);
         }
-    }
+        }
 };
+
 let emojiTrials = [];
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 3; i++) {
     emojiTrials.push(emoji_trial);
 }
 export { emojiTrials };

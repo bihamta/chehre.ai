@@ -1,4 +1,4 @@
-import { addExitButton } from "./utils.js";
+import { addExitButton, blobToBase64, shuffleArray } from "./utils.js";
 let globalStream = null;
 
 const AUImages = [
@@ -33,43 +33,26 @@ const AUImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Nose-Wrinkler.gif",
 ];
 
-// Shuffle the emoji array once
-// Track the unused emojis
 let unusedAUs = [...AUImages]; // Make a copy of the original array
 
-// Function to shuffle the array
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    }
-}
-
-function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get base64 data only
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-}
 let lastRecordingBlob = null;
 let recorder = null;
+let nameAU = '';
 const au_trial = {
     type: jsPsychHtmlVideoResponse,
 
     stimulus: function () {
         shuffleArray(unusedAUs);
 
-        // Pick the first emoji from the shuffled unused emojis
-        const randomAU = unusedAUs.pop(); // Get and remove the last emoji from the array
-
-        // If there are no emojis left, reset the unusedEmojis array
+        const randomAU = unusedAUs.pop();
+        
         if (unusedAUs.length === 0) {
             unusedAUs = [...AUImages]; // Reset to the full array
             shuffleArray(unusedAUs); // Shuffle again
         }
-        const auName = randomAU.split('/').pop().split('.')[0].replace(/-/g, ' ');
+        nameAU = randomAU.split('/').pop().split('.')[0];
+        const nameAUspace = nameAU.replace(/-/g, ' ')
+        console.log(nameAU)
         return `
         <style>
             #camera-preview {
@@ -88,7 +71,7 @@ const au_trial = {
         </style>
         <p><strong>Instruction:</strong></p>
         <p>Please record yourself mimicking the expression shown below. Ensure your entire face is visible in the camera.</p>
-        <p>Expression to perform:<strong>${auName}</strong></p>
+        <p>Expression to perform:<strong>${nameAUspace}</strong></p>
         <p><img src="${randomAU}" alt="AU"  style="height:100px; display: block; margin: 0 auto; "></p>
         <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
         <div>
@@ -108,11 +91,9 @@ const au_trial = {
     },
     recording_duration: null,
 
+
     on_load: function () {
-        addExitButton();  // Call the function to add the Exit button
-        let chunks = [];
-        let mediaRecorder;
-        let stream;
+        addExitButton();
 
         setTimeout(() => {
             const videoElement = document.getElementById('camera-preview');
@@ -122,50 +103,21 @@ const au_trial = {
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
 
-
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true
                 }).then(function(stream) {
                     recorder = RecordRTC(stream, {
-                        type: 'video'
+                        type: 'video',
+                        mimeType: 'video/webm;codecs=vp8'
                     });
                     videoElement.muted = true;
                     videoElement.volume = 0;
                     videoElement.srcObject = stream;
                     recorder.camera = stream;
-                });
-                // navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                //     .then(userStream => {
-                //         stream = userStream;
-                //         videoElement.srcObject = stream;
-
-                //         mediaRecorder = new MediaRecorder(stream);
-                //         mediaRecorder.ondataavailable = function (event) {
-                //             chunks.push(event.data);
-                //         };
-
-                // mediaRecorder.onstop = function () {
-                // lastRecordingBlob = new Blob(chunks, { type: 'video/mp4' });
-                // chunks = [];
-                // const videoURL = URL.createObjectURL(lastRecordingBlob);
-                // const recordedVideo = document.getElementById('recorded-video');
-            
-
-                // playbackContainer.style.display = 'block';
-
-                // Stop the camera feed after recording finishes
-                // if (stream) {
-                //     console.log(stream)
-                //     stream.getTracks().forEach(track => track.stop());
-                //     console.log('Camera stopped.');
-                // }
-                // };
-            // })
-            // .catch(error => {
-            //     console.error('Error accessing camera:', error);
-            // });
+                })
+                .catch((err) => console.error('Error accessing camera:', err));
             document.getElementById('finish-trial').disabled = true;
 
             }
@@ -173,8 +125,6 @@ const au_trial = {
             initializeCamera();
 
             startButton.addEventListener('click', () => {
-                chunks = [];
-                // mediaRecorder.start();
                 recorder.startRecording();
                 console.log('Recording started');
                 startButton.style.display = 'none';
@@ -182,30 +132,26 @@ const au_trial = {
             });
 
             stopButton.addEventListener('click', () => {
-                document.getElementById('finish-trial').disabled = false;
-
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
                     recordedVideo.src = URL.createObjectURL(blob);
-                    recorder.camera.stop();
+                    if (recorder.camera) {
+                        recorder.camera.stop();
+                    }
+                    lastRecordingBlob = blob;
                     recorder.destroy();
                     recorder = null;
-                    lastRecordingBlob = blob;
                 });
-                
                 console.log('Recording stopped');
 
-                // Stop camera immediately when user stops recording
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    console.log('Camera stopped after stop button click.');
-                }
-
+                // Hide the camera preview and Start Recording button
                 videoElement.style.display = 'none';
                 startButton.style.display = 'none';
                 stopButton.style.display = 'none';
 
+                // Show playback container
                 playbackContainer.style.display = 'block';
+                document.getElementById('finish-trial').disabled = false;
             });
 
             rerecordButton.addEventListener('click', () => {
@@ -213,7 +159,7 @@ const au_trial = {
 
                 playbackContainer.style.display = 'none';
                 recordedVideo.src = '';
-                chunks = [];
+
                 lastRecordingBlob = null;
 
                 videoElement.style.display = 'inline-block';
@@ -228,29 +174,57 @@ const au_trial = {
         console.log('Trial finished. Uploading the last recording...');
 
         // Ensure `lastRecordingBlob` exists in the scope
-        if (lastRecordingBlob) {
-            const videoData = await blobToBase64(lastRecordingBlob);
+        if (!lastRecordingBlob) {
+            console.log('No video was recorded.');
+            return;
+        }
             try {
-                const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
+                const base64 = await blobToBase64(lastRecordingBlob);
+                // 2) Build a key for S3
+                const surveyId = window.surveyId;
+                const participantId = window.participantIsd;
+                console.log("hereeeeeee", nameAU);
+                const videoKey = `videos/${surveyId}_${nameAU}.webm`;
+                const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ video: videoData })
+                    body: JSON.stringify({
+                        surveyId: surveyId,
+                        participantId: participantId,
+                        video: base64,
+                        contentType: 'video/webm',
+                        key: videoKey
+                    })
                 });
-                const responseData = await response.json();
-                // console.log('Video uploaded successfully:', responseData);
-                // document.getElementById('finish-trial').disabled = false;
+                const uploadData = await uploadResponse.json();
+                // 4) Update DynamoDB with the S3 video URL (after the upload is successful)
+            if (uploadData && uploadData.videoUrl) {
+                const newAUVideoURLs = uploadData.videoUrl; // Assuming the Lambda response includes the video URL
+                console.log(newAUVideoURLs)
+                const videoPath = newAUVideoURLs.split('videos/').pop();
+                const result = `videos/${videoPath}`;
 
-            } catch (error) {
-                console.error('Error uploading video:', error);
+                const updateResponse = await fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        surveyId: surveyId,
+                        participantId: participantId,
+                        newAUVideoURLs: result
+                    })
+                });
+
+                const updateData = await updateResponse.json();
+                console.log('DynamoDB updated with AU video URL:', nameAU, updateData);
             }
-        } else {
-            console.log('No video was recorded.');
+        } catch (error) {
+            console.error('Error uploading video or updating survey:', error);
         }
     }
 };
 
 let au_trials = [];
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 3; i++) {
     au_trials.push(au_trial);
 }
 export { au_trials };

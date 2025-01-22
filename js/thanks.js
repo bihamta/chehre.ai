@@ -22,10 +22,39 @@ const honesty = {
     `,
     button_label: "Submit",
     on_finish: function(data) {
-        console.log(data.response); // Logs both responses for analysis
+        let honestyRating = null;
+        let honestyExplain = null;
+
+        console.log(data.response.rating); // Logs both responses for analysis
+        
+        honestyRating = data.response.rating
+        honestyExplain = data.response.explanation
+        console.log("SURVEY2", window.surveyId)
+
+        const payload = {
+            surveyId: window.surveyId,
+            participantId: window.participantId, 
+            honestyRating: honestyRating,
+            honestyExplain: honestyExplain,
+        };
+
+        console.log("Sending demog payload:", payload);
+
+        // 3) POST once to your “survey” Lambda for partial update
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+        console.log("Demographics partial update success:", data);
+        })
+        .catch(err => {
+            console.error("Error updating demog data:", err);
+            });
     }
 };
-
 
 const goodbye = {
     type: jsPsychSurveyHtmlForm,

@@ -2,6 +2,7 @@ import { addExitButton } from './utils.js';
 
 const medi1 = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Medi1" },
     preamble: `
     <p id="instruction">Answer this question about meditation and mindfulness:</p>
     <p style="font-weight: bold; color: green;">Note:</p>
@@ -35,6 +36,7 @@ const medi1 = {
 
 const medi2 = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Medi2" },
     // preamble: `<p id="instruction">Answer the following question about the frequency of your formal meditation practice.</p>`,
     questions: [
         {
@@ -58,6 +60,7 @@ const medi2 = {
 
 const medi3 = {
     type: jsPsychSurveyMultiChoice,
+    data: { questionType: "Medi3" },
     // preamble: `<p id="instruction">Answer the following question about the duration of your formal meditation practice.</p>`,
     questions: [
         {
@@ -79,6 +82,7 @@ const medi3 = {
 
 const medi4 = {
     type: jsPsychSurveyHtmlForm,
+    data: { questionType: "Medi4" },
     // preamble: `<p>Answer this question about today's formal meditation practice:</p>`,
     html: `
             <p class="jspsych-survey-multi-choice-text survey-multi-choice">Did you practice formal meditation today?</p><br><br>
@@ -105,6 +109,7 @@ const medi4 = {
 
 const medi5 = {
     type: jsPsychSurveyLikert,
+    data: { questionType: "Medi5" },
     preamble: `<p  <p class="jspsych-survey-multi-choice-text survey-multi-choice"> Please use the descriptions provided to indicate how true the below statements are of you.</p>
             <p style="font-style: italic; color: darkgray;">Select the option which represents your own opinion of what is generally true for you.</p>`,
     questions: [
@@ -205,8 +210,94 @@ timeline: [
         }
     },
     medi5
-]
-}
-// Always add medi5 to the timeline (it runs if medi1 was "No")
+],
+    on_timeline_finish: function() {
+        // 1) Collect data from these 5 trials
+        const timelineData = jsPsych.data.getLastTimelineData().values();
+
+        let formalMeditation = null; // "Yes" or "No"
+        let yoga = null; // "Yes" / "No" / "N/A"
+        let meditationFrequency = null; // e.g. "About once a week"
+        let meditationDuration = null; // e.g. "6 months or less"
+        let meditationToday = null; // "yes" or "no"
+        let meditationTodayMins = null; // e.g. "15 minutes"
+        let mindfulnessResponses = null; // we could store all medi5 answers as an array
+
+        timelineData.forEach((trial) => {
+            if (!trial.response) return;
+
+            switch (trial.questionType) {
+                case "Medi1":
+                    // trial.response.Q0 => "Yes" or "No" (Have you ever practiced?)
+                    // trial.response.Q1 => "Yes", "No", or "N/A" (Yoga?)
+                    formalMeditation = trial.response.Q0;
+                    yoga = trial.response.Q1;
+                    break;
+
+                case "Medi2":
+                    // trial.response.Q0 => "Everyday" etc.
+                    meditationFrequency = trial.response.Q0;
+                    break;
+
+                case "Medi3":
+                    // trial.response.Q0 => "6 months or less", ...
+                    meditationDuration = trial.response.Q0;
+                    break;
+
+                case "Medi4":
+                    // "survey-html-form" returns something like:
+                    // trial.response["meditation-today"] => "yes" or "no"
+                    // trial.response["meditation-minutes"] => "15" (if "yes" was selected)
+                    meditationToday = trial.response["meditation-today"];
+                    if (meditationToday === "yes") {
+                        meditationTodayMins = trial.response["meditation-minutes"] || "";
+                    }
+                    break;
+
+                case "Medi5":
+                    // This is the big Likert. 
+                    // You could store as an array of the numeric indices. 
+                    // For example:
+                    // trial.response.Q0 => "0" to "4" as strings
+                    // trial.response.Q1 => "0" to "4" ...
+                    // etc.
+                    mindfulnessResponses = trial.response;
+                    console.log(mindfulnessResponses)
+                    break;
+            }
+        });
+
+        // 2) Build partial-update payload 
+        // (Pick any column names you want in Dynamo)
+        const payload = {
+            surveyId: window.surveyId,
+            participantId: window.participantId,
+            formalMeditation,     // e.g. "Yes" or "No"
+            yoga,                 // e.g. "Yes"/"No"/"N/A"
+            meditationFrequency,  // e.g. "Everyday"/"Once a week" ...
+            meditationDuration,   // e.g. "6 months or less"
+            meditationToday,      // "yes" or "no"
+            meditationTodayMins,  // e.g. "15 minutes"
+            // For the 15-likert:
+            mindfulnessResponses  // An object with Q0..Q14 => "0"-"4"
+        };
+
+        console.log("Medi timeline payload:", payload);
+
+        // 3) POST once to your “survey” Lambda for partial update
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Meditation partial update success:", data);
+            })
+            .catch(err => {
+                console.error("Error updating meditation data:", err);
+            });
+    }
+};
 
 export { medi };

@@ -1,4 +1,4 @@
-import { addExitButton, blobToBase64, shuffleArray } from './utils.js';
+import { addExitButton, blobToBase64, shuffleArray, getSupportedMimeType } from './utils.js';
 
 const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
@@ -196,8 +196,15 @@ const emoji_trial = {
             // 2) Build a key for S3
             const surveyId = window.surveyId;
             const participantId = window.participantIsd;
-            
-            const videoKey = `videos/${surveyId}/${surveyId}_${nameEmoji}.webm`;
+            const mimeType = getSupportedMimeType() || 'video/webm';
+            // console.log(mimeType)
+
+            let extension = 'webm';
+            if (mimeType.includes('mp4')) {
+                extension = 'mp4';
+            }
+            // console.log(extension)
+            const videoKey = `videos/${surveyId}/${surveyId}_${nameEmoji}.${extension}`;
             const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -205,7 +212,7 @@ const emoji_trial = {
                     surveyId: surveyId,
                     participantId: participantId,
                     video: base64,
-                    contentType: 'video/webm',
+                    contentType: mimeType,
                     key: videoKey
                 })
             });
@@ -213,7 +220,7 @@ const emoji_trial = {
                 // 4) Update DynamoDB with the S3 video URL (after the upload is successful)
             if (uploadData && uploadData.videoUrl) {
                 const newEmojiVideoURLs = uploadData.videoUrl; // Assuming the Lambda response includes the video URL
-                console.log(newEmojiVideoURLs)
+                // console.log(newEmojiVideoURLs)
                 const videoPath = newEmojiVideoURLs.split('videos/').pop();
                 const result = `videos/${videoPath}`;
 

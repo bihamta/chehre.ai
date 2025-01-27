@@ -39,7 +39,6 @@ function addExitButton() {
 
 async function uploadSurveyData(surveyData) {
     try {
-        console.log(surveyData)
         const response = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -56,12 +55,21 @@ function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
         // Create a new FileReader
         let reader = new FileReader();
-
+        //data:video/mp4;base64,AAAAHGZ0eX
         // Once reading is finished, handle the result
         reader.onloadend = function() {
             const dataUrl = reader.result;   // e.g. "data:video/webm;base64,AAAA..."
-            const base64 = dataUrl.split(',')[2];
-            resolve(base64);
+            const base64Marker = "base64,";
+
+            // Locate the base64 marker to split the string dynamically
+            const base64Index = dataUrl.indexOf(base64Marker);
+
+            if (base64Index !== -1) {
+                const base64Part = dataUrl.substring(base64Index + base64Marker.length); // Extract base64 data
+                resolve(base64Part);
+            } else {
+                reject(new Error("Invalid data URL: No base64 marker found."));
+            }
         };
 
         // If there's an error reading, reject the promise
@@ -80,4 +88,22 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]]; // Swap elements
     }
 }
-export {addExitButton, uploadSurveyData, blobToBase64, shuffleArray}
+
+// Check which format is supported by the browser
+function getSupportedMimeType() {
+    const possibleTypes = [
+        'video/mp4;codecs="avc1.42E01F, mp4a.40.2"', // Safari often supports this
+        'video/mp4', // Another fallback for Safari
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm' // Fallback for Chrome/Firefox
+        ];
+    for (const mimeType of possibleTypes) {
+        if (MediaRecorder.isTypeSupported(mimeType)) {
+            return mimeType;
+        }
+    }
+    return null;
+    }
+
+export {addExitButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType}

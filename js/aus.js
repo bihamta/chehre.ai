@@ -38,7 +38,7 @@ let lastRecordingBlob = null;
 let recorder = null;
 let nameAU = '';
 let recordingStartTime = 0;
-const au_trial = {
+const au_trial_init = {
     type: jsPsychHtmlVideoResponse,
 
     stimulus: function () {
@@ -190,7 +190,17 @@ const au_trial = {
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
+    }
+};
 
+const uploading_trial = {
+    type: jsPsychHtmlButtonResponse,  // or 'html-button-response'
+    stimulus:  `<div style="text-align: center;">
+    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> please wait</p>
+    <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..." style="width: 50px; height: 50px; margin-top: 10px;">
+    </div>`,
+    choices: [], // No keys or buttons to skip
+    on_load: async function () {
         // Ensure `lastRecordingBlob` exists in the scope
         if (!lastRecordingBlob) {
             console.log('No video was recorded.');
@@ -243,12 +253,14 @@ const au_trial = {
         } catch (error) {
             console.error('Error uploading video or updating survey:', error);
         }
+        jsPsych.finishTrial();
     }
 };
 
 let au_trials = [];
 for (let i = 0; i < 30; i++) {
-    au_trials.push(au_trial);
+    au_trials.push(au_trial_init);
+    au_trials.push(uploading_trial);
 }
 export { au_trials };
 

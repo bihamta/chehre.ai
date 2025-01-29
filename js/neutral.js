@@ -11,7 +11,7 @@ function bytesToMegabytes(bytes) {
 
 let lastRecordingBlob = null;
 let recorder = null;
-const neutral_trial = {
+const neutral_trial_init = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
         return `
@@ -157,44 +157,56 @@ const neutral_trial = {
 
         }, 500); // Add a slight delay to ensure the DOM is rendered
     },
-    on_finish: async function () {
+    on_finish: function () {
         console.log('Trial finished. Uploading the last recording...');
-        // Ensure `lastRecordingBlob` exists in the scope
+    }
+};
+
+const uploading_trial = {
+    type: jsPsychHtmlButtonResponse,  // or 'html-button-response'
+    stimulus:  `<div style="text-align: center;">
+    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> please wait</p>
+    <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..." style="width: 50px; height: 50px; margin-top: 10px;">
+    </div>`,
+    choices: [], // No keys or buttons to skip
+    on_load: async function () {
+        // 1) If we have a Blob, do the upload
         if (!lastRecordingBlob) {
-            console.log('No video was recorded.');
+            console.log('No video recorded in previous trial.');
+            jsPsych.finishTrial();
             return;
         }
+
+        // 2) Convert blob to base64, then upload
         try {
+            console.log('Uploading the lastRecordingBlob now...');
             const base64 = await blobToBase64(lastRecordingBlob);
-            // 2) Build a key for S3
+
+            // same logic as before:
             const surveyId = window.surveyId;
             const participantId = window.participantId;
-            const trialName = "neutral";
             const mimeType = getSupportedMimeType() || 'video/webm';
-            // console.log(mimeType)
+            let extension = mimeType.includes('mp4') ? 'mp4' : 'webm';
+            const trialName = "neutral";
+            const videoKey = `videos/${surveyId}/${surveyId}_${trialName}.${extension}`;
 
-            let extension = 'webm';
-            if (mimeType.includes('mp4')) {
-                extension = 'mp4';
-            }
-            const videoKey = `videos/${surveyId}/${surveyId}_${trialName}.${extension}}`;
-            
-            // 3) Upload video to S3 (through the Lambda endpoint that handles S3)
+            // Upload to S3
             const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    surveyId: surveyId,
-                    participantId: participantId,
+                    surveyId,
+                    participantId,
                     video: base64,
                     contentType: mimeType,
                     key: videoKey
                 })
             });
             const uploadData = await uploadResponse.json();
-                // 4) Update DynamoDB with the S3 video URL (after the upload is successful)
+
+            // Update DynamoDB
             if (uploadData && uploadData.videoUrl) {
-                const videoURLNeutral = uploadData.videoUrl; // Assuming the Lambda response includes the video URL
+                const videoURLNeutral = uploadData.videoUrl;
                 const videoPath = videoURLNeutral.split('videos/').pop();
                 const result = `videos/${videoPath}`;
 
@@ -202,19 +214,25 @@ const neutral_trial = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        surveyId: surveyId,
-                        participantId: participantId, // optional
+                        surveyId,
+                        participantId,
                         videoURLNeutral: result
                     })
                 });
-
                 const updateData = await updateResponse.json();
                 console.log('DynamoDB updated with neutral video URL:', updateData);
             }
-        } catch (error) {
-            console.error('Error uploading video or updating survey:', error);
+        } catch (err) {
+            console.error('Error uploading video or updating survey:', err);
         }
+
+        // 3) Once done (success or fail), end the trial to move on
+        jsPsych.finishTrial();
     }
 };
+const neutral_trial = [];
+neutral_trial.push(neutral_trial_init);
+neutral_trial.push(uploading_trial);
+
 
 export { neutral_trial, init_camera };

@@ -49,7 +49,7 @@ let nameEmoji = '';
 let userSubmittedLabel = "";
 let recordingStartTime = 0;
 
-const emoji_trial = {
+const emoji_trial_init = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
         // Shuffle the unused emojis array
@@ -245,6 +245,17 @@ const emoji_trial = {
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
+        }
+};
+
+const uploading_trial = {
+    type: jsPsychHtmlButtonResponse,  // or 'html-button-response'
+    stimulus:  `<div style="text-align: center;">
+    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> please wait</p>
+    <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..." style="width: 50px; height: 50px; margin-top: 10px;">
+    </div>`,
+    choices: [], // No keys or buttons to skip
+    on_load: async function () {
         if (!lastRecordingBlob) {
             console.log('No video was recorded.');
             return;
@@ -301,12 +312,13 @@ const emoji_trial = {
         } catch (error) {
             console.error('Error uploading video or updating survey:', error);
         }
-        }
+        jsPsych.finishTrial();
+    }
 };
-
-let emojiTrials = [];
+const emojiTrials = [];
 for (let i = 0; i < 30; i++) {
-    emojiTrials.push(emoji_trial);
+    emojiTrials.push(emoji_trial_init);
+    emojiTrials.push(uploading_trial);
 }
 export { emojiTrials };
 

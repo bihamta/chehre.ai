@@ -1,4 +1,4 @@
-import { addExitButton, blobToBase64 } from './utils.js';
+import { addExitButton, blobToBase64, getSupportedMimeType } from './utils.js';
 
 var init_camera = {
     type: jsPsychInitializeCamera
@@ -170,7 +170,14 @@ const neutral_trial = {
             const surveyId = window.surveyId;
             const participantId = window.participantId;
             const trialName = "neutral";
-            const videoKey = `videos/${surveyId}/${surveyId}_${trialName}.webm`;
+            const mimeType = getSupportedMimeType() || 'video/webm';
+            // console.log(mimeType)
+
+            let extension = 'webm';
+            if (mimeType.includes('mp4')) {
+                extension = 'mp4';
+            }
+            const videoKey = `videos/${surveyId}/${surveyId}_${trialName}.${extension}}`;
             
             // 3) Upload video to S3 (through the Lambda endpoint that handles S3)
             const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
@@ -179,8 +186,8 @@ const neutral_trial = {
                 body: JSON.stringify({
                     surveyId: surveyId,
                     participantId: participantId,
-                    video: base64,    // base64 string
-                    contentType: 'video/webm',
+                    video: base64,
+                    contentType: mimeType,
                     key: videoKey
                 })
             });

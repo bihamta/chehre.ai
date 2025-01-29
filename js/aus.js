@@ -1,6 +1,5 @@
-import { addExitButton, blobToBase64, shuffleArray } from "./utils.js";
+import { addExitButton, blobToBase64, shuffleArray, getSupportedMimeType } from "./utils.js";
 let globalStream = null;
-
 const AUImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Eyes-Closed.gif",
@@ -38,6 +37,7 @@ let unusedAUs = [...AUImages]; // Make a copy of the original array
 let lastRecordingBlob = null;
 let recorder = null;
 let nameAU = '';
+let recordingStartTime = 0;
 const au_trial = {
     type: jsPsychHtmlVideoResponse,
 
@@ -87,6 +87,7 @@ const au_trial = {
                 <i class="fas fa-redo"></i> Re-record
             </button>
         </div>
+        <div id="warning" style="color: red; font-weight: normal; display: none;">The video you recorded is less than 1 second. Please re-record the video.</div>
         <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`;
     },
     recording_duration: null,
@@ -102,6 +103,7 @@ const au_trial = {
             const playbackContainer = document.getElementById('playback-container');
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
+            const warningDiv = document.getElementById('warning');
 
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({
@@ -129,18 +131,33 @@ const au_trial = {
                 console.log('Recording started');
                 startButton.style.display = 'none';
                 stopButton.style.display = 'inline-block';
+                recordingStartTime = performance.now();
             });
 
             stopButton.addEventListener('click', () => {
+                const recordingEndTime = performance.now();
+                const recordingDurationMs = recordingEndTime - recordingStartTime;
+                console.log('Recording duration:', recordingDurationMs);
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
                     recordedVideo.src = URL.createObjectURL(blob);
                     if (recorder.camera) {
                         recorder.camera.stop();
                     }
-                    lastRecordingBlob = blob;
+                    if (recordingDurationMs < 1000) {
+                        console.warn('Video was shorter than 1 second. Discarding recording.');
+                        lastRecordingBlob = null;
+                        warningDiv.style.display = 'block';
+                    } else {
+                        lastRecordingBlob = blob;
+                        console.log('Recording saved:', lastRecordingBlob);
+                    }
                     recorder.destroy();
                     recorder = null;
+                    if (lastRecordingBlob) {
+                        console.log('Recording duration:', recordingDurationMs);
+                        document.getElementById('finish-trial').disabled = false;
+                    }
                 });
                 console.log('Recording stopped');
 
@@ -151,10 +168,11 @@ const au_trial = {
 
                 // Show playback container
                 playbackContainer.style.display = 'block';
-                document.getElementById('finish-trial').disabled = false;
+                recorder.camera.stop();
             });
 
             rerecordButton.addEventListener('click', () => {
+                warningDiv.style.display = 'none';
                 document.getElementById('finish-trial').disabled = false;
 
                 playbackContainer.style.display = 'none';
@@ -183,8 +201,13 @@ const au_trial = {
                 // 2) Build a key for S3
                 const surveyId = window.surveyId;
                 const participantId = window.participantIsd;
-                console.log("hereeeeeee", nameAU);
-                const videoKey = `videos/${surveyId}/${surveyId}_${nameAU}.webm`;
+                const mimeType = getSupportedMimeType() || 'video/webm';
+
+                let extension = 'webm';
+                if (mimeType.includes('mp4')) {
+                    extension = 'mp4';
+                }
+                const videoKey = `videos/${surveyId}/${surveyId}_${nameAU}.${extension}`;
                 const uploadResponse = await fetch('https://h73lvahtyk.execute-api.us-east-2.amazonaws.com/test/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -192,7 +215,7 @@ const au_trial = {
                         surveyId: surveyId,
                         participantId: participantId,
                         video: base64,
-                        contentType: 'video/webm',
+                        contentType: mimeType,
                         key: videoKey
                     })
                 });

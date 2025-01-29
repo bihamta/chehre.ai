@@ -46,6 +46,8 @@ let unusedEmojis = [...emojiImages]; // Make a copy of the original array
 let lastRecordingBlob = null;
 let recorder = null;
 let nameEmoji = '';
+let userSubmittedLabel = "";
+let recordingStartTime = 0;
 
 const emoji_trial = {
     type: jsPsychHtmlVideoResponse,
@@ -94,8 +96,25 @@ const emoji_trial = {
                 <i class="fas fa-redo"></i> Re-record
                 </button>
             </div>
+            <div id="warning" style="color: red; font-weight: normal; display: none;">The video you recorded is less than 1 second. Please re-record the video.</div>
             <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
-        `;
+            <label for="emotion-label">
+            <p style="font-weight: bold;">What would you call the expression that you just performed? 
+            <span style="color: rgb(21, 92, 125); font-weight: normal;">
+                Use your own words you can explain with a word or a sentence.
+                </span>
+            </p>
+            </label><br>
+            <input type="text" id="emotion-label" name="emotion-label"
+            placeholder="Type here..."
+            style="width: 300px; margin-top: 5px;">
+            <button id="submit-emotion-label" style="margin-left: 10px;">Submit</button>
+            <br><br>  
+
+            <div id="display-emotion-label"
+            style="font-style: italic; color: green; margin-top: 5px;">
+            </div>
+            `;
     },
     recording_duration: null,
 
@@ -110,6 +129,14 @@ const emoji_trial = {
             const playbackContainer = document.getElementById('playback-container');
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
+            const finishButton = document.getElementById('finish-trial');
+            const userEmotionLabel = document.getElementById('emotion-label');
+            const displayNameDiv   = document.getElementById('display-emotion-label');
+            const submitNameButton = document.getElementById('submit-emotion-label');
+            const warningDiv = document.getElementById('warning');
+
+
+
 
             function initializeCamera() {
                 navigator.mediaDevices.getUserMedia({
@@ -126,12 +153,28 @@ const emoji_trial = {
                     recorder.camera = stream;
                 })
                 .catch((err) => console.error('Error accessing camera:', err));
-                    document.getElementById('finish-trial').disabled = true;
+                if (finishButton) 
+                    finishButton.disabled = true;  
 
             }
-
             // Initialize the camera on load
             initializeCamera();
+            userSubmittedLabel = ""
+
+            function checkIfCanEnableFinish() {
+                const hasVideo = (lastRecordingBlob !== null);
+                const hasName  = (userSubmittedLabel.trim().length > 0);
+                finishButton.disabled = !(hasVideo && hasName);
+                console.log('Finish button enabled:', finishButton.disabled);
+            }
+
+            submitNameButton.addEventListener('click', () => {
+                userSubmittedLabel = userEmotionLabel.value.trim();
+                displayNameDiv.innerText = userSubmittedLabel.length
+                ? `Your response: ${userEmotionLabel.value}`
+                : '';
+                checkIfCanEnableFinish();
+            });
 
             // Add event listeners for start and stop buttons
             startButton.addEventListener('click', () => {
@@ -139,18 +182,30 @@ const emoji_trial = {
                 console.log('Recording started');
                 startButton.style.display = 'none';
                 stopButton.style.display = 'inline-block';
+                recordingStartTime = performance.now();
+
             });
 
             stopButton.addEventListener('click', () => {
+                const recordingEndTime = performance.now();
+                const recordingDurationMs = recordingEndTime - recordingStartTime;
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
                     recordedVideo.src = URL.createObjectURL(blob);
                     if (recorder.camera) {
                         recorder.camera.stop();
                     }
-                    lastRecordingBlob = blob;
+                    if (recordingDurationMs < 1000) {
+                        console.warn('Video was shorter than 1 second. Discarding recording.');
+                        lastRecordingBlob = null;
+                        warningDiv.style.display = 'block';
+                    } else {
+                        lastRecordingBlob = blob;
+                    }
                     recorder.destroy();
                     recorder = null;
+                    console.log(bytesToSize(blob.size))
+                    checkIfCanEnableFinish();
                 });
                 console.log('Recording stopped');
 
@@ -161,17 +216,21 @@ const emoji_trial = {
 
                 // Show playback container
                 playbackContainer.style.display = 'block';
-                document.getElementById('finish-trial').disabled = false;
+                finishButton.disabled = false;
+                recorder.camera.stop();
             });
 
             // Add event listener for rerecord button
             rerecordButton.addEventListener('click', () => {
-                document.getElementById('finish-trial').disabled = false;
+                warningDiv.style.display = 'none';
+                finishButton.disabled = false;
                 // Reset UI elements to recording state
                 playbackContainer.style.display = 'none'; // Hide playback container
                 recordedVideo.src = ''; // Clear the previous video
 
                 lastRecordingBlob = null; // Clear the last recorded Blob
+                // userSubmittedLabel = ""
+
 
                 // Restart the camera preview
                 videoElement.style.display = 'inline-block';
@@ -186,13 +245,14 @@ const emoji_trial = {
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
-        // Ensure `lastRecordingBlob` exists in the scope
         if (!lastRecordingBlob) {
             console.log('No video was recorded.');
             return;
         }
-            try {
-                const base64 = await blobToBase64(lastRecordingBlob);
+        try {
+            const emotionLabels = {};
+            emotionLabels[nameEmoji] = userSubmittedLabel
+            const base64 = await blobToBase64(lastRecordingBlob);
             // 2) Build a key for S3
             const surveyId = window.surveyId;
             const participantId = window.participantIsd;
@@ -223,14 +283,15 @@ const emoji_trial = {
                 // console.log(newEmojiVideoURLs)
                 const videoPath = newEmojiVideoURLs.split('videos/').pop();
                 const result = `videos/${videoPath}`;
-
+                
                 const updateResponse = await fetch('https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         surveyId: surveyId,
                         participantId: participantId,
-                        newEmojiVideoURLs: result
+                        newEmojiVideoURLs: result,
+                        emotionLabels: emotionLabels,
                     })
                 });
 

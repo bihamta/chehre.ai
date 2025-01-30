@@ -1,58 +1,45 @@
 import { addExitButton, blobToBase64, shuffleArray, getSupportedMimeType } from "./utils.js";
-let globalStream = null;
-const AUImages = [
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Depressor.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Eyes-Closed.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Puckerer.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Outer-Brow-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Upper-Lid-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Inner-Brow-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Stretcher.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Slit.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Blink.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Jaw-Drop.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Suck.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Squint.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Brow-Lowerer.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lid-Droop.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Tightener.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Upper-Lip-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Cheek-Puffer.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lid-Tightener.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lips-part.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Wink.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Cheek-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Corner-Puller.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lower-Lip-Depressor.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Chin-Raiser.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Funneler.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Mouth-Stretch.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Dimpler.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Lip-Pressor.gif",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/aus/Nose-Wrinkler.gif",
-];
-
-let unusedAUs = [...AUImages]; // Make a copy of the original array
+import { AUs } from "./mixedAUs.js";
 
 let lastRecordingBlob = null;
 let recorder = null;
 let nameAU = '';
+let descAU = '';
 let recordingStartTime = 0;
+
+const participantAUs = AUs();
+let auList = [...participantAUs.isolated, ...participantAUs.mixed];
+shuffleArray(auList); // Shuffle the final AU list
+console.log("AU List", auList)
+
 const au_trial_init = {
     type: jsPsychHtmlVideoResponse,
 
     stimulus: function () {
-        shuffleArray(unusedAUs);
-
-        const randomAU = unusedAUs.pop();
-        
-        if (unusedAUs.length === 0) {
-            unusedAUs = [...AUImages]; // Reset to the full array
-            shuffleArray(unusedAUs); // Shuffle again
+        if (auList.length === 0) {
+            console.warn("All AUs have been used. Regenerating...");
+            const newAUs = AUs();
+            auList = [...newAUs.isolated, ...newAUs.mixed];
+            shuffleArray(auList);
         }
-        nameAU = randomAU.split('/').pop().split('.')[0];
-        const nameAUspace = nameAU.replace(/-/g, ' ')
-        console.log(nameAU)
+
+        const randomAU = auList.pop();
+        nameAU = randomAU.au || `${randomAU.au1}-${randomAU.au2}`;
+        descAU = randomAU.description 
+            ? `</br><span style="color: rgb(21, 92, 125);">${randomAU.description}</span>` 
+            : `<span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">[Please perform both together]</span></br>
+            <span style="color: rgb(21, 92, 125);">${randomAU.description1}</span> 
+            <span style="font-style: italic; font-weight: normal;">and</span> 
+            <span style="color: rgb(21, 125, 54);">${randomAU.description2}</span> </br>`;
+
+        console.log(descAU);
+        const gifHtml = randomAU.gif
+            ? `<img src="${randomAU.gif}" alt="AU" style="height:100px; display: block; margin: 0 auto;">`
+            : `
+                <img src="${randomAU.gif1}" alt="AU1" style="height:100px; display: block; margin: 0 auto;">
+                <img src="${randomAU.gif2}" alt="AU2" style="height:100px; display: block; margin: 0 auto;">
+            `;
+        console.log(nameAU);
         return `
         <style>
             #camera-preview {
@@ -70,9 +57,9 @@ const au_trial_init = {
 
         </style>
         <p><strong>Instruction:</strong></p>
-        <p>Please record yourself mimicking the expression shown below. Ensure your entire face is visible in the camera.</p>
-        <p>Expression to perform:<strong>${nameAUspace}</strong></p>
-        <p><img src="${randomAU}" alt="AU"  style="height:100px; display: block; margin: 0 auto; "></p>
+        <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you start the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral face</span> while <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">looking at the camera</span>.</p>
+        <p> <strong>${descAU}</strong></p>
+        <p>${gifHtml}</p>
         <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
         <div>
             <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
@@ -82,12 +69,12 @@ const au_trial_init = {
             <i class="fas fa-stop"></i> Stop Recording</button>
         </div>
         <div id="playback-container" style="display: none;">
-            <video id="recorded-video" controls "></video><br>
+            <video id="recorded-video" controls></video><br>
             <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
                 <i class="fas fa-redo"></i> Re-record
             </button>
         </div>
-        <div id="warning" style="color: red; font-weight: normal; display: none;">The video you recorded is less than 1 second. Please re-record the video.</div>
+        <div id="warning" style="color: red; font-weight: normal; display: none;">Your recorded video is shorter than 1 second. Please record again.</div>
         <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`;
     },
     recording_duration: null,
@@ -196,7 +183,7 @@ const au_trial_init = {
 const uploading_trial = {
     type: jsPsychHtmlButtonResponse,  // or 'html-button-response'
     stimulus:  `<div style="text-align: center;">
-    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> please wait</p>
+    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the video...<br><br> Please wait</p>
     <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..." style="width: 50px; height: 50px; margin-top: 10px;">
     </div>`,
     choices: [], // No keys or buttons to skip
@@ -210,7 +197,7 @@ const uploading_trial = {
                 const base64 = await blobToBase64(lastRecordingBlob);
                 // 2) Build a key for S3
                 const surveyId = window.surveyId;
-                const participantId = window.participantIsd;
+                const participantId = window.participantId;
                 const mimeType = getSupportedMimeType() || 'video/webm';
 
                 let extension = 'webm';
@@ -258,7 +245,7 @@ const uploading_trial = {
 };
 
 let au_trials = [];
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 20; i++) {
     au_trials.push(au_trial_init);
     au_trials.push(uploading_trial);
 }

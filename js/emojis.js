@@ -78,7 +78,7 @@ const emoji_trial_init = {
                     height: 300px;
                 }
             </style>
-            <p>Please record yourself performing the expression or action shown by the emoji below. Ensure your entire face is visible in the camera while performing.</p>
+            <p>Please record yourself performing the expression or action depicted by the emoji below. Make sure your entire face is visible in the camera while performing.</p>
             <p>Reference emoji:</p>
             <p><img src="${randomEmoji}" alt="Emoji" style="display: block; margin: 0 auto; width:50px; height:50px;"></p>
             <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
@@ -96,14 +96,10 @@ const emoji_trial_init = {
                 <i class="fas fa-redo"></i> Re-record
                 </button>
             </div>
-            <div id="warning" style="color: red; font-weight: normal; display: none;">The video you recorded is less than 1 second. Please re-record the video.</div>
-            <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>
+            <div id="warning" style="color: red; font-weight: normal; display: none;">Your recorded video is shorter than 1 second. Please record again.</div>
+            <p>Click 'Start Recording' to begin and 'Stop Recording' to finish.</p>
             <label for="emotion-label">
-            <p style="font-weight: bold;">What would you call the expression that you just performed? 
-            <span style="color: rgb(21, 92, 125); font-weight: normal;">
-                Use your own words you can explain with a word or a sentence.
-                </span>
-            </p>
+            <p style="font-weight: bold;">What does this emoji mean to you?</p>
             </label><br>
             <input type="text" id="emotion-label" name="emotion-label"
             placeholder="Type here..."
@@ -171,7 +167,7 @@ const emoji_trial_init = {
             submitNameButton.addEventListener('click', () => {
                 userSubmittedLabel = userEmotionLabel.value.trim();
                 displayNameDiv.innerText = userSubmittedLabel.length
-                ? `Your response: ${userEmotionLabel.value}`
+                ? `You entered: ${userEmotionLabel.value}`
                 : '';
                 checkIfCanEnableFinish();
             });
@@ -251,7 +247,7 @@ const emoji_trial_init = {
 const uploading_trial = {
     type: jsPsychHtmlButtonResponse,  // or 'html-button-response'
     stimulus:  `<div style="text-align: center;">
-    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> please wait</p>
+    <p style="font-size: 20px; color:rgb(21, 92, 125); font-weight: bold; text-align: center;">Uploading the last video...<br><br> Please wait</p>
     <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..." style="width: 50px; height: 50px; margin-top: 10px;">
     </div>`,
     choices: [], // No keys or buttons to skip
@@ -316,7 +312,7 @@ const uploading_trial = {
     }
 };
 const emojiTrials = [];
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 40; i++) {
     emojiTrials.push(emoji_trial_init);
     emojiTrials.push(uploading_trial);
 }

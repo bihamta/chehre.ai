@@ -1,7 +1,7 @@
 // Welcome
 import {welcome} from './welcome.js';
 import {consent} from './consent.js'
-import { instruction_trial } from './instru.js';
+import { instruction_trial_1, instruction_trial_2 } from './instru.js';
 import { thank, emoji, facialdynamics, questionnaire, demographic, emoji_reminder } from './landing.js';
 // Questionnaire
 import {demog } from './demographic.js';
@@ -29,7 +29,8 @@ timeline.push(welcome);
 timeline.push(consent);
 timeline.push(questionnaire);
 timeline.push(medi)
-timeline.push(instruction_trial);
+timeline.push(instruction_trial_1);
+timeline.push(instruction_trial_2);
 timeline.push(init_camera)
 timeline.push(emoji)
 timeline.push(emojiTrials)

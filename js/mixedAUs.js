@@ -34,7 +34,6 @@ const action_units_gifs = [
 const action_units_names = new Map([
     ["AU00", action_units_gifs[0]],
     ["AU0", action_units_gifs[1]],
-    ["AU2", action_units_gifs[23]],
     ["AU4", action_units_gifs[2]],
     ["AU5", action_units_gifs[3]],
     ["AU7", action_units_gifs[4]],
@@ -56,17 +55,20 @@ const action_units_names = new Map([
     ["AU26", action_units_gifs[20]],
     ["AU27", action_units_gifs[21]],
     ["AU28", action_units_gifs[22]],
-    ["AU41", action_units_gifs[24]],
-    ["AU43", action_units_gifs[25]],
-    ["AU45", action_units_gifs[26]],
-    ["AU46", action_units_gifs[27]]
+    ["AU2a", action_units_gifs[23]],
+    ["AU2b", action_units_gifs[24]],
+    ["AU41", action_units_gifs[25]],
+    ["AU43", action_units_gifs[26]],
+    ["AU45", action_units_gifs[27]],
+    ["AU46", action_units_gifs[28]]
 ]);
 
 
 const action_units_desc = new Map([
     ["AU00", "Move your mouth completely to the right"],
     ["AU0", "Move your mouth completely to the left"],
-    ["AU2", "Raise the outer edges of your eyebrows"],
+    ["AU2a", "Raise the outer edges of your eyebrows"],
+    ["AU2b", "Raise the outer edge of one of your eyebrows"],
     ["AU4", "Bring your eyebrows down and together to frown"],
     ["AU5", "Raise your upper eyelids as if surprised"],
     ["AU7", "Squeeze your eyelids tightly together"],
@@ -85,7 +87,7 @@ const action_units_desc = new Map([
     ["AU23", "Press your lips together"],
     ["AU24", "Firmly press your lips together as if holding something in your mouth"],
     ["AU25", "Slightly open your lips"],
-    ["AU26", "Drop your jaw to open your mouth wide"],
+    ["AU26", "Drop your jaw slightly to open your mouth"],
     ["AU27", "Stretch your mouth open as wide as possible"],
     ["AU28", "Suck your lips inward, covering your teeth"],
     ["AU41", "Lower your upper eyelids slightly as if feeling sleepy"],
@@ -109,7 +111,7 @@ const action_units_mixed = [
     ["AU1", "AU9"],   // Raise inner eyebrows while scrunching nose (disgust and surprise mix)
     ["AU1", "AU27"],  // Raise inner eyebrows while stretching mouth open (shocked or scared look)
 
-    ["AU2", "AU43"],  // Raise outer eyebrows while closing eyes (worried look)
+    ["AU2a", "AU43"],  // Raise outer eyebrows while closing eyes (worried look)
 
     ["AU4", "AU7"],   // Frown while squeezing eyes shut (pain or discomfort)
     ["AU4", "AU15"],  // Frown while pulling mouth corners downward (sad expression)
@@ -149,7 +151,7 @@ const action_units_mixed = [
     ["AU22", "AU18"], // Funnel lips while puckering (strong pucker or exaggerated kiss face)
     ["AU22", "AU27"], // Funnel lips while stretching mouth wide open (vocalization or extreme surprise)
 
-    ["AU23", "AU2"],  // Tighten lips while raising outer eyebrows (focused or concerned look)
+    ["AU23", "AU2a"],  // Tighten lips while raising outer eyebrows (focused or concerned look)
 
     ["AU24", "AU13"], // Press lips together while puffing out cheeks (holding back a smile)
     ["AU24", "AU12"], // Press lips together while smiling (hiding a smile)
@@ -162,7 +164,7 @@ const action_units_mixed = [
     ["AU28", "AU13"], // Suck lips inward while puffing out cheeks
     ["AU28", "AU24"], // Firmly press lips together while sucking them inward (hiding lips)
 
-    ["AU41", "AU2"],  // Droop eyelids while raising outer eyebrows (tired but surprised look)
+    ["AU41", "AU2a"],  // Droop eyelids while raising outer eyebrows (tired but surprised look)
     ["AU41", "AU17"], // Droop eyelids while raising chin (contemplative or smug expression)
     ["AU41", "AU26"], // Droop eyelids while dropping jaw (exhausted expression)
 

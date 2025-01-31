@@ -134,7 +134,7 @@ const neutral_trial_init = {
                         // Show playback container
                         playbackContainer.style.display = 'block';
                     }
-                }, 500);
+                }, 1200);
             });
 
             // Add event listener for rerecord button
@@ -155,7 +155,7 @@ const neutral_trial_init = {
                 initializeCamera();
             });
 
-        }, 500); // Add a slight delay to ensure the DOM is rendered
+        }, 1200); // Add a slight delay to ensure the DOM is rendered
     },
     on_finish: function () {
         console.log('Trial finished. Uploading the last recording...');

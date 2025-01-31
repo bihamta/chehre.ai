@@ -29,8 +29,10 @@ const medi1 = {
     },
     on_finish: function(data) {
         // Store the answer to medi1 (whether formal meditation was practiced)
-        data.medi1_response = data.response.Q0;
-        console.log(data.medi1_response)
+        if (data.response){
+            data.medi1_response = data.response.Q0;
+            console.log(data.medi1_response)
+        }
     }
 };
 

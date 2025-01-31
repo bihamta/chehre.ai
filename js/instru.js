@@ -105,26 +105,26 @@ const instruction_trial_2 = {
         `<div style="text-align: center;">
             <h2 style="color: rgb(21, 92, 125);">Camera Positioning</h2>
             <img src="${images[0]}" alt="Angle Instruction" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p>Ensure your face is visible and the camera is positioned at <span style="color: rgb(215, 60, 99); font-weight: bold;">eye level</span>.</p>
+            <p id="thanks">Ensure your face is visible and the camera is positioned at <span style="color: rgb(215, 60, 99); font-weight: bold;">eye level</span>.</p>
         </div>`,
         `<div style="text-align: center;">
             <h2 style="color: rgb(21, 92, 125);">Distance from Camera</h2>
             <img src="${images[1]}" alt="Too Far" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p>Do <span style="color: rgb(215, 60, 99); font-weight: bold;">not</span> stand too far from the camera.</p>
+            <p id="thanks">Do <span style="color: rgb(215, 60, 99); font-weight: bold;">not</span> stand too far from the camera.</p>
             <img src="${images[2]}" alt="Too Close" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p>Do <span style="color: rgb(215, 60, 99); font-weight: bold;">not</span> stand too close either.</p>
+            <p id="thanks">Do <span style="color: rgb(215, 60, 99); font-weight: bold;">not</span> stand too close either.</p>
         </div>`,
         `<div style="text-align: center;">
             <h2 style="color: rgb(21, 92, 125);">Hands Visibility</h2>
             <img src="${images[3]}" alt="Hands in Frame" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p>Ensure your hands are <span style="color: rgb(215, 60, 99); font-weight: bold;">not visible</span> in the frame.</p>
+            <p id="thanks">Ensure your hands are <span style="color: rgb(215, 60, 99); font-weight: bold;">not visible</span> in the frame.</p>
         </div>`,
         `<div style="text-align: center;">
             <h2 style="color: rgb(21, 92, 125);">Final Check</h2>
             <img src="${images[4]}" alt="Face Visibility" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p>Make sure your entire face is visible.</p>
+            <p id="thanks">Make sure your entire face is visible.</p>
             <img src="${images[5]}" alt="Correct Position" style="max-width: 50%; height: auto; margin-top: 15px;">
-            <p><span style="color: rgb(215, 60, 99); font-weight: bold;">This is the correct camera setup.</span></p>
+            <p id="thanks"><span style="color: rgb(215, 60, 99); font-weight: bold;">This is the correct camera setup.</span></p>
         </div>`
     ],
     show_clickable_nav: true

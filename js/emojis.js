@@ -1,5 +1,4 @@
 import { addExitButton, blobToBase64, shuffleArray, getSupportedMimeType } from './utils.js';
-
 const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/anxious-face-with-sweat_1f630.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/beaming-face-with-smiling-eyes_1f601.png",
@@ -91,7 +90,6 @@ const emoji_trial_init = {
                 }
             </style>
             <p>Please record yourself performing the expression or action depicted by the emoji below. Make sure your entire face is visible in the camera while performing.</p>
-            <p>Reference emoji:</p>
             <p><img src="${randomEmoji}" alt="Emoji" style="display: block; margin: 0 auto; width:50px; height:50px;"></p>
             <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
             <div>

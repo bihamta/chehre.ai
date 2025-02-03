@@ -188,7 +188,12 @@ const emoji_trial_init = {
                 console.log('Recording started');
                 startButton.style.display = 'none';
                 stopButton.style.display = 'inline-block';
+                try {
                 recordingStartTime = performance.now();
+                }
+                catch (error) {
+                    console.error('Error recording start time:', error);
+                }
 
             });
 
@@ -267,6 +272,7 @@ const uploading_trial = {
             return;
         }
         try {
+            console.log('recording blob size:', lastRecordingBlob.size);
             const emotionLabels = {};
             emotionLabels[nameEmoji] = userSubmittedLabel
             const base64 = await blobToBase64(lastRecordingBlob);

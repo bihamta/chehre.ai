@@ -150,6 +150,7 @@ const emoji_trial_init = {
                     audio: true
                 }).then(function(stream) {
                     recorder = RecordRTC(stream, {
+                        recorderType: MediaStreamRecorder,
                         type: 'video',
                         mimeType: 'video/webm;codecs=vp8'
                     });

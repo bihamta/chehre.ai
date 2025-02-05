@@ -28,8 +28,8 @@ const timeline = [];
 // Add trials to the timeline
 timeline.push(welcome);
 timeline.push(consent);
-timeline.push(questionnaire);
-timeline.push(medi)
+// timeline.push(questionnaire);
+// timeline.push(medi)
 timeline.push(instruction_trial_1);
 timeline.push(instruction_trial_2);
 timeline.push(init_camera)

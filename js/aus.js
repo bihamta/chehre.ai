@@ -63,7 +63,7 @@ const au_trial_init = {
 
         </style>
         <p><strong>Instruction:</strong></p>
-        <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you start the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral expression (hold it for about 1 second)</span> while <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">looking at the camera</span>.</p>
+        <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you <span style="font-weight: bold;">start</span> the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral expression (hold it for about 1 second)</span> while <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">looking at the camera</span>.</p>
         <p> <strong>${descAU}</strong></p>
         <p>${gifHtml}</p>
         <video id="camera-preview" autoplay playsinline style="border: 2px solid black;"></video>

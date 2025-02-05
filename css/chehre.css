@@ -69,3 +69,6 @@ p#note{
     color:rgb(21, 92, 125);
     font-weight: bold;
 }
+div#demog_q{
+    text-align: left;
+}   

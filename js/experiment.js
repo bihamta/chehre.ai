@@ -4,7 +4,8 @@ import {consent} from './consent.js'
 import { instruction_trial_1, instruction_trial_2 } from './instru.js';
 import { thank, emoji, facialdynamics, questionnaire, demographic, emoji_reminder } from './landing.js';
 // Questionnaire
-import {demog } from './demographic.js';
+// import {demog } from './demographic_his.js';
+import { demog } from './demographics.js';
 import {medi} from './mindfulness.js';
 
 // Video Recordings 1
@@ -28,9 +29,9 @@ const timeline = [];
 timeline.push(welcome);
 timeline.push(consent);
 timeline.push(questionnaire);
-// timeline.push(medi)
-// timeline.push(instruction_trial_1);
-// timeline.push(instruction_trial_2);
+timeline.push(medi)
+timeline.push(instruction_trial_1);
+timeline.push(instruction_trial_2);
 timeline.push(init_camera)
 timeline.push(emoji)
 timeline.push(emojiTrials)

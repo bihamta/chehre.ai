@@ -6,11 +6,12 @@ let recorder = null;
 let nameAU = '';
 let descAU = '';
 let recordingStartTime = 0;
+let au_counter = 0;
 
 const participantAUs = AUs();
 let auList = [...participantAUs.isolated, ...participantAUs.mixed];
 shuffleArray(auList); // Shuffle the final AU list
-console.log("AU List", auList)
+const number_of_aus = auList.length;
 
 const au_trial_init = {
     type: jsPsychHtmlVideoResponse,
@@ -22,7 +23,7 @@ const au_trial_init = {
             auList = [...newAUs.isolated, ...newAUs.mixed];
             shuffleArray(auList);
         }
-
+        
         const randomAU = auList.pop();
         nameAU = randomAU.au || `${randomAU.au1}-${randomAU.au2}`;
         descAU = randomAU.description 
@@ -32,35 +33,40 @@ const au_trial_init = {
             <span style="font-style: italic; font-weight: normal;">and</span> 
             <span style="color: rgb(21, 125, 54);">${randomAU.description2}</span> </br>`;
 
-        console.log(descAU);
+        
         const gifHtml = randomAU.gif
             ? `<img src="${randomAU.gif}" alt="AU" style="height:100px; display: block; margin: 0 auto;">`
             : `
                 <img src="${randomAU.gif1}" alt="AU1" style="height:100px; display: block; margin: 0 auto;">
                 <img src="${randomAU.gif2}" alt="AU2" style="height:100px; display: block; margin: 0 auto;">
             `;
-        console.log(nameAU);
+        
         return `
+        <div style="text-align:center;">
+                <h4>Recorded ${au_counter} facial muscle movement out of ${number_of_aus}</h4>
+            </div>
         <style>
             #camera-preview {
                 border: 2px solid black;
-                width: 400px;
-                height: 300px;
+                width: 100%;
+                max-width: 400px;
+                height: auto;
                 transform: scaleX(-1); /* Mirror the video preview */
             }
 
             #recorded-video {
                 border: 2px solid black;
-                width: 400px;
-                height: 300px;
+                margin: 0 auto;
+                width: 100%;
+                max-width: 400px;
             }
 
         </style>
         <p><strong>Instruction:</strong></p>
-        <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you start the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral face</span> while <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">looking at the camera</span>.</p>
+        <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you start the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral expression (hold it for about 1 second)</span> while <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">looking at the camera</span>.</p>
         <p> <strong>${descAU}</strong></p>
         <p>${gifHtml}</p>
-        <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
+        <video id="camera-preview" autoplay playsinline style="border: 2px solid black;"></video>
         <div>
             <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
             <i class="fas fa-play"></i> Start Recording</button>
@@ -74,7 +80,7 @@ const au_trial_init = {
                 <i class="fas fa-redo"></i> Re-record
             </button>
         </div>
-        <div id="warning" style="color: red; font-weight: normal; display: none;">Your recorded video is shorter than 1 second. Please record again.</div>
+        <div id="warning" style="color: red; font-weight: normal; display: none;"></div>
         <p>Click "Start Recording" to begin, and "Stop Recording" to end.</p>`;
     },
     recording_duration: null,
@@ -98,6 +104,7 @@ const au_trial_init = {
                     audio: true
                 }).then(function(stream) {
                     recorder = RecordRTC(stream, {
+                        recorderType: MediaStreamRecorder,
                         type: 'video',
                         mimeType: 'video/webm;codecs=vp8'
                     });
@@ -118,7 +125,12 @@ const au_trial_init = {
                 console.log('Recording started');
                 startButton.style.display = 'none';
                 stopButton.style.display = 'inline-block';
-                recordingStartTime = performance.now();
+                try {
+                    recordingStartTime = performance.now();
+                    }
+                    catch (error) {
+                        console.error('Error recording start time:', error);
+                    }
             });
 
             stopButton.addEventListener('click', () => {
@@ -127,23 +139,37 @@ const au_trial_init = {
                 console.log('Recording duration:', recordingDurationMs);
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
-                    recordedVideo.src = URL.createObjectURL(blob);
+                    let videoSize = blob.size
+
                     if (recorder.camera) {
-                        recorder.camera.stop();
+                        recorder.camera.getAudioTracks().forEach(track => track.stop());
+                        recorder.camera.getVideoTracks().forEach(track => track.stop());
                     }
+                    recorder.destroy();
+                    recorder = null;
+                    const MAX_SIZE = 4.5 * 1024 * 1024; // 10MB = 10,485,760 bytes
+
                     if (recordingDurationMs < 1000) {
                         console.warn('Video was shorter than 1 second. Discarding recording.');
                         lastRecordingBlob = null;
                         warningDiv.style.display = 'block';
+                        warningDiv.innerHTML = `<b style="color: red;">Video was shorter than 1 second. Please re-record the video.</b>`;
+                    } else if (videoSize > MAX_SIZE) {
+                        console.warn('Video is too long, please reocrd a shorter video');
+                        lastRecordingBlob = null;
+                        warningDiv.style.display = 'block';
+                        warningDiv.innerHTML = `<b style="color: red;">Video is too long, please reocrd a shorter video.</b>`;
+
                     } else {
                         lastRecordingBlob = blob;
-                        console.log('Recording saved:', lastRecordingBlob);
+                        recordedVideo.src = URL.createObjectURL(blob);
                     }
-                    recorder.destroy();
-                    recorder = null;
+                    
                     if (lastRecordingBlob) {
                         console.log('Recording duration:', recordingDurationMs);
                         document.getElementById('finish-trial').disabled = false;
+                        console.log(bytesToSize(blob.size))
+
                     }
                 });
                 console.log('Recording stopped');
@@ -173,10 +199,11 @@ const au_trial_init = {
 
                 initializeCamera(); // Restart camera for rerecording
             });
-        }, 500);
+        }, 2000);
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
+        au_counter += 1;
     }
 };
 
@@ -245,7 +272,7 @@ const uploading_trial = {
 };
 
 let au_trials = [];
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < number_of_aus; i++) {
     au_trials.push(au_trial_init);
     au_trials.push(uploading_trial);
 }

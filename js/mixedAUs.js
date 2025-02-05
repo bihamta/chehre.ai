@@ -245,6 +245,6 @@ function getRandomAUs(action_units_names, action_units_mixed, isolatedCount = 5,
 }
 
 function AUs(){
-    return getRandomAUs(action_units_names, action_units_mixed, 5, 15);
+    return getRandomAUs(action_units_names, action_units_mixed, 5, 5);
 }
 export { AUs };

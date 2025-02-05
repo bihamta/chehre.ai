@@ -6,7 +6,7 @@ const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/expressionless-face_1f611.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-blowing-a-kiss_1f618.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-exhaling_1f62e-200d-1f4a8.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-exhaling_1f62e.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-holding-back-tears_1f979.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-savoring-food_1f60b.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-screaming-in-fear_1f631.png",
@@ -47,7 +47,12 @@ const emojiImages = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/winking-face_1f609.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/woozy-face_1f974.png"
 ];
-
+const specialEmojis = [
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-hand-over-mouth_1f92d.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-open-eyes-and-hand-over-mouth_1fae2.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-peeking-eye_1fae3.png",
+    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/thinking-face_1f914.png"
+];
 // Shuffle the emoji array once
 // Track the unused emojis
 let unusedEmojis = [...emojiImages]; // Make a copy of the original array
@@ -59,39 +64,82 @@ let recorder = null;
 let nameEmoji = '';
 let userSubmittedLabel = "";
 let recordingStartTime = 0;
+const number_of_emojis = 1;
+let emoji_counter = 0;
+
+let cameraStream = null;
+function shutdownCamera() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+        console.log('Camera stream has been shutdown.');
+    }
+    // Optionally, also clear the recorder.
+    recorder = null;
+}
 
 const emoji_trial_init = {
     type: jsPsychHtmlVideoResponse,
     stimulus: function () {
         // Shuffle the unused emojis array
         shuffleArray(unusedEmojis);
+        
 
         // Pick the first emoji from the shuffled unused emojis
         const randomEmoji = unusedEmojis.pop(); // Get and remove the last emoji from the array
         nameEmoji = randomEmoji.split("_")[1].split('.png')[0]
+        let emojisLeft = unusedEmojis.length;
         // If there are no emojis left, reset the unusedEmojis array
         if (unusedEmojis.length === 0) {
             unusedEmojis = [...emojiImages]; // Reset to the full array
             shuffleArray(unusedEmojis); // Shuffle again
         }
+        const isSpecialEmoji = specialEmojis.includes(randomEmoji);
+
+        
         return `
+            <div style="text-align:center;">
+                <h4>Recorded ${emoji_counter} emojis out of ${number_of_emojis}</h4>
+            </div>
             <style>
                 #camera-preview {
                     border: 2px solid black;
-                    width: 400px;
-                    height: 300px;
+                    width: 100%;
+                    height: auto;
+                    max-width: 400px;
                     transform: scaleX(-1); /* Mirror the video preview */
                 }
 
                 #recorded-video {
-                    border: 2px solid black;
-                    width: 400px;
-                    height: 300px;
+                    display: block;
+                    margin: 0 auto;
+                    width: 100%;
+                    max-width: 400px;
                 }
             </style>
-            <p>Please record yourself performing the expression or action depicted by the emoji below. Make sure your entire face is visible in the camera while performing.</p>
-            <p><img src="${randomEmoji}" alt="Emoji" style="display: block; margin: 0 auto; width:50px; height:50px;"></p>
-            <video id="camera-preview" autoplay playsinline style="border: 2px solid black; width: 400px; height: 300px;"></video>
+            <p>Please record yourself performing the expression depicted by the emoji below. Make sure your entire face is visible in the camera while performing.</p>
+            <p>Please record yourself mimicking the facial movement shown below. Ensure your entire face is visible in the camera and you start the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral face (hold it for about 1 second)</span></p>
+
+            <div style="position: relative; text-align: center;">
+                <img src="${randomEmoji}" alt="Emoji"
+                    style="display:inline-block; margin: 0 auto; width: 50px; height: 50px;">
+                    
+                ${
+                isSpecialEmoji
+                    ? `
+                    <div style="margin: 10px auto;">
+                        <img src="https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/nohands.png",
+                        nohands.png"
+                            alt="Reminder Icon"
+                            style="width: auto; height: 100px; display:inline-block" />
+                    </div>
+                    `
+                    : ""
+                }
+            </div>
+
+
+            <video id="camera-preview" autoplay playsinline style="border: 2px solid black; "></video>
             <div>
                 <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
                 <i class="fas fa-play"></i> Start Recording</button>
@@ -100,13 +148,13 @@ const emoji_trial_init = {
                 <i class="fas fa-stop"></i> Stop Recording</button>
             </div>
             <div id="playback-container" style="display: none;">
-                <video id="recorded-video" controls "></video><br>
+                <video id="recorded-video" controls></video><br>
                 <br>
                 <button id="rerecord-button" style="margin: 10px; padding: 10px 20px;">
                 <i class="fas fa-redo"></i> Re-record
                 </button>
             </div>
-            <div id="warning" style="color: red; font-weight: normal; display: none;">Your recorded video is shorter than 1 second. Please record again.</div>
+            <div id="warning" style="color: red; font-weight: normal; display: none;"></div>
             <p>Click 'Start Recording' to begin and 'Stop Recording' to finish.</p>
             <label for="emotion-label">
             <p style="font-weight: bold;">What does this emoji mean to you?</p>
@@ -127,8 +175,8 @@ const emoji_trial_init = {
     
     on_load: function () {
         addExitButton();
-
-        setTimeout(() => {
+        // document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(() => {
             const videoElement = document.getElementById('camera-preview');
             const startButton = document.getElementById('start-recording');
             const stopButton = document.getElementById('stop-recording');
@@ -145,6 +193,8 @@ const emoji_trial_init = {
 
 
             function initializeCamera() {
+
+                
                 navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true
@@ -171,8 +221,10 @@ const emoji_trial_init = {
             function checkIfCanEnableFinish() {
                 const hasVideo = (lastRecordingBlob !== null);
                 const hasName  = (userSubmittedLabel.trim().length > 0);
+                if (finishButton) {
                 finishButton.disabled = !(hasVideo && hasName);
                 console.log('Finish button enabled:', finishButton.disabled);
+                }
             }
 
             submitNameButton.addEventListener('click', () => {
@@ -195,29 +247,45 @@ const emoji_trial_init = {
                 catch (error) {
                     console.error('Error recording start time:', error);
                 }
-
+                
             });
 
             stopButton.addEventListener('click', () => {
                 const recordingEndTime = performance.now();
                 const recordingDurationMs = recordingEndTime - recordingStartTime;
+                console.log('Recording duration:', recordingDurationMs);
+
                 recorder.stopRecording(function() {
                     let blob = recorder.getBlob();
-                    recordedVideo.src = URL.createObjectURL(blob);
+                    let videoSize = blob.size
+
                     if (recorder.camera) {
-                        recorder.camera.stop();
+                        recorder.camera.getAudioTracks().forEach(track => track.stop());
+                        recorder.camera.getVideoTracks().forEach(track => track.stop());
                     }
+                    recorder.destroy();
+                    recorder = null;
+                    const MAX_SIZE = 4.5 * 1024 * 1024; // 10MB = 10,485,760 bytes
+
                     if (recordingDurationMs < 1000) {
                         console.warn('Video was shorter than 1 second. Discarding recording.');
                         lastRecordingBlob = null;
                         warningDiv.style.display = 'block';
+                        warningDiv.innerHTML = `<b style="color: red;">Video was shorter than 1 second. Please re-record the video.</b>`;
+                    } else if (videoSize > MAX_SIZE) {
+                        console.warn('Video is too long, please reocrd a shorter video');
+                        lastRecordingBlob = null;
+                        warningDiv.style.display = 'block';
+                        warningDiv.innerHTML = `<b style="color: red;">Video is too long, please reocrd a shorter video.</b>`;
+
                     } else {
                         lastRecordingBlob = blob;
+                        recordedVideo.src = URL.createObjectURL(blob);
                     }
-                    recorder.destroy();
-                    recorder = null;
+                    
                     console.log(bytesToSize(blob.size))
                     checkIfCanEnableFinish();
+                    
                 });
                 console.log('Recording stopped');
 
@@ -229,7 +297,8 @@ const emoji_trial_init = {
                 // Show playback container
                 playbackContainer.style.display = 'block';
                 finishButton.disabled = false;
-                recorder.camera.stop();
+                
+
             });
 
             // Add event listener for rerecord button
@@ -253,10 +322,24 @@ const emoji_trial_init = {
                 initializeCamera();
             });
 
-        }, 500); // Add a slight delay to ensure the DOM is rendered
+        }, 2000); // Add a slight delay to ensure the DOM is rendered
+        
+    // };
+        // }
+        // if (document.readyState === 'loading') {
+        //     document.addEventListener('DOMContentLoaded', initializeTrialElements);
+        //     setTimeout(initializeTrialElements, 500);
+        //     console.log('DOM content loaded');
+        // } else {
+        //     // initializeTrialElements();
+        //     setTimeout(initializeTrialElements, 500);
+        //     console.log('DOM content already loaded');
+        // }
     },
     on_finish: async function () {
         console.log('Trial finished. Uploading the last recording...');
+        emoji_counter += 1;
+        
         }
 };
 
@@ -279,7 +362,7 @@ const uploading_trial = {
             const base64 = await blobToBase64(lastRecordingBlob);
             // 2) Build a key for S3
             const surveyId = window.surveyId;
-            const participantId = window.participantIsd;
+            const participantId = window.participantId;
             const mimeType = getSupportedMimeType() || 'video/webm';
             // console.log(mimeType)
 
@@ -329,7 +412,7 @@ const uploading_trial = {
     }
 };
 const emojiTrials = [];
-for (let i = 0; i < 46; i++) {
+for (let i = 0; i < number_of_emojis; i++) {
     emojiTrials.push(emoji_trial_init);
     emojiTrials.push(uploading_trial);
 }

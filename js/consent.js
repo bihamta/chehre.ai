@@ -1,4 +1,5 @@
 let repeatConsent = true;
+let sonaID = "";
 const consentForm = {
     type: jsPsychSurveyHtmlForm,
     preamble: `
@@ -20,8 +21,47 @@ const consentForm = {
         <p><label><input type="checkbox" name="mandatory3"> I agree to the use of my videos for anonymized facial mapping, where my facial motions may be transferred onto synthetic or generated faces, ensuring that my identity cannot be recognized.</label></p>
         <p><label><input type="checkbox" name="optional1"> I agree that my de-identified data may be made available for future unspecified research projects unrelated to the specific aims of this study.</label></p>
         <p><label><input type="checkbox" name="optional2"> I agree that my identifiable video recordings may be included in research talks, conference presentations, or public datasets, as described in the consent form.</label></p>
+        <div><label>SONA ID: <input type="text" id="sona_id" name="sona_id" placeholder="Enter your ID"></label>
+        <button type="button" id="submit" style="margin-top: 15px;">
+        <i class="fa-solid fa-check"></i>confirm</button></br>
+        <span id="sonaConfirmation"style="font-style: italic; color: green;"></span></div></br>
     `,
     button_label: "Proceed to Experiment",
+
+    on_load: function() {
+       // Disable button initially
+        setTimeout(() => {
+        const nextButton = document.querySelector("#jspsych-survey-html-form-next");
+        const submit = document.getElementById('submit');
+        const sonaConfirmation = document.getElementById('sonaConfirmation');
+        const sonaid = document.getElementById('sona_id');
+
+        nextButton.disabled = true;
+        let sona = "";
+        
+        function validateForm() {
+            sonaID = sonaid.value.trim();
+            console.log(sonaID);
+            if (sonaID) {
+                sonaConfirmation.innerText = `You entered: ${sonaID}`;
+                sonaConfirmation.style.display = "block";
+            } else {
+                sonaConfirmation.style.display = "none";
+            }
+            // Enable the button only if all mandatory fields are checked and SONA ID is provided
+            nextButton.disabled = !(sonaID);
+        }
+        submit.addEventListener('click', () => {
+            sona = sonaid.value.trim();
+            sonaConfirmation.innerText = sona.length
+            ? `You entered: ${sonaID}`
+            : '';
+            validateForm();
+        });
+        // Add event listeners for live validation
+        // document.getElementById("sona_id").addEventListener("submit", validateForm);
+        }, 1000);
+    },
     on_finish: function(data) {
         console.log(data.response);
 
@@ -62,6 +102,14 @@ const consentForm = {
                 .catch(error => {
                     console.error("Error submitting consent data:", error);
                 });
+            fetch('https://mzqm49npmk.execute-api.us-east-2.amazonaws.com/masterlist/ml', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    surveyId: window.surveyId,
+                    sonaId: sonaID
+                })
+            });
         }
     }
 };

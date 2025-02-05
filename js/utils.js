@@ -3,7 +3,7 @@ function addExitButton() {
     if (document.getElementById('exit-button')) return; 
 
     const exitButton = document.createElement("button");
-    exitButton.innerHTML = "Exit";
+    exitButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Exit';
     // exitButton.style.position = "fixed"; // Position the button on the screen
     exitButton.style.right = "10px"; // Place the button 10px from the right side
     exitButton.style.bottom = "10px"; // Place the button 10px from the bottom
@@ -36,6 +36,30 @@ function addExitButton() {
     });
 }
 
+// Function to create a Back Button  
+function addBackButton() {
+    if (document.getElementById("back-button")) return;
+    
+    const backButton = document.createElement("button");
+    backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back';
+    backButton.style.position = "absolute";
+    backButton.style.left = "10px";
+    backButton.style.bottom = "50px";
+    backButton.style.width = "80px";
+    backButton.style.padding = "8px 12px"; // Padding for better size
+    backButton.style.fontSize = "14px"; // Text size
+    backButton.style.cursor = "pointer";
+
+    backButton.addEventListener("click", function () {
+        console.log('Back button clicked');
+        console.log(jsPsych.getProgress().current_trial_global);
+        if (jsPsych.getProgress().current_trial_global > 0) {
+            jsPsych.abortCurrentTimeline();
+        }
+    });
+
+    document.body.appendChild(backButton);
+}
 
 async function uploadSurveyData(surveyData) {
     try {
@@ -106,4 +130,4 @@ function getSupportedMimeType() {
     return null;
     }
 
-export {addExitButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType}
+export {addExitButton, addBackButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType}

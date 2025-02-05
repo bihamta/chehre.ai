@@ -1,0 +1,17 @@
+apiVersion: v1alpha
+kind: cypress
+metadata:
+  name: cypress-tests
+  region: us-west-1
+  build: cypress-build-NK0LL
+suites:
+  - name: "Basic Webpage Test"
+    browserName: "chrome"
+    platformName: "Windows 10"
+    screenResolution: "1920x1080"
+    testMatch: "**/*.spec.js"
+    cypress:
+      config:
+        baseUrl: "http://localhost:3000"
+        video: true
+

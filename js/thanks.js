@@ -3,7 +3,7 @@ const honesty = {
     preamble: `
         <p class="jspsych-survey-multi-choice-text">Please provide an honest rating (1-5) of the quality of data provided, with a brief explanation of your rating.</p>
         <p>Your honest answer helps us to evaluate the source of variability in data, and/or exclude responses, with no impact on you as the respondent.</p>
-        <p id="note" style="bold";>(1 = poor, 5 = excellent)</p>
+        <p id="note" style="font-weight: bold";>(1 = poor, 5 = excellent)</p>
     `,
     html: `
         <div>

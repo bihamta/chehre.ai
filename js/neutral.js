@@ -40,7 +40,7 @@ const neutral_trial_init = {
             <button id="start-recording" style="margin: 10px; padding: 10px 20px;">
             <i class="fas fa-play"></i> Start Recording
             </button>
-            <div id="recording_status" style="display: none;">Recording Now...</div>
+            <div id="recording_status" style="display: none;">Recording in progress...</div>
             <span id="timer" style="font-size: 20px; display: none;">5</span>
         </div>
         <div id="playback-container" style="display: none;">

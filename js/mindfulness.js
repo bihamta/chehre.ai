@@ -299,6 +299,7 @@ timeline: [
             .catch(err => {
                 console.error("Error updating meditation data:", err);
             });
+        localStorage.setItem("hasMedi", "true");
     }
 };
 

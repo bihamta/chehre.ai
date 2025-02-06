@@ -308,6 +308,7 @@ const demog = {
       responses = JSON.parse(data.response);
     } catch {
       responses = data.response;
+      return;
     }
 
     // If user was born in Canada, there's no "countryOfBirth" field from the plugin, so default "Canada"

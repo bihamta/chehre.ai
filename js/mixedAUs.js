@@ -243,8 +243,10 @@ function getRandomAUs(action_units_names, action_units_mixed, isolatedCount = 5,
         }))
     };
 }
-
+const au_mixed = 5;
+const au = 5;
+const aus_count = au_mixed + au;
 function AUs(){
-    return getRandomAUs(action_units_names, action_units_mixed, 5, 5);
+    return getRandomAUs(action_units_names, action_units_mixed, au, au_mixed);
 }
-export { AUs };
+export { AUs, aus_count };

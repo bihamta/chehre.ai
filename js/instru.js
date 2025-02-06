@@ -48,6 +48,7 @@ const instruction_trial_1q = {
         }
 
         if (!repeatConsent) {
+            localStorage.setItem("hasCompletedInstructions", "true");
             const payload = {
                 consent: { device },
                 participantId: window.participantId,  // Assuming you have a participantId stored somewhere

@@ -78,6 +78,9 @@ const consentForm = {
             repeatConsent = false; // Allow proceeding if all mandatory fields are checked
         }
         if (!repeatConsent) {
+
+            localStorage.setItem("hasConsented", "true");
+
             const payload = {
                 consent: {
                     mandatory1,

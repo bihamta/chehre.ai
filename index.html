@@ -43,6 +43,7 @@
         if (savedSurveyId && savedParticipantId) {
         window.surveyId = savedSurveyId;
         window.participantId = savedParticipantId;
+        console.log("Generated new IDs:", window.surveyId)
         } else {
         // If they don't exist in localStorage, generate them
         window.surveyId = uuid();
@@ -50,7 +51,8 @@
         // And store them so we don’t lose them on refresh
         localStorage.setItem('surveyId', window.surveyId);
         localStorage.setItem('participantId', window.participantId);
-}
+        console.log("Generated new IDs:", window.surveyId)
+        }
 
         // 2) Make an initial call to your “survey” API to create a record in DynamoDB
         fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
@@ -75,8 +77,29 @@
         const jsPsych = initJsPsych({
             on_finish: function () {
                 console.log("Experiment finished.");
+                
+                // 1) Whole Survey
                 localStorage.removeItem('surveyId');
                 localStorage.removeItem('participantId');
+
+                // 2) Consent
+                localStorage.removeItem('hasConsented');
+
+                // 3) Meidtation
+                localStorage.removeItem('hasMedi');
+
+                // 4) Instructions
+                localStorage.removeItem('hasCompletedInstructions');
+                
+                // 5) Emojis
+                localStorage.removeItem('unusedEmojis');
+                localStorage.removeItem('emojiCounter');
+
+                // 6) AUs
+                localStorage.removeItem('neutralUploaded');
+                localStorage.removeItem('auList');
+                localStorage.removeItem('auCounter');
+                console.log("Local Storage Cleared");
             },
         });
     </script>

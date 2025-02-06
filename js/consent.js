@@ -42,20 +42,22 @@ const consentForm = {
         function validateForm() {
             sonaID = sonaid.value.trim();
             console.log(sonaID);
-            if (sonaID) {
+
+            const regex = /^\d{5}$/;
+            
+            if (regex.test(sonaID)) {
+                // If valid, show the entered SONA ID and enable the button.
                 sonaConfirmation.innerText = `You entered: ${sonaID}`;
                 sonaConfirmation.style.display = "block";
+                nextButton.disabled = false;
             } else {
-                sonaConfirmation.style.display = "none";
+                // If not valid, display an error message and disable the button.
+                sonaConfirmation.innerText = "SONA ID must be exactly 5 digits.";
+                sonaConfirmation.style.display = "block";
+                nextButton.disabled = true;
             }
-            // Enable the button only if all mandatory fields are checked and SONA ID is provided
-            nextButton.disabled = !(sonaID);
         }
         submit.addEventListener('click', () => {
-            sona = sonaid.value.trim();
-            sonaConfirmation.innerText = sona.length
-            ? `You entered: ${sonaID}`
-            : '';
             validateForm();
         });
         // Add event listeners for live validation

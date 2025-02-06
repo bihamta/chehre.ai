@@ -167,7 +167,7 @@ const emoji_trial_init = {
             }
         </style>
 
-        <p>Please record yourself performing the expression depicted by the emoji below. Make sure your entire face is visible in the camera while performing.</p>
+        <p>Please express the emoji below. Make sure your entire face is visible in the camera while performing.</p>
         <p>Please <span style="font-weight: bold;">start</span> the video with a <span style="color: rgb(215, 60, 99); font-style: italic; font-weight: normal;">neutral face (hold it for about 1 second)</span></p>
 
 
@@ -233,6 +233,8 @@ const emoji_trial_init = {
             const displayNameDiv = document.getElementById("display-emotion-label");
             const submitNameButton = document.getElementById("submit-emotion-label");
             const warningDiv = document.getElementById("warning");
+            let finishButton = document.getElementById("finish-trial");
+
 
             // Camera init
             function initializeCamera() {
@@ -263,15 +265,20 @@ const emoji_trial_init = {
             }
 
             initializeCamera();
+            finishButton.disabled = true;
             userSubmittedLabel = "";
             lastRecordingBlob = null;
-            let finishButton = document.getElementById("finish-trial");
             // If you don't have a "finish-trial" button in the DOM yet, check for null
 
             function checkIfCanEnableFinish() {
-                if (!finishButton) return;
+                if (!finishButton)
+                { 
+                    console.warn("No finish button found.");
+                    return;
+                }
                 const hasVideo = lastRecordingBlob !== null;
                 const hasLabel = userSubmittedLabel.trim().length > 0;
+                console.log("Can enable finish?", hasVideo, hasLabel);
                 finishButton.disabled = !(hasVideo && hasLabel);
             }
 
@@ -342,7 +349,7 @@ const emoji_trial_init = {
 
                 // Show the playback container
                 playbackContainer.style.display = "block";
-
+                
                 if (finishButton) finishButton.disabled = false;
             });
 
@@ -369,6 +376,7 @@ const emoji_trial_init = {
     },
 
     on_finish: function () {
+        
         console.log("Trial finished. We have a recording? -> Upload next.");
         // We have completed 1 more emoji
         emoji_counter += 1;
@@ -384,11 +392,11 @@ const uploading_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
     <div style="text-align:center;">
-      <p style="font-size:20px;color:rgb(21,92,125);font-weight:bold;">
+        <p style="font-size:20px;color:rgb(21,92,125);font-weight:bold;">
         Uploading the last video...<br><br>Please wait
-      </p>
-      <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..."
-           style="width:50px;height:50px;margin-top:10px;">
+        </p>
+        <img src="https://i.gifer.com/ZKZx.gif" alt="Loading..."
+            style="width:50px;height:50px;margin-top:10px;">
     </div>`,
     choices: [],
     on_load: async function () {

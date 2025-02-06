@@ -12,7 +12,7 @@ var facialdynamics = {
     pages: [
         'Step 3 of 5' +
         '<br>' +
-        'We will now record Eye Gaze and Facial Muscle Movements.'
+        'We will now record Facial Muscle Movements.'
     ],
     show_clickable_nav: true
 }
@@ -21,9 +21,7 @@ var emoji = {
     pages: [
         'Step 2 of 5' +
         '<br>' +
-        'Please proceed to perform the Emojis task.' +
-        '<br>' +
-        'Start with a neutral face and then perform the expression shown by the emoji.' 
+        'Please proceed to perform the Emojis task.'
     ],
     show_clickable_nav: true
 }

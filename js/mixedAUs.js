@@ -243,7 +243,7 @@ function getRandomAUs(action_units_names, action_units_mixed, isolatedCount = 5,
         }))
     };
 }
-const au_mixed = 5;
+const au_mixed = 4;
 const au = 5;
 const aus_count = au_mixed + au;
 function AUs(){

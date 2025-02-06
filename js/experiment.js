@@ -37,8 +37,14 @@ const hasCompletedInstructions = localStorage.getItem("hasCompletedInstructions"
 if (!hasCompletedInstructions) {
     timeline.push(instruction_trial_1);
 }
+
 timeline.push(instruction_trial_2);
 timeline.push(init_camera);
+const neutralUploaded = localStorage.getItem('neutralUploaded');
+if (!neutralUploaded) {
+    timeline.push(neutral_trial);
+}
+
 
 // 6) Check leftover Emojis
 const storedEmojis = localStorage.getItem('unusedEmojis');
@@ -58,9 +64,6 @@ if (canDoEmojis) {
     timeline.push(emojiTrials);
 }
 
-// 9) Next the rest: facialdynamics, neutral
-
-const neutralUploaded = localStorage.getItem('neutralUploaded');
 
 // 10) Check leftover AUs
 const storedAUs = localStorage.getItem('auList');
@@ -80,9 +83,6 @@ if (storedAUs) {
 }
 if (hasAUleft) {
     timeline.push(facialdynamics);
-    if (!neutralUploaded) {
-        timeline.push(neutral_trial);
-    }
     timeline.push(au_trials);
 }
 

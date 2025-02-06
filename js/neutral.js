@@ -31,7 +31,7 @@ const neutral_trial_init = {
             height: auto;
         }
         </style>
-        <p><strong>Instruction:</strong></p>
+        <p><strong>Let's Practice:</strong></p>
         <p>Please record yourself with a neutral expression. Keep your head still and avoid making any facial expressions. Slowly look around (left, right, up, and down) for 5 seconds.</p>
         <p>Ensure your entire face is visible in the camera during the recording.</p>
         <p>Click "Start Recording" to begin. Recording will automatically stop after 5 seconds. If you are not happy with the recording, click "Re-record."</p>

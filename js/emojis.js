@@ -1,9 +1,9 @@
 import { addExitButton, blobToBase64, shuffleArray, getSupportedMimeType } from './utils.js';
 const emojiImages = [
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/anxious-face-with-sweat_1f630.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/beaming-face-with-smiling-eyes_1f601.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
-    "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/expressionless-face_1f611.png",
+    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/anxious-face-with-sweat_1f630.png",
+    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/beaming-face-with-smiling-eyes_1f601.png",
+    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/exploding-head_1f92f.png",
+    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/expressionless-face_1f611.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-blowing-a-kiss_1f618.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-exhaling_1f62e.png"
     // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-holding-back-tears_1f979.png",
@@ -58,7 +58,7 @@ let recorder = null;
 let nameEmoji = '';
 let userSubmittedLabel = "";
 let recordingStartTime = 0;
-const number_of_emojis = 41;
+const number_of_emojis = 2;
 let emoji_counter = 0;
 
 let cameraStream = null;

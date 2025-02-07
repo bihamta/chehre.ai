@@ -58,7 +58,7 @@ const specialEmojis = [
 ];
 
 // Maximum total number of emojis we want to record:
-const number_of_emojis = 41;
+const number_of_emojis = 40;
 
 // -----------------------------------------------------------------
 // 2) GLOBALS TRACKING PROGRESS

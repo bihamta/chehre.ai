@@ -50,7 +50,7 @@ const instruction_trial_1q = {
         if (!repeatConsent) {
             localStorage.setItem("hasCompletedInstructions", "true");
             const payload = {
-                device: { device },
+                device: device,
                 participantId: window.participantId,  // Assuming you have a participantId stored somewhere
                 surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
             };
@@ -78,6 +78,24 @@ const message = {
     on_finish: function(data) {
         if (data.response === 1) { // 'Exit' button is clicked
             repeatConsent = false; // Stop looping to exit the survey
+            const exited = "EXITED";
+            const payload = {
+                exited: exited,
+                participantId: window.participantId,  // Assuming you have a participantId stored somewhere
+                surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
+            };
+            fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Consent Data Submitted Successfully:", data);
+                })
+                .catch(error => {
+                    console.error("Error submitting consent data:", error);
+                });
             jsPsych.abortExperiment("You chose to exit the survey. Thank you for your participation.");
         } else if (data.response === 0) { // 'Retry' button is clicked
             repeatConsent = true; // Continue to retry the trial

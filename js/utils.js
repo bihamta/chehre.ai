@@ -22,8 +22,27 @@ function addExitButton() {
 
     // Add event listener to handle the exit button click
     exitButton.addEventListener("click", function() {
+        const exited = "EXITED";
         exitButton.style.display = "none"; // Hide the button after it's clicked
+        const payload = {
+            exited: exited,
+            participantId: window.participantId,  // Assuming you have a participantId stored somewhere
+            surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
+        };
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Consent Data Submitted Successfully:", data);
+            })
+            .catch(error => {
+                console.error("Error submitting consent data:", error);
+            });
         jsPsych.abortExperiment("You chose to exit the survey. Thank you for your participation. You can close the window.");
+
     });
     
     // Add hover effect for a darker color

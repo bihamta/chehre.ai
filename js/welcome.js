@@ -12,8 +12,8 @@ const instructionsText = hasExistingSession
     ? `<h2>Chehre.ai</h2><br>
     <p id=thanks>You can click <strong>"Resume Experiment"</strong> to continue where you left off.</p>
     <p id=thanks>If you encounter any issues, please refresh the page or contact support (bazari@sfu.ca).</p>`
-    : `<h1>Welcome to Chehre.ai</h1><br>
-    <p>If you accidentally leave the experiment, your progress will be saved automatically and you can continue again.</p>
+    : `<h1>Welcome to Chehre.ai</h1><br><br>
+    <p id=thanks>If you accidentally leave the experiment, your progress will be saved automatically and you can continue again.</p>
     `;
 
 // Define the jsPsych trial:

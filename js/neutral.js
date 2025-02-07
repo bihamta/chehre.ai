@@ -68,10 +68,16 @@ const neutral_trial_init = {
             const rerecordButton = document.getElementById('rerecord-button');
 
             function initializeCamera() {
-                navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                }).then(function(stream) {
+                navigator.mediaDevices
+                    .getUserMedia({
+                        video: {
+                            width: { ideal: 640 },
+                            height: { ideal: 480 },
+                            facingMode: 'user',
+                            frameRate: { ideal: 25}
+                        },
+                        audio: true,
+                    }).then(function(stream) {
                     recorder = RecordRTC(stream, {
                         recorderType: MediaStreamRecorder,
                         type: 'video',

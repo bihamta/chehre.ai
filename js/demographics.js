@@ -262,7 +262,7 @@ const demog = {
 
         // Save to global so that we can access in on_finish
         window.collectedEthnicity = selectedEthnicities;
-        console.log("Collected Ethnicity on Page 5:", selectedEthnicities);
+
       }
 
       // Determine next page
@@ -303,14 +303,8 @@ const demog = {
     console.log("Demographics data (plugin):", data.response);
 
     // Try to parse the plugin's data
-    let responses;
-    try {
-      responses = JSON.parse(data.response);
-    } catch {
-      responses = data.response;
-      return;
-    }
-
+    let responses = data.response;
+    console.log("Parsed Demographics data:", responses);
     // If user was born in Canada, there's no "countryOfBirth" field from the plugin, so default "Canada"
     if (!responses.countryOfBirth) {
       responses.countryOfBirth = "Canada";
@@ -318,7 +312,7 @@ const demog = {
 
     // Merge the ethnicity array we collected on Page 5
     responses.ethnicity = window.collectedEthnicity || null;
-
+    console.log("age", responses.age);
     // We'll also store just the "Other" text if you want it separately
     let ethnicityOtherVal = null;
     if (window.collectedEthnicity && window.collectedEthnicity.length) {
@@ -329,7 +323,7 @@ const demog = {
     }
 
     console.log("Final Ethnicity Array:", responses.ethnicity);
-
+    console.log("age", responses.age);
     // Build final payload
     const payload = {
       surveyId: window.surveyId,
@@ -338,7 +332,7 @@ const demog = {
       gender: responses.gender,
       bornInCanada: responses.bornInCanada,
       countryOfBirth: responses.countryOfBirth,
-      ethnicity: responses.ethnicity,       // e.g. ["Africa","Other text"] or ["Asia"] or ...
+      ethnicity: responses.ethnicity,
       maritalStatus: responses.marital
     };
     console.log("Sending payload =>", payload);

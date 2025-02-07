@@ -21,6 +21,13 @@ const honesty = {
         </div>
     `,
     button_label: "Submit",
+    on_load: function() {
+        // Remove the style that might hide the default button
+        const hiddenStyle = document.getElementById("hide-continue-button");
+        if (hiddenStyle) {
+            hiddenStyle.remove();
+        }
+    },
     on_finish: function(data) {
         let honestyRating = null;
         let honestyExplain = null;

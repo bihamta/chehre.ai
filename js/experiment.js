@@ -16,17 +16,17 @@ import {down} from './down.js'
 
 // 2) We start building the timeline
 const timeline = [];
-timeline.push(down);
+// timeline.push(down);
 // 3) Always push "Welcome" first
 timeline.push(welcome);
 
-// 4) Check if the user *already* consented on a previous session
+// // 4) Check if the user *already* consented on a previous session
 const hasConsented = localStorage.getItem("hasConsented") === "true";
 if (!hasConsented) {
     timeline.push(consent);
 }
 
-// 5) Check if user already completed medi
+// // 5) Check if user already completed medi
 const hasMedi = localStorage.getItem("hasMedi") === "true";
 if (!hasMedi) {
   // If they haven't done medi, push your questionnaire + medi block
@@ -34,13 +34,14 @@ if (!hasMedi) {
     timeline.push(medi);
 }
 
-// 6) Add instructions & camera init
+// // 6) Add instructions & camera init
 const hasCompletedInstructions = localStorage.getItem("hasCompletedInstructions") === "true";
 if (!hasCompletedInstructions) {
     timeline.push(instruction_trial_1);
+    timeline.push(instruction_trial_2);
 }
 
-timeline.push(instruction_trial_2);
+
 timeline.push(init_camera);
 const neutralUploaded = localStorage.getItem('neutralUploaded');
 if (!neutralUploaded) {
@@ -55,8 +56,7 @@ let canDoEmojis = true; // default if no info
 if (storedEmojis && storedEmojiCounter) {
     const emojisArray = JSON.parse(storedEmojis);
     const emojiCount = parseInt(storedEmojiCounter, 10) || 0;
-    const totalEmojis = 2; // or your chosen total
-  // If we have already recorded them all OR no emojis left
+    const totalEmojis = 40;
     if (emojiCount >= totalEmojis || emojisArray.length === 0) {
         canDoEmojis = false;
     }   

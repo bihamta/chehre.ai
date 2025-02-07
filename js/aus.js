@@ -13,22 +13,18 @@ let currentAU = null;  // The item we are currently recording
 
 // 1) Attempt to load existing state from localStorage
 function loadAUState() {
-  console.log('Loading AU state from localStorage...'); 
   const storedAUs = localStorage.getItem('auList');
   const storedCounter = localStorage.getItem('auCounter');
 
   if (storedAUs) {
-    console.log('Found stored AUs:', storedAUs);
     try {
       auList = JSON.parse(storedAUs);
-      console.log('Loaded AU list:', auList);
     } catch (e) {
       console.warn('Failed to parse stored AU list. Re-initializing a new one.', e);
       auList = [];
     }
   }
   if (storedCounter) {
-    console.log('Found stored AU counter:', storedCounter);
     au_counter = parseInt(storedCounter, 10) || 0;
   }
 
@@ -45,10 +41,8 @@ function loadAUState() {
 
 // 2) Save current state to localStorage
 function saveAUState() {
-  console.log('Saving state -> au_counter =', au_counter);
   localStorage.setItem('auList', JSON.stringify(auList));
   localStorage.setItem('auCounter', String(au_counter));
-  console.log('Saved AU list:', auList);
 }
 
 function bytesToSize(bytes) {

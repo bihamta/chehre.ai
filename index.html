@@ -40,8 +40,6 @@
         const savedSurveyId = localStorage.getItem('surveyId');
         const savedParticipantId = localStorage.getItem('participantId');
 
-        console.log("saved emojis", localStorage.getItem('unusedEmojis'));
-        console.log("saved emojis", localStorage.getItem('emojiCounter'));
         if (savedSurveyId && savedParticipantId) {
         window.surveyId = savedSurveyId;
         window.participantId = savedParticipantId;

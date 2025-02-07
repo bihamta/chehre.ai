@@ -53,7 +53,6 @@ const emojiImages = [
 const specialEmojis = [
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-hand-over-mouth_1f92d.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-open-eyes-and-hand-over-mouth_1fae2.png",
-    // "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/face-with-peeking-eye_1fae3.png",
     "https://raw.githubusercontent.com/bihamta/chehre.ai/main/emojis/thinking-face_1f914.png"
 ];
 
@@ -71,6 +70,8 @@ let nameEmoji = "";
 let userSubmittedLabel = "";
 let recordingStartTime = 0;
 let cameraStream = null;
+let currentEmoji = null;
+
 
 // -----------------------------------------------------------------
 // 3) LOCALSTORAGE LOADING/SAVING
@@ -78,7 +79,6 @@ let cameraStream = null;
 function loadEmojiState() {
     // If we have saved data in localStorage, parse it
     const storedUnused = localStorage.getItem("unusedEmojis");
-    console.log("unused Emojis:  ", storedUnused);
     const storedCounter = localStorage.getItem("emojiCounter");
 
     if (storedUnused) {
@@ -136,10 +136,8 @@ const emoji_trial_init = {
         }
 
         // Pick the **last** from the array (or first, up to you)
-        const randomEmoji = unusedEmojis.pop();
-        // Immediately save the new array state
-        saveEmojiState();
-
+        currentEmoji = unusedEmojis[unusedEmojis.length - 1];
+        const randomEmoji = currentEmoji;
         // Extract a label from the filename
         // e.g. "face-blowing-a-kiss_1f618.png" => nameEmoji = "1f618"
         nameEmoji = randomEmoji.split("_")[1].split(".png")[0];
@@ -220,7 +218,6 @@ const emoji_trial_init = {
 
     on_load: function () {
         addExitButton();
-
         // Delay a bit for DOM to be ready
         setTimeout(() => {
             const videoElement = document.getElementById("camera-preview");
@@ -378,10 +375,14 @@ const emoji_trial_init = {
     on_finish: function () {
         
         console.log("Trial finished. We have a recording? -> Upload next.");
-        // We have completed 1 more emoji
-        emoji_counter += 1;
-        // Save to localStorage so we don’t lose progress
-        saveEmojiState();
+        if (currentEmoji) {
+            // In case you used random index, you’d splice, but if you always
+            // pick from the end, you can just pop:
+            unusedEmojis.pop();
+            // Now increment
+            emoji_counter += 1;
+            saveEmojiState();
+        }
     },
 };
 
@@ -479,8 +480,9 @@ loadEmojiState(); // Attempt to load from localStorage first
 // pairs of [recording_trial, uploading_trial] for the REMAINING emojis.
 const leftover = number_of_emojis - emoji_counter;
 const emojiTrials = [];
-
 for (let i = 0; i < leftover; i++) {
+    
+    
     emojiTrials.push(emoji_trial_init);
     emojiTrials.push(uploading_trial);
 }

@@ -71,8 +71,8 @@ const neutral_trial_init = {
                 navigator.mediaDevices
                     .getUserMedia({
                         video: {
-                            width: { ideal: 640 },
-                            height: { ideal: 480 },
+                            width: { ideal: 320 },
+                            height: { ideal: 240 },
                             facingMode: 'user',
                             frameRate: { ideal: 25}
                         },

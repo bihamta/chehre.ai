@@ -12,7 +12,7 @@ import { emojiTrials } from './emojis.js';
 import { au_trials } from './aus.js';
 import { goodbye, honesty } from './thanks.js';
 
-// import {down} from './down.js'
+import {down} from './down.js'
 
 // 2) We start building the timeline
 const timeline = [];

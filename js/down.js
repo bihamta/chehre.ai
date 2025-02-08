@@ -1,7 +1,7 @@
 var down = {
     type: jsPsychInstructions,
     pages: [
-        'Sorry server is down, please try again later'
+        "We're currently improving the study. Please try again tomorrow."
     ],
     show_clickable_nav: false
 }

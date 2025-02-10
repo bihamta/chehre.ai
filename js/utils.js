@@ -149,4 +149,34 @@ function getSupportedMimeType() {
     return null;
     }
 
-export {addExitButton, addBackButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType}
+function logError({
+    surveyId = "",
+    error = "",
+    stack = "",
+    message = "",
+    timestamp = new Date().toISOString(),
+        }) {
+            if (!surveyId) {
+            // If you store these in localStorage or global variables, grab them here
+            surveyId = window.surveyId || "unknown_survey";
+        }
+        console.error("Logging error:",surveyId);
+        // Construct the payload
+        const payload = {
+            surveyId,
+            error: String(error),
+            stack: String(stack),
+            message,
+            timestamp
+        };
+        // Send to your logger Lambda
+        fetch("https://vmq3r1f7xi.execute-api.us-east-2.amazonaws.com/log/logs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        }).catch((err) => console.error("Failed to log error:", err));
+    }
+
+export {addExitButton, addBackButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType, logError};
+
+

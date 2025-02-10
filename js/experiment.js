@@ -1,4 +1,26 @@
 // experiment.js
+import { logError } from "./utils.js";
+
+// 1) Attach global error capture first:
+window.onerror = function (msg, url, lineNo, colNo, errorObj) {
+    logError({
+        error: errorObj || msg,
+        stack: errorObj?.stack || "",
+        message: `Uncaught Error at ${url}:${lineNo}:${colNo}`
+    });
+    return false;
+    };
+
+    window.addEventListener("unhandledrejection", (evt) => {
+        const reason = evt.reason || {};
+        logError({
+            error: reason,
+            stack: reason.stack || "",
+            message: "Unhandled promise rejection"
+        });
+});
+
+// throw new Error("test error!")
 
 // 1) Import everything
 import { welcome } from './welcome.js';
@@ -16,7 +38,7 @@ import {down} from './down.js'
 
 // 2) We start building the timeline
 const timeline = [];
-timeline.push(down);
+// timeline.push(down);
 // 3) Always push "Welcome" first
 timeline.push(welcome);
 

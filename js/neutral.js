@@ -81,7 +81,9 @@ const neutral_trial_init = {
                     recorder = RecordRTC(stream, {
                         recorderType: MediaStreamRecorder,
                         type: 'video',
-                        mimeType: 'video/webm;codecs=vp8'
+                        mimeType: 'video/webm;codecs=vp8',
+                        bitsPerSecond: 1500000
+                        // audioBitsPerSecond: 64000 
                     });
                     videoElement.muted = true;
                     videoElement.volume = 0;

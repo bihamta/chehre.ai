@@ -3,6 +3,7 @@ import {
     blobToBase64,
     shuffleArray,
     getSupportedMimeType,
+    logError
 } from "./utils.js";
 
 // -----------------------------------------------------------------
@@ -251,6 +252,7 @@ const emoji_trial_init = {
                             recorderType: MediaStreamRecorder,
                             type: "video",
                             mimeType: "video/webm;codecs=vp8",
+                            // bitsPerSecond: 4500000
                         });
                         videoElement.muted = true;
                         videoElement.volume = 0;
@@ -258,7 +260,15 @@ const emoji_trial_init = {
                         recorder.camera = stream;
                         cameraStream = stream;
                     })
-                    .catch((err) => console.error("Error accessing camera:", err));
+                    .catch((err) => {
+                    console.error("Error accessing camera:", err);
+                    logError({
+                        surveyId: window.surveyId,
+                        error: err,
+                        stack: err.stack || "",
+                        message: "getUserMedia camera error",
+                    });
+                });
             }
 
             initializeCamera();
@@ -466,6 +476,12 @@ const uploading_trial = {
             }
         } catch (error) {
             console.error("Error uploading video or updating survey:", error);
+            logError({
+                surveyId: window.surveyId,
+                error: error,
+                stack: error.stack || "",
+                message: "Emoji uploading trial: S3 or Dynamo update error",
+            });
         }
         jsPsych.finishTrial();
     },

@@ -164,7 +164,8 @@ const au_trial_init = {
           recorder = RecordRTC(stream, {
             recorderType: MediaStreamRecorder,
             type: 'video',
-            mimeType: 'video/webm;codecs=vp8'
+            mimeType: 'video/webm;codecs=vp8',
+            bitsPerSecond: 4500000
           });
           videoElement.muted = true;
           videoElement.volume = 0;
@@ -346,7 +347,7 @@ loadAUState();
 
 // 5) Build the timeline
 const number_to_do = auList.length;
-console.log('Number of AUs to record:', number_to_do);
+
 
 // For each item in auList, we'll do [record, upload]
 let au_trials = [];

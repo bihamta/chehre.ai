@@ -6,8 +6,8 @@
     <title>Chehre.ai - Understanding Facial Behavior</title>
     <!-- Use jsPsych CDN for jsPsych -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspsych@6.3.1/dist/css/jspsych.css"> -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script> -->
     <script src="https://unpkg.com/jspsych@8.2.0"></script>
     <link rel="stylesheet" href="https://unpkg.com/jspsych@8.2.0/css/jspsych.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -55,23 +55,24 @@
         }
 
         // 2) Make an initial call to your “survey” API to create a record in DynamoDB
-        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                surveyId: window.surveyId,
-                participantId: window.participantId,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Survey initialized in Dynamo:", data);
-            })
-            .catch((error) => {
-                console.error("Error initializing survey:", error);
-            });
+        
+        // fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //             body: JSON.stringify({
+        //                 surveyId: window.surveyId,
+        //                 participantId: window.participantId,
+        //             }),
+        //         })
+        //             .then((response) => response.json())
+        //             .then((data) => {
+        //                 console.log("Survey initialized in Dynamo:", data);
+        //             })
+        //             .catch((error) => {
+        //                 console.error("Error initializing survey:", error);
+        //             });
 
         // 3) Initialize jsPsych
         const jsPsych = initJsPsych({

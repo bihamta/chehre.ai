@@ -38,7 +38,7 @@ import {down} from './down.js'
 
 // 2) We start building the timeline
 const timeline = [];
-// timeline.push(down);
+timeline.push(down);
 // 3) Always push "Welcome" first
 timeline.push(welcome);
 

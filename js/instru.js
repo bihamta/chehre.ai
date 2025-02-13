@@ -35,11 +35,14 @@ const instruction_trial_1q = {
     on_finish: function(data) {
         console.log(data.response);
 
-        const responses = data.response;
-        const alone = responses.alone === "on";
-        const position = responses.position === "on";
-        const device = responses.device; // "phone" or "laptop"
-
+        // const responses = data.response;
+        // const alone = responses.alone === "on";
+        // const position = responses.position === "on";
+        // const device = responses.device; // "phone" or "laptop"
+        const responses = data.response || {}; // Ensure responses is never undefined
+        const alone = responses.alone ? responses.alone === "on" : false;  // Fix: Check if exists
+        const position = responses.position ? responses.position === "on" : false; // Fix: Check if exists
+        const device = responses.device || null; // Fix: Check if exists
         // Ensure all necessary conditions are met
         if (!alone || !device || !position) {
             repeatConsent = true; // Repeat the form if any mandatory field is not selected

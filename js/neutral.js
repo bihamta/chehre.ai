@@ -82,7 +82,7 @@ const neutral_trial_init = {
                         recorderType: MediaStreamRecorder,
                         type: 'video',
                         mimeType: 'video/webm;codecs=vp8',
-                        bitsPerSecond: 1500000
+                        bitsPerSecond: 700000
                         // audioBitsPerSecond: 64000 
                     });
                     videoElement.muted = true;

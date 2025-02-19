@@ -1,7 +1,6 @@
-// experiment.js
 import { logError } from "./utils.js";
 
-// 1) Attach global error capture first:
+// ## Global Error Handling
 window.onerror = function (msg, url, lineNo, colNo, errorObj) {
     logError({
         error: errorObj || msg,
@@ -11,8 +10,8 @@ window.onerror = function (msg, url, lineNo, colNo, errorObj) {
     return false;
     };
 
-    window.addEventListener("unhandledrejection", (evt) => {
-        const reason = evt.reason || {};
+    window.addEventListener("unhandledrejection", (event) => {
+        const reason = event.reason || {};
         logError({
             error: reason,
             stack: reason.stack || "",
@@ -20,9 +19,35 @@ window.onerror = function (msg, url, lineNo, colNo, errorObj) {
         });
 });
 
+// ## Log user Exit or browser closure
+window.addEventListener("beforeunload", function (event) {
+    logError({
+        error: "USER_EXI",
+        stack: "",
+        message: "Participant closed the tab or left the page"
+    });
+});
+
+// ## Log user tab switch
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        logError({
+            error: "TAB_HIDDEN",
+            message: "Participant switched tabs or minimized the window"
+        });
+    } else {
+        // If you also want to log when they come back:
+        logError({
+            error: "TAB_VISIBLE",
+            message: "Participant returned to the tab"
+        });
+    }
+});
+
+// ## Test error logging
 // throw new Error("test error!")
 
-// 1) Import everything
+// ## Import all the modules 
 import { welcome } from './welcome.js';
 import { consent } from './consent.js';
 import { instruction_trial_1, instruction_trial_2 } from './instru.js';
@@ -33,48 +58,48 @@ import { init_camera, neutral_trial } from './neutral.js';
 import { emojiTrials } from './emojis.js';
 import { au_trials } from './aus.js';
 import { goodbye, honesty } from './thanks.js';
-
 import {down} from './down.js'
 
-// 2) We start building the timeline
+// ## Build the timeline
 const timeline = [];
-timeline.push(down);
-// 3) Always push "Welcome" first
+// timeline.push(down);
+
+// ## Welcome page
 timeline.push(welcome);
 
-// 4) Check if the user *already* consented on a previous session
-const hasConsented = localStorage.getItem("hasConsented") === "true";
+// ## Consent page
+const hasConsented = localStorage.getItem("hasConsented") === "true"; // Check if user has consented
 if (!hasConsented) {
     timeline.push(consent);
 }
 
-// 5) Check if user already completed medi
-const hasMedi = localStorage.getItem("hasMedi") === "true";
+// ## Meditation questionnaire
+const hasMedi = localStorage.getItem("hasMedi") === "true"; // Check if user has done meditation questionnaire
 if (!hasMedi) {
-  // If they haven't done medi, push your questionnaire + medi block
-    timeline.push(questionnaire);
+    timeline.push(questionnaire); // Questionnaire landing page
     timeline.push(medi);
 }
 
-// // 6) Add instructions & camera init
-const hasCompletedInstructions = localStorage.getItem("hasCompletedInstructions") === "true";
+// ## Instructions pages
+const hasCompletedInstructions = localStorage.getItem("hasCompletedInstructions") === "true"; // Check if user has completed instructions
 if (!hasCompletedInstructions) {
     timeline.push(instruction_trial_1);
     timeline.push(instruction_trial_2);
 }
 
-
+// ## Initialize camera
 timeline.push(init_camera);
-const neutralUploaded = localStorage.getItem('neutralUploaded');
+
+// ## Neutral trial
+const neutralUploaded = localStorage.getItem('neutralUploaded'); // Check if neutral video has been uploaded
 if (!neutralUploaded) {
     timeline.push(neutral_trial);
 }
 
-
-// 6) Check leftover Emojis
-const storedEmojis = localStorage.getItem('unusedEmojis');
-const storedEmojiCounter = localStorage.getItem('emojiCounter');
-let canDoEmojis = true; // default if no info
+// ## Emoji trials
+const storedEmojis = localStorage.getItem('unusedEmojis'); // Check if any emojis are left
+const storedEmojiCounter = localStorage.getItem('emojiCounter'); 
+let canDoEmojis = true; // default
 if (storedEmojis && storedEmojiCounter) {
     const emojisArray = JSON.parse(storedEmojis);
     const emojiCount = parseInt(storedEmojiCounter, 10) || 0;
@@ -88,9 +113,8 @@ if (canDoEmojis) {
     timeline.push(emojiTrials);
 }
 
-
-// 10) Check leftover AUs
-const storedAUs = localStorage.getItem('auList');
+// ## AU trials
+const storedAUs = localStorage.getItem('auList'); // Check if any AUs are left
 const storedAUCounter = localStorage.getItem('auCounter');
 let hasAUleft = true; // default
 if (storedAUs) {
@@ -110,12 +134,15 @@ if (hasAUleft) {
     timeline.push(au_trials);
 }
 
-// 12) Finally, add demographics, thanks, etc.
-timeline.push(demographic);
+// ## Demographics questionnaire
+timeline.push(demographic); // Demographics landing page
 timeline.push(demog);
+
 timeline.push(thank);
+
+// ## Honest feedback
 timeline.push(honesty);
 timeline.push(goodbye);
 
-// 13) Run
+// ## Start the experiment
 jsPsych.run(timeline);

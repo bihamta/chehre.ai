@@ -160,9 +160,12 @@ function logError({
             // If you store these in localStorage or global variables, grab them here
             surveyId = window.surveyId || "unknown_survey";
         }
+        // Generate a unique logId (e.g. surveyId + current time)
+        const logId = surveyId + "_" + Date.now();
         console.error("Logging error:",surveyId);
         // Construct the payload
         const payload = {
+            logId,
             surveyId,
             error: String(error),
             stack: String(stack),

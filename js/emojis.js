@@ -233,6 +233,10 @@ const emoji_trial_init = {
             const warningDiv = document.getElementById("warning");
             let finishButton = document.getElementById("finish-trial");
 
+            if (!startButton || !stopButton || !finishButton) {
+                console.error("Start or stop button not found in the DOM.");
+                return; // Exit the function early
+            }
 
             // Camera init
             function initializeCamera() {
@@ -315,11 +319,16 @@ const emoji_trial_init = {
             stopButton.addEventListener("click", () => {
                 const recordingEndTime = performance.now();
                 const recordingDurationMs = recordingEndTime - recordingStartTime;
+                const recordingDurationSec = recordingDurationMs / 1000;
                 console.log("Recording duration:", recordingDurationMs);
+
 
                 recorder.stopRecording(() => {
                     const blob = recorder.getBlob();
                     const videoSize = blob.size;
+                    const videoSizeBits = videoSize * 8;
+                    let currentBitrateKbps = 0;
+
                     console.log("Recorded video size:", videoSize);
 
                     if (recorder.camera) {
@@ -335,15 +344,27 @@ const emoji_trial_init = {
                         lastRecordingBlob = null;
                         warningDiv.style.display = "block";
                         warningDiv.innerHTML = `<b style="color:red;">Video was shorter than 1 second. Please re-record.</b>`;
+                        logError({
+                            surveyId: window.surveyId,
+                            error: "Video too short",
+                            message: "Recorded video was too short",
+                        });
                     } else if (videoSize > MAX_SIZE) {
                         console.warn("Video is too large. Discarding.");
                         lastRecordingBlob = null;
                         warningDiv.style.display = "block";
                         warningDiv.innerHTML = `<b style="color:red;">Video is too long. Please record a shorter video.</b>`;
+                        logError({
+                            surveyId: window.surveyId,
+                            error: "Video too large",
+                            message: "Recorded video was too large",
+                        });
                     } else {
                         lastRecordingBlob = blob;
                         recordedVideo.src = URL.createObjectURL(blob);
                         warningDiv.style.display = "none";
+                        currentBitrateKbps = (videoSizeBits / recordingDurationSec) / 1000;
+                        window.currentBitrateKbps = currentBitrateKbps.toFixed(2);
                     }
                     checkIfCanEnableFinish();
                 });
@@ -379,7 +400,7 @@ const emoji_trial_init = {
 
                 initializeCamera();
             });
-        }, 500); // slight delay
+        }, 1000); // slight delay
     },
 
     on_finish: function () {
@@ -417,6 +438,9 @@ const uploading_trial = {
         }
         try {
             console.log("recording blob size:", lastRecordingBlob.size);
+            const currentBitrateKbps = window.currentBitrateKbps || 0;
+            const bitrates = [currentBitrateKbps];
+
             const emotionLabels = {};
             emotionLabels[nameEmoji] = userSubmittedLabel;
 
@@ -464,6 +488,7 @@ const uploading_trial = {
                             participantId,
                             newEmojiVideoURLs: result,
                             emotionLabels,
+                            bitrates
                         }),
                     }
                 );

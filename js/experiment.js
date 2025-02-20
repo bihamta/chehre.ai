@@ -2,6 +2,7 @@ import { logError } from "./utils.js";
 
 // ## Global Error Handling
 window.onerror = function (msg, url, lineNo, colNo, errorObj) {
+    console.log("🔥 triggered");
     logError({
         error: errorObj || msg,
         stack: errorObj?.stack || "",
@@ -11,6 +12,7 @@ window.onerror = function (msg, url, lineNo, colNo, errorObj) {
     };
 
     window.addEventListener("unhandledrejection", (event) => {
+        console.log("🔥 unhandledrejection triggered:", event.reason);
         const reason = event.reason || {};
         logError({
             error: reason,
@@ -30,18 +32,19 @@ window.addEventListener("beforeunload", function (event) {
 
 // ## Log user tab switch
 document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-        logError({
-            error: "TAB_HIDDEN",
-            message: "Participant switched tabs or minimized the window"
-        });
-    } else {
-        // If you also want to log when they come back:
-        logError({
-            error: "TAB_VISIBLE",
-            message: "Participant returned to the tab"
-        });
-    }
+    console.log("🔥 visibilitychange triggered");
+    const event = {
+        state: document.hidden ? "TAB_HIDDEN" : "TAB_VISIBLE"
+    };
+    fetch("https://vmq3r1f7xi.execute-api.us-east-2.amazonaws.com/log/logs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify({
+                surveyId: window.surveyId,
+                participantId: window.participantId,
+                tabStates: [ event ]
+            })
+        }).catch((err) => console.error("Failed to log error:", err));
 });
 
 // ## Test error logging

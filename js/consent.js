@@ -92,7 +92,8 @@ const consentForm = {
                     optional2,
                 },
                 participantId: window.participantId,  // Assuming you have a participantId stored somewhere
-                surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
+                surveyId: window.surveyId , // Assuming you have a surveyId stored somewhere
+                userAgent: navigator.userAgent || "Unknown UA",
             };
 
             fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {

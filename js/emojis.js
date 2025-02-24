@@ -233,6 +233,8 @@ const emoji_trial_init = {
             const warningDiv = document.getElementById("warning");
             let finishButton = document.getElementById("finish-trial");
 
+            startButton.disabled = true;
+
             if (!startButton || !stopButton || !finishButton) {
                 console.error("Start or stop button not found in the DOM.");
                 return; // Exit the function early
@@ -256,13 +258,15 @@ const emoji_trial_init = {
                             recorderType: MediaStreamRecorder,
                             type: "video",
                             mimeType: "video/webm;codecs=vp8",
-                            // bitsPerSecond: 4500000
+                            bitsPerSecond: 2500000
                         });
                         videoElement.muted = true;
                         videoElement.volume = 0;
                         videoElement.srcObject = stream;
                         recorder.camera = stream;
                         cameraStream = stream;
+
+                        startButton.disabled = false;
                     })
                     .catch((err) => {
                     console.error("Error accessing camera:", err);

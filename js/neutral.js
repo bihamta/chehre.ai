@@ -67,6 +67,8 @@ const neutral_trial_init = {
             const recordedVideo = document.getElementById('recorded-video');
             const rerecordButton = document.getElementById('rerecord-button');
 
+            startButton.disabled = true;
+
             function initializeCamera() {
                 navigator.mediaDevices
                     .getUserMedia({
@@ -89,6 +91,8 @@ const neutral_trial_init = {
                     videoElement.volume = 0;
                     videoElement.srcObject = stream;
                     recorder.camera = stream;
+
+                    startButton.disabled = false;
                 })
                 .catch((err) => console.error('Error accessing camera:', err));
                 document.getElementById('finish-trial').disabled = true;

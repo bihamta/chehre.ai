@@ -156,6 +156,8 @@ const au_trial_init = {
       const rerecordButton = document.getElementById('rerecord-button');
       const warningDiv = document.getElementById('warning');
 
+      startButton.disabled = true;
+
       function initializeCamera() {
         navigator.mediaDevices.getUserMedia({
           video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user', frameRate: { ideal: 25 } },
@@ -165,12 +167,15 @@ const au_trial_init = {
             recorderType: MediaStreamRecorder,
             type: 'video',
             mimeType: 'video/webm;codecs=vp8',
-            bitsPerSecond: 4500000
+            bitsPerSecond: 2500000
           });
           videoElement.muted = true;
           videoElement.volume = 0;
           videoElement.srcObject = stream;
           recorder.camera = stream;
+
+          startButton.disabled = false;
+
         })
         .catch(err => console.error('Error accessing camera:', err));
 

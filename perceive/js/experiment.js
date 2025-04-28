@@ -11,17 +11,18 @@ const timeline = [];
 // ## Welcome page
 timeline.push(welcome);
 
+timeline.push(consent);
 // ## Consent page
 const hasConsented = localStorage.getItem("hasConsented") === "true"; // Check if user has consented
 if (!hasConsented) {
     timeline.push(consent);
 }
 
-timeline.push(thank);
+// timeline.push(thank);
 
-// ## Honest feedback
-timeline.push(honesty);
-timeline.push(goodbye);
+// // ## Honest feedback
+// timeline.push(honesty);
+// timeline.push(goodbye);
 
 // ## Start the experiment
 jsPsych.run(timeline);

@@ -14,9 +14,18 @@ const selecting_videos = {
     stimulus: function () {
     const [v1, v2] = nextTwoVideos.videos;
     console.log("Rendering videos:", v1.video_url, v2.video_url, v2.emoji_code);
+    if (v2.emoji_code.includes("AU")) {
+        emoji_code = "AU";
+    }
+    else if (v2.emoji_code.includes("neutral")) {
+        emoji_code = "neutral";
+    }
+    else {
+        emoji_code = v2.emoji_code;
+    }
     return `
         <div class="fc-container">
-            <img src="media/emojis/${v2.emoji_code}.png" alt="emoji" class="emoji-img" style="width: 50px; height: 50px; margin-bottom: 20px;" />
+            <img src="./media/emojis/${emoji_code}.png" alt="emoji" class="emoji-img" style="width: 50px; height: 50px; margin-bottom: 20px;" />
             <div class="fc-row">
                 <div class="fc-video-block">
                     <video id="video-player1" class="video_compare" autoplay loop muted>

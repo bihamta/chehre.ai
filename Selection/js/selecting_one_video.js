@@ -10,17 +10,20 @@ const selecting_one_video = {
     if (video.emoji_code.includes("AU")) {
         emoji_code = "AU";
     }
+    else if (video.emoji_code.includes("neutral")) {
+        emoji_code = "neutral";
+    }
     else {
         emoji_code = video.emoji_code;
     }
     return `
         <div class="fc-container">
-            <img src="media/emojis/${video.emoji_code}.png" alt="emoji" class="emoji-img" style="width: 50px; height: 50px; margin-bottom: 20px;" />
+            <img src="./media/emojis/${emoji_code}.png" alt="emoji" class="emoji-img" style="width: 50px; height: 50px; margin-bottom: 20px;" />
             <div class="fc-container">
     
             <div class="fc-video-block">
                 <video id="video1" autoplay loop muted>
-                    <source src="${emoji_code}" type="video/mp4">
+                    <source src="${video.video_url}" type="video/mp4">
                 </video>
             </div>
             <div class="fc-button-group" style="margin-top: 30px;">
@@ -87,6 +90,7 @@ const selecting_one_video = {
                 .then(res => res.json())
                 .then(resp => console.log("Rating success:", resp))
                 .catch(err => console.error("Rating error:", err));
+
         }
     };
     

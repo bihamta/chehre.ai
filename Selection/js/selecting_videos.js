@@ -114,18 +114,18 @@ const selecting_videos = {
             const payload = {
             video_name,
             emoji_code,
-            rater: "vit",
+            rater: window.rater,
             decision
             };
             console.log("Submitting rating =>", payload);
-            // fetch("https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/video-selection", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify(payload),
-            //     })
-            //     .then(res => res.json())
-            //     .then(resp => console.log("Rating success:", resp))
-            //     .catch(err => console.error("Rating error:", err));
+            fetch("https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/video-selection", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                })
+                .then(res => res.json())
+                .then(resp => console.log("Rating success:", resp))
+                .catch(err => console.error("Rating error:", err));
         });
         }
     };

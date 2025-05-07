@@ -19,7 +19,8 @@ const passwordTrial = {
         granted = data.correct;
 
         if (granted && pw.includes("-")) {
-            researcherName = pw.split("-")[0]; 
+            researcherName = pw.split("-")[0];
+            window.rater = researcherName;
         } else if (granted) {
             researcherName = "Researcher";
         }

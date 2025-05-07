@@ -4,24 +4,24 @@ import { goodbye } from './thankyou.js';
 import { nextTwoVideos, fetchTwoVideos } from './utils.js';
 import { selecting_one_video } from './selecting_one_video.js';
 
-const timeline = [];
-timeline.push(passwordLoop);
-(async () => {
-        await new Promise(resolve => fetchTwoVideos(resolve));
-        console.log(nextTwoVideos.videos);
+jsPsych.run([passwordLoop]);  // Start with password check
 
-        if (!nextTwoVideos.videos || nextTwoVideos.videos.length === 0) {
-            console.log("No videos available");
-            timeline.push(goodbye);
-        } else if (nextTwoVideos.videos.length === 1) {
-            console.log("Only one video available");
-            timeline.push(selecting_one_video);
-        } else {
-            console.log("Two videos available");
-            timeline.push(selecting_videos);
-        }
+// Then begin the loop
+const runNext = async () => {
+    await new Promise(resolve => fetchTwoVideos(resolve));
+    const vids = nextTwoVideos.videos || [];
 
-        // timeline.push(passwordLoop);
-        jsPsych.run(timeline);
-    })();
+    if (vids.length === 0) {
+        jsPsych.run([goodbye]);
+        return;
+    }
 
+    const trial = vids.length === 1 ? selecting_one_video : selecting_videos;
+
+    jsPsych.run([{
+        timeline: [trial],
+        on_finish: runNext  // After each rating, loop again
+    }]);
+};
+
+runNext();

@@ -11,7 +11,8 @@ p#note {
 }
 .jspsych-btn {
     background-color: white;
-    border: 2px solid #3e5f4e;
+    width: 80px;
+    /* border: 2px solid #3e5f4e; */
     color: #3e5f4e;
     transition: all 0.3s ease;
     border-radius: 6px;
@@ -81,62 +82,63 @@ video{
 /* slider */
 /* Range slider track */
 input[type=range].styled-slider {
-  width: 100%;
-  appearance: none;
-  height: 8px;
-  background: #d3d3d3;
-  border-radius: 5px;
-  outline: none;
-  position: relative;
-  margin-bottom: 40px; /* Extra space for ticks */
+    width: 100%;
+    appearance: none;
+    height: 8px;
+    background: #d3d3d3;
+    border-radius: 5px;
+    outline: none;
+    position: relative;
+    margin-bottom: 40px; /* Extra space for ticks */
 }
 
 /* Thumb (circle you drag) */
 input[type=range].styled-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #3e5f4e;
-  cursor: pointer;
-  border: none;
-  margin-top: -8px;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3e5f4e;
+    cursor: pointer;
+    border: none;
+    margin-top: -8px;
 }
 
 input[type=range].styled-slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #3e5f4e;
-  cursor: pointer;
-  border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3e5f4e;
+    cursor: pointer;
+    border: none;
 }
 
 /* FAKE TICKS using background gradient */
 input[type=range].styled-slider {
-  background-image: 
+    background-image: 
     linear-gradient(to right, 
-      #3e5f4e 0%, 
-      #d3d3d3 0.5%, 
-      #d3d3d3 24.5%, 
-      #3e5f4e 25%, 
-      #d3d3d3 25.5%, 
-      #d3d3d3 49.5%, 
-      #3e5f4e 50%, 
-      #d3d3d3 50.5%, 
-      #d3d3d3 74.5%, 
-      #3e5f4e 75%, 
-      #d3d3d3 75.5%, 
-      #d3d3d3 99.5%, 
-      #3e5f4e 100%
+        #3e5f4e 0%, 
+        #d3d3d3 0.5%, 
+        #d3d3d3 24.5%, 
+        #3e5f4e 25%, 
+        #d3d3d3 25.5%, 
+        #d3d3d3 49.5%, 
+        #3e5f4e 50%, 
+        #d3d3d3 50.5%, 
+        #d3d3d3 74.5%, 
+        #3e5f4e 75%, 
+        #d3d3d3 75.5%, 
+        #d3d3d3 99.5%, 
+        #3e5f4e 100%
     );
-  background-size: 100% 7px;
-  background-repeat: no-repeat;
-  background-position: bottom center;
+    background-size: 100% 7px;
+    background-repeat: no-repeat;
+    background-position: bottom center;
 }
 
 
 /* 2 videos side by side */
+
 .fc-container {
     display: flex;
     flex-direction: column;
@@ -144,55 +146,55 @@ input[type=range].styled-slider {
     width: 100%;
     padding: 0 0;
     box-sizing: border-box;
-  }
-  
-  .fc-prompt {
+}
+
+.fc-prompt {
     font-size: 20px;
     color: #3e5f4e;
     margin-bottom: 24px;
     text-align: center;
     max-width: 800px;
-  }
-  
-  .fc-row {
+}
+
+.fc-row {
     display: flex;
     justify-content: center;
     gap: 5vw;
     width: 100%;
     max-width: 800px;
-  }
-  
-  .fc-video-block {
+}
+
+.fc-video-block {
     width: 45vw;
     max-width: 300px;
     min-width: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .fc-video-block video {
-    width: 100%;
-    height: auto;
+}
+
+.fc-video-block video {
+    width: 300px;
+    height: 300px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  
-  .fc-label {
+}
+
+.fc-label {
     margin-top: 10px;
     font-weight: bold;
     color: #3e5f4e;
     text-align: center;
     font-size: 16px;
-  }
-  
-  .fc-button-group {
+}
+
+.fc-button-group {
     display: flex;
     gap: 12px;
     margin-top: 32px;
     flex-wrap: wrap;
     justify-content: center;
-  }
+}
 .emoji-grid {
     display: grid;
     grid-template-columns: repeat(4, 60px);

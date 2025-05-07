@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bihamta/chehre.ai#readme",
   "dependencies": {
+    "@jspsych/plugin-call-function": "^2.1.0",
     "jspsych": "^8.2.0",
     "uuid": "^11.0.5"
   },

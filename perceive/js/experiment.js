@@ -3,6 +3,7 @@ import { welcome } from './welcome.js';
 import { consent } from './consent.js';
 import { goodbye, honesty } from './thanks.js';
 import { thank } from './landing.js';
+import { down } from './down.js';
 import { get_next_video }   from './get_next_video.js';
 import { compare_two_videos } from './compare_two_videos.js';
 import { emoji_single_slider } from './emoji_single_slider.js';

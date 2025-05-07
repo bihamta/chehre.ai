@@ -87,7 +87,6 @@ const selecting_one_video = {
                 .then(res => res.json())
                 .then(resp => console.log("Rating success:", resp))
                 .catch(err => console.error("Rating error:", err));
-        });
         }
     };
     

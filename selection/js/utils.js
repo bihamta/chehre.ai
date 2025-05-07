@@ -41,7 +41,7 @@ function addExitButton() {
             .catch(error => {
                 console.error("Error submitting consent data:", error);
             });
-        jsPsych.abortExperiment("You chose to exit the survey. Thank you for your participation. You can close the window.");
+        jsPsych.abortExperiment("Thank you for your help. You may close this window now.");
 
     });
     

@@ -58,7 +58,7 @@ const passwordLoop = {
         }
     ],
     loop_function: function() {
-        return !granted;2
+        return !granted;
     }
 };
 

@@ -1,27 +1,38 @@
-import { passwordLoop } from './letmein.js';
-import { selecting_videos } from './selecting_videos.js';
-import { goodbye } from './thankyou.js';
+
+import { passwordLoop }           from './letmein.js';
+import { selecting_videos }       from './selecting_videos.js';
+import { selecting_one_video }    from './selecting_one_video.js';
+import { goodbye }                from './thankyou.js';
 import { nextTwoVideos, fetchTwoVideos } from './utils.js';
-import { selecting_one_video } from './selecting_one_video.js';
 
-jsPsych.run([passwordLoop]);  // Start with password check
-
-// Then begin the loop
-const runNext = async () => {
-    await new Promise(resolve => fetchTwoVideos(resolve));
-    const vids = nextTwoVideos.videos || [];
-
-    if (vids.length === 0) {
-        jsPsych.run([goodbye]);
-        return;
-    }
-
-    const trial = vids.length === 1 ? selecting_one_video : selecting_videos;
-
-    jsPsych.run([{
-        timeline: [trial],
-        on_finish: runNext  // After each rating, loop again
-    }]);
+const fetchVideos = {
+    type: jsPsychCallFunction,
+    async: true,
+    func: (done) => fetchTwoVideos(done)
 };
 
-runNext();
+const chooseVideoTrial = {
+    timeline: [
+        {
+        timeline: [ selecting_one_video ],
+        conditional_function: () => nextTwoVideos.videos.length === 1
+        },
+        {
+        timeline: [ selecting_videos ],
+        conditional_function: () => nextTwoVideos.videos.length > 1
+        }
+    ]
+};
+
+const videoLoop = {
+    timeline: [ fetchVideos, chooseVideoTrial ],
+    loop_function: () => {
+        return (nextTwoVideos.videos || []).length > 0;
+    }
+};
+
+jsPsych.run([
+  passwordLoop,  // stays on password until correct
+  videoLoop,     // repeats fetch→trial until empty
+  goodbye        // once empty, show thank you
+]);

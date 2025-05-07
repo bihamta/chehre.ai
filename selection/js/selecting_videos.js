@@ -1,5 +1,5 @@
 import { addExitButton, nextTwoVideos, fetchTwoVideos } from "./utils.js";
-
+let emoji_code = "";
 const selecting_videos = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: false,

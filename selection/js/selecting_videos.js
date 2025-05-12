@@ -28,14 +28,14 @@ const selecting_videos = {
             <img src="./media/emojis/${emoji_code}.png" alt="emoji" class="emoji-img" style="width: 50px; height: 50px; margin-bottom: 20px;" />
             <div class="fc-row">
                 <div class="fc-video-block">
-                    <video id="video-player1" class="video_compare" autoplay loop muted>
+                    <video id="video-player1" class="video_compare" autoplay loop muted playsinline webkit-playsinline preload="metadata">
                         <source src="${v1.video_url}" type="video/mp4">
                     </video>
                     <p class="fc-label">Video 1</p>
                 </div>
 
                 <div class="fc-video-block">
-                    <video id="video-player2" class="video_compare" autoplay loop muted>
+                    <video id="video-player2" class="video_compare" autoplay loop muted playsinline webkit-playsinline preload="metadata">
                         <source src="${v2.video_url}" type="video/mp4">
                     </video>
                     <p class="fc-label">Video 2</p>

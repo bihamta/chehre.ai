@@ -11,7 +11,7 @@ p#note {
 }
 .jspsych-btn {
     background-color: white;
-    width: 80px;
+    width: 100px;
     /* border: 2px solid #3e5f4e; */
     color: #3e5f4e;
     transition: all 0.3s ease;

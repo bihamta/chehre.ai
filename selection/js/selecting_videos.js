@@ -59,11 +59,27 @@ const selecting_videos = {
     on_load: function () {
         addExitButton();
 
-        const player1 = document.getElementById("video-player1");
-        const player2 = document.getElementById("video-player2");
-        player1.play().catch(() => console.warn("Autoplay prevented for video 1"));
-        player2.play().catch(() => console.warn("Autoplay prevented for video 2"));
-        
+    const player1 = document.getElementById("video-player1");
+    const player2 = document.getElementById("video-player2");
+    const players = [player1, player2];
+    let readyCount = 0;
+    
+    players.forEach(v => {
+        // ensure we are preloading
+        v.preload = 'auto';
+    
+        // When enough data is buffered to play through…
+        v.addEventListener('canplaythrough', () => {
+        readyCount++;
+        if (readyCount === players.length) {
+            // both videos buffered enough—play them
+            players.forEach(p => p.play().catch(() => {}));
+        }
+        });
+    
+        // Kick off loading
+        v.load();
+    });
         let selected = null;
         const selectionText = document.getElementById("selectionText");
         const confirmButton = document.getElementById("confirmButton");

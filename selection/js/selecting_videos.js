@@ -59,6 +59,11 @@ const selecting_videos = {
     on_load: function () {
         addExitButton();
 
+        const player1 = document.getElementById("video-player1");
+        const player2 = document.getElementById("video-player2");
+        player1.play().catch(() => console.warn("Autoplay prevented for video 1"));
+        player2.play().catch(() => console.warn("Autoplay prevented for video 2"));
+        
         let selected = null;
         const selectionText = document.getElementById("selectionText");
         const confirmButton = document.getElementById("confirmButton");

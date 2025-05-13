@@ -1,4 +1,4 @@
-const validPasswords = ["Zoe-202505", "Avneet-202505", "Bita-202505", "Angelica-202505"];
+const validPasswords = ["1", "Zoe-202505", "Avneet-202505", "Bita-202505", "Angelica-202505"];
 let granted = false;
 let researcherName = "";
 

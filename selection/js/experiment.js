@@ -13,17 +13,25 @@ const fetchVideos = {
 
 const chooseVideoTrial = {
     timeline: [
-        {
+      {
         timeline: [ selecting_one_video ],
-        conditional_function: () => nextTwoVideos.videos.length === 1
-        },
-        {
-        timeline: [ selecting_videos ],
-        conditional_function: () => nextTwoVideos.videos.length > 1
+        conditional_function: () => {
+          const one = nextTwoVideos.videos.length === 1;
+          if (one) console.log("One video selected");
+          return one;        // ← return the boolean!
         }
+      },
+      {
+        timeline: [ selecting_videos ],
+        conditional_function: () => {
+          const two = nextTwoVideos.videos.length > 1;
+          if (two) console.log("Two videos selected");
+          return two;       // ← return the boolean!
+        }
+      }
     ]
-};
-
+  };
+  
 const videoLoop = {
     timeline: [ fetchVideos, chooseVideoTrial ],
     loop_function: () => {

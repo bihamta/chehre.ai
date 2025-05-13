@@ -13,15 +13,16 @@ const selecting_videos = {
 
     stimulus: function () {
     const [v1, v2] = nextTwoVideos.videos;
+    
     console.log("Rendering videos:", v1.video_url, v2.video_url, v2.emoji_code);
-    if (v2.emoji_code.includes("AU")) {
+    if (v1.emoji_code.includes("AU")) {
         emoji_code = "AU";
     }
-    else if (v2.emoji_code.includes("neutral")) {
+    else if (v1.emoji_code.includes("neutral")) {
         emoji_code = "neutral";
     }
     else {
-        emoji_code = v2.emoji_code;
+        emoji_code = v1.emoji_code;
     }
     return `
         <div class="fc-container">
@@ -59,27 +60,26 @@ const selecting_videos = {
     on_load: function () {
         addExitButton();
 
-    const player1 = document.getElementById("video-player1");
-    const player2 = document.getElementById("video-player2");
-    const players = [player1, player2];
-    let readyCount = 0;
-    
-    players.forEach(v => {
-        // ensure we are preloading
-        v.preload = 'auto';
-    
-        // When enough data is buffered to play through…
-        v.addEventListener('canplaythrough', () => {
-        readyCount++;
-        if (readyCount === players.length) {
-            // both videos buffered enough—play them
-            players.forEach(p => p.play().catch(() => {}));
-        }
+        const video1 = document.getElementById("video-player1");
+        const video2 = document.getElementById("video-player2");
+
+        // Estimate size using `buffered` and duration
+        video1.addEventListener("progress", () => {
+            if (video1.buffered.length > 0) {
+                const loadedTime = video1.buffered.end(0);
+                const percent = (loadedTime / video1.duration) * 100;
+                console.log(`Video 1 loaded: ${percent.toFixed(2)}%`);
+            }
         });
-    
-        // Kick off loading
-        v.load();
-    });
+
+        video2.addEventListener("progress", () => {
+            if (video2.buffered.length > 0) {
+                const loadedTime = video2.buffered.end(0);
+                const percent = (loadedTime / video2.duration) * 100;
+                console.log(`Video 2 loaded: ${percent.toFixed(2)}%`);
+            }
+        });
+
         let selected = null;
         const selectionText = document.getElementById("selectionText");
         const confirmButton = document.getElementById("confirmButton");

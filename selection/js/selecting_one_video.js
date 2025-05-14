@@ -1,11 +1,12 @@
 import { addExitButton, nextTwoVideos, fetchTwoVideos } from "./utils.js";
-
+let emoji_code = "";
 const selecting_one_video = {
     type: jsPsychHtmlKeyboardResponse,
     response_ends_trial: false,
 
     stimulus: function () {
     const video = nextTwoVideos.videos[0];
+    console.log("---------->", video)
     console.log("Rendering videos:", video.video_url, video.emoji_code);
     if (video.emoji_code.includes("AU")) {
         emoji_code = "AU";

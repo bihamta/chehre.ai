@@ -1,4 +1,4 @@
-import { addExitButton } from './utils.js';
+import { addExitButton } from '../utils.js';
 
 const emoji_single_slider = {
   type: jsPsychHtmlButtonResponse,

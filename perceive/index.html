@@ -51,7 +51,13 @@
         const jsPsych = initJsPsych({
             on_finish: function () {
                 console.log("Experiment finished.");
-                
+
+                localStorage.removeItem('hasConsented');
+                localStorage.removeItem('hasMedi');
+                localStorage.removeItem('hasDemog');
+                localStorage.removeItem('labelRatingDone');
+                localStorage.removeItem("emotionRatingDone");
+
                 // 1) Whole Survey
                 localStorage.removeItem('participantId');
                 console.log("Local Storage Cleared");

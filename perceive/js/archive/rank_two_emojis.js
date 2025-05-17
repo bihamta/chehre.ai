@@ -1,4 +1,4 @@
-import { addExitButton } from "./utils.js";
+import { addExitButton } from "../utils.js";
 
 const rank_two_emojis = {
     type: jsPsychHtmlKeyboardResponse,

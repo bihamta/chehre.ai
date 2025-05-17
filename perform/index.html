@@ -35,44 +35,17 @@
 
     <script>
         
-        // At the very top of your script:
-        // 1) Try to load existing IDs from localStorage
-        const savedSurveyId = localStorage.getItem('surveyId');
         const savedParticipantId = localStorage.getItem('participantId');
 
-        if (savedSurveyId && savedParticipantId) {
-        window.surveyId = savedSurveyId;
-        window.participantId = savedParticipantId;
-        console.log("Generated new IDs:", window.surveyId)
+        if (savedParticipantId) {
+            window.participantId = savedParticipantId;
+            console.log("Generated new IDs:", window.surveyId)
         } else {
-        // If they don't exist in localStorage, generate them
-        window.surveyId = uuid();
-        window.participantId = uuid();
-        // And store them so we don’t lose them on refresh
-        localStorage.setItem('surveyId', window.surveyId);
-        localStorage.setItem('participantId', window.participantId);
-        console.log("Generated new IDs:", window.surveyId)
+            window.participantId = uuid();
+            // And store them so we don’t lose them on refresh
+            localStorage.setItem('participantId', window.participantId);
+            console.log("Generated new IDs:", window.participantId)
         }
-
-        // 2) Make an initial call to your “survey” API to create a record in DynamoDB
-        
-        // fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
-        //             method: "POST",
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //             },
-        //             body: JSON.stringify({
-        //                 surveyId: window.surveyId,
-        //                 participantId: window.participantId,
-        //             }),
-        //         })
-        //             .then((response) => response.json())
-        //             .then((data) => {
-        //                 console.log("Survey initialized in Dynamo:", data);
-        //             })
-        //             .catch((error) => {
-        //                 console.error("Error initializing survey:", error);
-        //             });
 
         // 3) Initialize jsPsych
         const jsPsych = initJsPsych({

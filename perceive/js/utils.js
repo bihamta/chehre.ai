@@ -27,9 +27,8 @@ function addExitButton() {
         const payload = {
             exited: exited,
             participantId: window.participantId,  // Assuming you have a participantId stored somewhere
-            surveyId: window.surveyId  // Assuming you have a surveyId stored somewhere
         };
-        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/survey", {
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -179,17 +178,17 @@ function logError({
             body: JSON.stringify(payload),
         }).catch((err) => console.error("Failed to log error:", err));
     }
-const videoData = {};
+const videoData_labels = {};
 
-function fetchNextVideo(done) {
-    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/next_video?participant_id=${window.participantId}`)
+function fetchNextVideoForLabels(done) {
+    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforLabelAnnotation?pid=${window.participantId}`)
     .then(r => {
         if (!r.ok) throw new Error('No more videos');
         return r.json();
     })
     .then(json => {
-        Object.assign(videoData, json);
-        console.log('Fetched videoData:', videoData);
+        Object.assign(videoData_labels, json);
+        console.log('Fetched videoData:', videoData_labels);
         done();  
     })
     .catch(err => {
@@ -199,6 +198,27 @@ function fetchNextVideo(done) {
     });
 }
 
-export {addExitButton, addBackButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType, logError, videoData, fetchNextVideo};
+const videoData_emojis = {};
+
+function fetchNextVideoForEmojis(done) {
+    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforEmojiAnnotation?pid=${window.participantId}`)
+    .then(r => {
+        if (!r.ok) throw new Error('No more videos');
+        return r.json();
+    })
+    .then(json => {
+        Object.assign(videoData_emojis, json);
+        console.log('Fetched videoData:', videoData_emojis);
+        done();  
+    })
+    .catch(err => {
+        console.error('Error fetching next video:', err);
+        jsPsych.endCurrentTimeline();
+        done();
+    });
+}
+
+
+export {addExitButton, addBackButton, uploadSurveyData, blobToBase64, shuffleArray, getSupportedMimeType, logError, videoData_labels, videoData_emojis, fetchNextVideoForLabels, fetchNextVideoForEmojis};
 
 

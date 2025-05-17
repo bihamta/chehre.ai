@@ -1,4 +1,4 @@
-import { addExitButton } from "./utils.js";
+import { addExitButton } from "../utils.js";
 
 const compare_two_videos = {
     type: jsPsychHtmlKeyboardResponse,

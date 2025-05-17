@@ -40,7 +40,6 @@ const honesty = {
         console.log("SURVEY2", window.surveyId)
 
         const payload = {
-            surveyId: window.surveyId,
             participantId: window.participantId, 
             honestyRating: honestyRating,
             honestyExplain: honestyExplain,
@@ -49,7 +48,7 @@ const honesty = {
         console.log("Sending demog payload:", payload);
 
         // 3) POST once to your “survey” Lambda for partial update
-        fetch("-", {
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -69,7 +68,6 @@ const goodbye = {
     preamble: `
         <h2>Thank You!</h2>
         <p id="thanks">Your participation in this study is greatly appreciated.</p>
-        <p id="thanks">If you'd like to receive a follow-up or have any questions, please provide your email below.</p>
     `,
     html: `
         <p id="thanks">If you have further inquiries, feel free to contact us at <a href="mailto:bazari@sfu.ca">bazari@sfu.ca</a> or <a href="mailto:angelica@sfu.ca">angelica@sfu.ca</a> .</p>

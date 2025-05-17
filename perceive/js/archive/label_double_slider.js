@@ -1,4 +1,4 @@
-import { addExitButton } from "./utils.js";
+import { addExitButton } from "../utils.js";
 
 const label_double_slider = {
     type: jsPsychHtmlButtonResponse,

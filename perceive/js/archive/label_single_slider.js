@@ -1,4 +1,4 @@
-import { addExitButton, videoData } from './utils.js';
+import { addExitButton, videoData } from '../utils.js';
 
 const label_single_slider = {
   type: jsPsychHtmlButtonResponse,

@@ -13,8 +13,20 @@ p#note {
     background-color: white;
     border: 2px solid #3e5f4e;
     color: #3e5f4e;
+    min-width: 120px;  /* Forces equal width */
     transition: all 0.3s ease;
     border-radius: 6px;
+}
+.jspsych-btn:disabled {
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  color: #999;
+  opacity: 1; /* Prevents it from shrinking */
+  cursor: not-allowed;
+  border-radius: 6px;
+  padding: 6px 12px; /* Same as enabled buttons */
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 .jspsych-btn:hover {
@@ -28,6 +40,13 @@ p#note {
     color: #2D2D2D;
     border-color: #9BA79E;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.jspsych-instructions-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .brown-btn {
@@ -74,8 +93,20 @@ p#thanks{
 div#demog_q{
     text-align: left;
 }   
+div#language_q{
+    text-align: left;
+}
 video{
     text-align: center;
+}
+.responsive-video {
+  display: block;
+  width: 100%;
+  max-width: 320px;      /* all videos cap at 320px wide */
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  margin: 0 auto 24px;   /* center + space below */
 }
 
 /* slider */
@@ -88,7 +119,7 @@ input[type=range].styled-slider {
   border-radius: 5px;
   outline: none;
   position: relative;
-  margin-bottom: 40px; /* Extra space for ticks */
+  margin-bottom: 0px; /* Extra space for ticks */
 }
 
 /* Thumb (circle you drag) */
@@ -116,19 +147,16 @@ input[type=range].styled-slider::-moz-range-thumb {
 input[type=range].styled-slider {
   background-image: 
     linear-gradient(to right, 
-      #3e5f4e 0%, 
-      #d3d3d3 0.5%, 
-      #d3d3d3 24.5%, 
-      #3e5f4e 25%, 
-      #d3d3d3 25.5%, 
-      #d3d3d3 49.5%, 
-      #3e5f4e 50%, 
-      #d3d3d3 50.5%, 
-      #d3d3d3 74.5%, 
-      #3e5f4e 75%, 
-      #d3d3d3 75.5%, 
-      #d3d3d3 99.5%, 
-      #3e5f4e 100%
+    #3e5f4e 0%, 
+    #d3d3d3 0.5%, 
+    #d3d3d3 32.83%, 
+    #3e5f4e 33.33%, 
+    #d3d3d3 33.83%, 
+    #d3d3d3 66.17%, 
+    #3e5f4e 66.67%, 
+    #d3d3d3 67.17%, 
+    #d3d3d3 99.5%, 
+    #3e5f4e 100% 
     );
   background-size: 100% 7px;
   background-repeat: no-repeat;
@@ -261,3 +289,47 @@ input[type=range].styled-slider {
     justify-content: center;
     font-size: 13px;
 }
+/* container around each slider + labels */
+.slider-block {
+  width: 100%;
+  max-width: 420px;  /* ⬅️ Try this instead of 600px */
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+  
+ 
+  /* tick labels under the slider */
+  .tick-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    /* margin-top: 2px; */
+    font-size: 14px;
+    color: #3e5f4e;
+  }
+  
+  /* optional: label text above */
+  .slider-label {
+    margin-bottom: 0px;
+    font-size: 16px;
+    color: #3e5f4e;
+  }
+  
+  @media (max-width: 480px) {
+    .fc-container { padding: 0 10px; }
+  
+    .responsive-video { max-width: 90vw; }
+  
+    .slider-large {
+      height: 10px;
+    }
+    .slider-large::-webkit-slider-thumb,
+    .slider-large::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      margin-top: -4px;
+    }
+    .tick-labels { font-size: 11px; }
+    .slider-label { font-size: 13px; }
+  }

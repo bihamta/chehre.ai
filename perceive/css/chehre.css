@@ -6,6 +6,15 @@ body, html {
 h1, h2, h3, p.jspsych-survey-multi-choice-text, p#note {
     color: #3e5f4e; /* deep moss green */
 }
+h1, h2, h3 {
+  font-size: clamp(1.5rem, 4vw, 3rem); /* responsive scaling */
+  text-align: center;
+  word-break: break-word;
+  hyphens: auto;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  max-width: 100%;  /* allow full width */
+}
 p#note {
     font-weight: bold;
 }

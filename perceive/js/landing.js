@@ -3,7 +3,7 @@ var questionnaire_intro = {
     pages: [
         '<div style="text-align:center;">' +
         '<h3>Step 1 of 6</h3>' +
-        '<p text-align: center;>Please complete the  Mindfulness Questionnaires.</p>' +
+        '<p style="text-align: center;">Please complete the  Mindfulness Questionnaires.</p>' +
         '</div>'
     ],
     show_clickable_nav: true
@@ -40,7 +40,7 @@ var demographic_intro = {
     pages: [
         '<div style="text-align:center;">' +
         '<h3>Step 2 of 6</h3>' +
-        '<p text-align: center;>Please complete the Demographic Questionnaire.</p>' +
+        '<p style="text-align: center;">Please complete the Demographic Questionnaire.</p>' +
         '</div>'
     ],
     show_clickable_nav: true
@@ -62,7 +62,7 @@ var final = {
     pages: [
         '<div style="text-align:center;">' +
         '<h3>Step 6 of 6</h3>' +
-        '<p>Please answer one final question.</p>' +
+        '<p style="text-align: center;">Please answer one final question.</p>' +
         '</div>'
     ],
     show_clickable_nav: true

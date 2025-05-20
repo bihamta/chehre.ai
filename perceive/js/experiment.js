@@ -58,7 +58,7 @@ for (let i = 0; i < N_REPEATS_LABELS_TODO; i++) {
 
 let rated_emojis = localStorage.getItem("emojiRatingsDone");
 console.log("Emoji ratings completed:", rated_emojis);
-const N_REPEATS_EMOJI = 30;
+const N_REPEATS_EMOJI = 20;
 if (rated_emojis !== N_REPEATS_EMOJI) {
     timeline.push(emoji_intro);
 }

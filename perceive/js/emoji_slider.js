@@ -31,12 +31,15 @@ const emoji_slider = {
         <p class="instruction-text">
         How much does the video represent the emoji above?
         </p>
+        <p style="font-size: 0.9em; color: green; margin-top: -10px;">
+        Slide to rate from 0 (not at all) to 3 (very much)
+        </p>
 
         <div class="slider-block">
         <input
             type="range"
             id="match_slider"
-            min="0" max="3" step="1" value="0"
+            min="-1" max="3" step="1" value=""
             class="styled-slider slider-large"
         />
         <div class="tick-labels">

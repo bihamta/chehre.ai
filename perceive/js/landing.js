@@ -14,7 +14,7 @@ const label_intro = {
     pages: [
         `<div style="text-align:center;">
             <h3>Step 3 of 6</h3>
-            <h2>Facial Expression Labeling Task</h2>
+            <h3>Facial Expression Labeling Task</h3>
             <p style="font-size: 18px; max-width: 700px; margin: 0 auto; text-align: center;">
             In this task, you will label each video by selecting the facial expression(s) you believe best describe what the person is showing.</p>
         </div>`
@@ -27,7 +27,7 @@ const emoji_intro = {
     pages: [
         `<div style="text-align:center;">
             <h3>Step 4 of 6</h3>
-            <h2>Emoji Rating Task</h2>
+            <h3>Emoji Rating Task</h3>
             <p style="font-size: 18px; max-width: 700px; margin: 0 auto; text-align: center;">
             In this task, you will watch a series of short videos and rate how well a specific emoji matches the facial expression shown.</p>
         </div>`
@@ -50,7 +50,7 @@ const empathy_intro = {
     pages: [
         `<div style="text-align:center;">
             <h3>Step 5 of 6</h3>
-            <h2>Empathy Questionnaire</h2>
+            <h3>Empathy Questionnaire</h3>
             <p style="font-size: 18px; max-width: 700px; margin: 0 auto; text-align: center;">
             In the following section, you will be asked to reflect on how often certain statements apply to you.</p>
         </div>`

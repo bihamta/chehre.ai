@@ -6,8 +6,21 @@ body, html {
 h1, h2, h3, p.jspsych-survey-multi-choice-text, p#note {
     color: #3e5f4e; /* deep moss green */
 }
-h1, h2, h3 {
-  font-size: clamp(1.5rem, 4vw, 3rem); /* responsive scaling */
+h1, h2{
+  font-size: clamp(1.3rem, 3.5vw, 2rem); /* responsive scaling */
+  letter-spacing: 0.03em; /* enhanced letter spacing */
+  text-align: center;
+  word-break: break-word;
+  hyphens: auto;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  max-width: 100%;  /* allow full width */
+}
+
+h3 {
+  font-size: clamp(1.2rem, 3vw, 1.8rem); /* smaller responsive scaling */
+  font-weight: 600; /* lighter weight than default bold */
+  letter-spacing: 0.02em; /* add some letter spacing */
   text-align: center;
   word-break: break-word;
   hyphens: auto;
@@ -307,38 +320,46 @@ input[type=range].styled-slider {
   margin-right: auto;
 }
   
- 
-  /* tick labels under the slider */
-  .tick-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    /* margin-top: 2px; */
-    font-size: 14px;
-    color: #3e5f4e;
+
+/* tick labels under the slider */
+.tick-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  /* margin-top: 2px; */
+  font-size: 14px;
+  color: #3e5f4e;
+}
+/* .tick-labels .tick-dash {
+  margin-left: -80px !important;
+} */
+
+/* optional: label text above */
+.slider-label {
+  margin-bottom: 0px;
+  font-size: 16px;
+  color: #3e5f4e;
+}
+
+@media (max-width: 480px) {
+  .fc-container { padding: 0 10px; }
+
+  .responsive-video { max-width: 90vw; }
+
+  .slider-large {
+    height: 10px;
   }
-  
-  /* optional: label text above */
-  .slider-label {
-    margin-bottom: 0px;
-    font-size: 16px;
-    color: #3e5f4e;
+  .slider-large::-webkit-slider-thumb,
+  .slider-large::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: -4px;
   }
-  
-  @media (max-width: 480px) {
-    .fc-container { padding: 0 10px; }
-  
-    .responsive-video { max-width: 90vw; }
-  
-    .slider-large {
-      height: 10px;
-    }
-    .slider-large::-webkit-slider-thumb,
-    .slider-large::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      margin-top: -4px;
-    }
-    .tick-labels { font-size: 11px; }
-    .slider-label { font-size: 13px; }
-  }
+  .tick-labels { font-size: 11px; }
+  .slider-label { font-size: 13px; }
+}
+
+  .disabled-option {
+    opacity: 0.4;
+    pointer-events: none;
+}

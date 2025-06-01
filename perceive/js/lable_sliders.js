@@ -1,4 +1,3 @@
-
 import { addExitButton, videoData_labels } from "./utils.js";
 import { emojiLabels }             from "./label_loader.js";
 
@@ -15,8 +14,8 @@ const dynamic_slider = {
     const labels = emojiLabels[emoji_code] || [];
 
     const sliderHtml = labels.map((label, i) => `
-    <div class="slider-block">
-        <p class="slider-label"><strong>${label}</strong></p>
+    <div class="slider-block slider-container slider-untouched" id="slider-container-${i}">
+        <p class="slider-label"><strong>${label}</strong> <span class="choice-display" id="choice-display-${i}"></span></p>
         <input
         type="range" id="slider_${i}" name="${label}"
         min="0" max="3" step="1" value="0"
@@ -28,12 +27,33 @@ const dynamic_slider = {
     </div>
     `).join("");
 
-    const labelOptionsHtml = labels.map((label, i) => `
+    const labelOptionsHtml = [...labels, 'None'].map((label, i) => `
     <div class="label-option" data-index="${i}" data-label="${label}">
         ${label}
     </div>
     `).join("");
     return `
+    <style>
+        .slider-untouched {
+            opacity: 0.5;
+            filter: grayscale(0.3);
+        }
+        
+        .slider-touched {
+            opacity: 1;
+            filter: none;
+            font-weight: bold;
+        }
+        
+        .choice-display {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 0.7em;
+            color: #3e5f4e;
+            min-height: 25px;
+        }
+    </style>
+    
     <div>
         <video class="responsive-video" autoplay loop muted>
             <source src="${videoData_labels.video.url}" type="video/mp4">
@@ -57,6 +77,13 @@ const dynamic_slider = {
 
         <div id="label-list" class="label-list">${labelOptionsHtml}</div>
 
+        <div class="jittery-flag" style="margin-top:24px; text-align:center;">
+            <input type="checkbox" id="jitteryFlag" name="jitteryFlag">
+            <label for="jitteryFlag">
+                Flag this video as jittery or glitchy, if it seems unstable.
+            </label>
+        </div>
+
         <button id="confirmButton" class="jspsych-btn" style="margin-top:20px;" disabled>
             Confirm & Continue
         </button>
@@ -67,43 +94,73 @@ const dynamic_slider = {
     on_load: function() {
         addExitButton();
         const selected = [];
-        let sliderMoved = false;
+        const movedSliders = new Set();
         const opts = document.querySelectorAll(".label-option");
         const confirm = document.getElementById("confirmButton");
         const sliders = document.querySelectorAll(".slider-large");
 
-        // listen for slider changes
-        sliders.forEach(sl => {
-        sl.addEventListener('input', () => {
-            if (+sl.value > 0) sliderMoved = true;
-            updateConfirmState();
-        });
+        // Track which sliders have been interacted with
+        const sliderInteracted = new Set();
+
+        // require every slider moved at least once
+        sliders.forEach((sl, index) => {
+            sl.addEventListener('input', () => {
+                const currentValue = parseInt(sl.value);
+                const container = document.getElementById(`slider-container-${index}`);
+                const choiceDisplay = document.getElementById(`choice-display-${index}`);
+                
+                if (!sliderInteracted.has(sl.id)) {
+                    sliderInteracted.add(sl.id);
+                    
+                    // Visual feedback: make slider look "activated"
+                    container.classList.remove("slider-untouched");
+                    container.classList.add("slider-touched");
+                }
+                
+                // Show current choice
+                choiceDisplay.textContent = ` (Your choice is: ${currentValue})`;
+                
+                movedSliders.add(sl.id);
+                updateConfirmState();
+            });
         });
 
-        // label click handlers
+        // label click handlers with None logic
         opts.forEach(opt => {
-        opt.addEventListener("click", () => {
-            const idx = opt.dataset.index;
-            const label = opt.dataset.label;
-            const exists = selected.find(s => s.idx === idx);
-            if (exists) selected.splice(selected.indexOf(exists), 1);
-            else if (selected.length < 2) selected.push({ idx, label });
+            opt.addEventListener("click", () => {
+                const idx = opt.dataset.index;
+                const label = opt.dataset.label;
+                const exists = selected.find(s => s.idx === idx);
+                const noneLabel = label === 'None';
+
+                if (exists) {
+                    selected.splice(selected.indexOf(exists), 1);
+                } else if (selected.length < 2) {
+                    // prevent selecting a real label after None is first
+                    if (!(selected.length === 1 && selected[0].label === 'None' && !noneLabel)) {
+                        selected.push({ idx, label });
+                    }
+                }
 
             // clear UI
             opts.forEach(o => {
-            o.classList.remove("rank1", "rank2");
-            const b = o.querySelector(".label-rank");
-            if (b) b.remove();
+                o.classList.remove("rank1", "rank2", "disabled-option");
+                const b = o.querySelector(".label-rank");
+                if (b) b.remove();
+                const isNone = selected[0]?.label === 'None';
+                if (isNone && o.dataset.label !== 'None') {
+                    o.classList.add("disabled-option");
+                }
             });
 
             // draw badges
             selected.forEach((s, i) => {
-            const o = document.querySelector(`.label-option[data-index="${s.idx}"]`);
-            const badge = document.createElement("span");
-            badge.className = "label-rank";
-            badge.textContent = i + 1;
-            o.appendChild(badge);
-            o.classList.add(i === 0 ? "rank1" : "rank2");
+                const o = document.querySelector(`.label-option[data-index="${s.idx}"]`);
+                const badge = document.createElement("span");
+                badge.className = "label-rank";
+                badge.textContent = i + 1;
+                o.appendChild(badge);
+                o.classList.add(i === 0 ? "rank1" : "rank2");
             });
 
             updateConfirmState();
@@ -111,8 +168,10 @@ const dynamic_slider = {
         });
 
         function updateConfirmState() {
-        // enable only if 2 labels selected AND at least one slider moved
-        confirm.disabled = !(selected.length === 2 && sliderMoved);
+            const allMoved = movedSliders.size === sliders.length;
+            // allow single None or two selections
+            const labelsOK = (selected.length === 2) || (selected.length === 1 && selected[0].label === 'None');
+            confirm.disabled = !(labelsOK && allMoved);
         }
 
         confirm.addEventListener("click", () => {
@@ -121,19 +180,23 @@ const dynamic_slider = {
         const emoji_code = code.includes("AU")      ? "AU"
                             : code.includes("neutral") ? "neutral"
                             : code;
-        const labels = emojiLabels[emoji_code] || [];
+        const baseLabels = emojiLabels[emoji_code] || [];
+        const labels = [...baseLabels, 'None'];
         const ratings = {};
         labels.forEach((l, i) => {
             ratings[l] = +document.getElementById(`slider_${i}`).value;
 
         });
 
+        const jittery = document.getElementById('jitteryFlag').checked;
+
         jsPsych.finishTrial({
             participantId: window.participantId,
             videoId: videoData_labels.video.filename,
             ratings,
             rank1: selected[0]?.label || null,
-            rank2: selected[1]?.label || null
+            rank2: selected[1]?.label || null,
+            jitteryFlag: jittery
         });
         });
     },
@@ -144,7 +207,8 @@ const dynamic_slider = {
             video_name: data.videoId,
             ratings: data.ratings,
             rank1: data.rank1,
-            rank2: data.rank2
+            rank2: data.rank2,
+            jitteryFlag: data.jitteryFlag
         };
         
         console.log("Submitting:", payload);

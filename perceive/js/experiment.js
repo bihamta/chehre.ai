@@ -25,6 +25,7 @@ if (!localStorage.getItem("labelRatingsDone")) {
     localStorage.setItem("labelRatingsDone", "0");
 }
 
+//------- Welcome and Consent -------//
 timeline.push(welcome);
 
 const hasConsented = localStorage.getItem("hasConsented");
@@ -32,18 +33,21 @@ if (!hasConsented) {
     timeline.push(consent);
 }
 
+//------- Meditation Questionnaire -------//
 const hasMedi = localStorage.getItem("hasMedi");
 if (!hasMedi) {
     timeline.push(questionnaire_intro);
     timeline.push(medi);
 }
 
+//------- Demographic questions -------//
 const hasDemog = localStorage.getItem("hasDemog");
 if (!hasDemog) {
     timeline.push(demographic_intro);
     timeline.push(demog);
 }
 
+//------- Lable Ratings -------//
 let rated_labels = localStorage.getItem("labelRatingsDone");
 console.log("Label ratings completed:", rated_labels);
 const N_REPEATS_LABELS = 30;
@@ -56,6 +60,7 @@ for (let i = 0; i < N_REPEATS_LABELS_TODO; i++) {
     timeline.push(dynamic_slider);
 }
 
+//------- Emoji Ratings -------//
 let rated_emojis = localStorage.getItem("emojiRatingsDone");
 console.log("Emoji ratings completed:", rated_emojis);
 const N_REPEATS_EMOJI = 30;
@@ -69,7 +74,7 @@ for (let i = 0; i < N_REPEATS_EMOJI_TODO; i++) {
 }
 
 
-;
+//------- Final Steps -------//
 timeline.push(empathy_intro);
 timeline.push(empathy);
 timeline.push(final)

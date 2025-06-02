@@ -64,6 +64,9 @@ const dynamic_slider = {
             <em style="color: green; text-align: center; display: block;">
                 (0 - not at all, 3 - very much)
             </em>
+            <em style="color: #d9534f; text-align: center; display: block; font-size: 0.9em; margin-top: 8px;">
+                Note: You must move all sliders to proceed to the next step
+            </em>
         </p>
 
         <div>${sliderHtml}</div>
@@ -175,7 +178,7 @@ const dynamic_slider = {
         }
 
         confirm.addEventListener("click", () => {
-        // gather slider values 
+        // gather slider values - FIXED: only iterate through actual slider labels, not including 'None'
         const code = videoData_labels.video.emoji_code || '';
         const emoji_code = code.includes("AU")      ? "AU"
                             : code.includes("neutral") ? "neutral"

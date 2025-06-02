@@ -175,17 +175,20 @@ const dynamic_slider = {
         }
 
         confirm.addEventListener("click", () => {
-        // gather slider values
+        // gather slider values 
         const code = videoData_labels.video.emoji_code || '';
         const emoji_code = code.includes("AU")      ? "AU"
                             : code.includes("neutral") ? "neutral"
                             : code;
         const baseLabels = emojiLabels[emoji_code] || [];
-        const labels = [...baseLabels, 'None'];
         const ratings = {};
-        labels.forEach((l, i) => {
-            ratings[l] = +document.getElementById(`slider_${i}`).value;
-
+        
+        // Only get ratings for labels that have sliders (exclude 'None')
+        baseLabels.forEach((label, i) => {
+            const sliderElement = document.getElementById(`slider_${i}`);
+            if (sliderElement) {
+                ratings[label] = +sliderElement.value;
+            }
         });
 
         const jittery = document.getElementById('jitteryFlag').checked;

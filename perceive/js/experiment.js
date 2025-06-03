@@ -16,7 +16,7 @@ import { emoji_slider } from './emoji_slider.js';
 
 const timeline = [];
 await loadEmojiLabels();
-
+timeline.push(down);
 if (!localStorage.getItem("emojiRatingsDone")) {
     localStorage.setItem("emojiRatingsDone", "0");
 }

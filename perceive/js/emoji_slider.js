@@ -56,7 +56,7 @@ const emoji_slider = {
             </p>
 
             <div class="slider-container slider-untouched" id="slider-container">
-                <input type="range" id="match_slider" class="styled-slider slider-large" min="0" max="4" step="1" value="4" />
+                <input type="range" id="match_slider" class="styled-slider slider-large" min="0" max="3" step="1" value="0" />
 
                 <div class="slider-block">
                     <div class="tick-labels">
@@ -83,33 +83,33 @@ const emoji_slider = {
         // Track if user has interacted with slider
         let hasInteracted = false;
 
-        s.addEventListener("input", () => {
-            const currentValue = parseInt(s.value);
-            
-            if (!hasInteracted && currentValue <= 3) {
+        const markAsInteracted = () => {
+            if (!hasInteracted && parseInt(s.value) <= 3) {
                 hasInteracted = true;
-                
-                // Visual feedback: make slider look "activated"
                 container.classList.remove("slider-untouched");
                 container.classList.add("slider-touched");
-                
-                // Once they move to a valid rating (0-3), prevent going back to 4
                 s.max = "3";
-                
-                // Enable button
                 b.disabled = false;
-                
-                // Show choice
-                choiceDisplay.textContent = `Your choice is: ${currentValue}`;
-                
-            } else if (hasInteracted && currentValue <= 3) {
-                // Update choice display
-                choiceDisplay.textContent = `Your choice is: ${currentValue}`;
-                
-                // Keep button enabled for any valid value
-                b.disabled = false;
+                choiceDisplay.textContent = `Your choice is: ${parseInt(s.value)}`;
             }
+        };
+        
+        // Input change (already present)
+        s.addEventListener("input", () => {
+            markAsInteracted();
+            choiceDisplay.textContent = `Your choice is: ${parseInt(s.value)}`;
         });
+        
+        // One-click or touch interactions
+        ["focus", "mousedown", "touchstart"].forEach(evt => {
+            s.addEventListener(evt, () => {
+                markAsInteracted();
+                if (!choiceDisplay.textContent.includes("Your choice is:")) {
+                    choiceDisplay.textContent = `Your choice is: ${parseInt(s.value)}`;
+                }
+            });
+        });
+        // Ensure slider is always at 0-3 range        
 
         b.addEventListener("click", () => {
             const finalValue = Math.min(3, parseInt(s.value)); // Ensure valid rating 0-3
@@ -122,21 +122,28 @@ const emoji_slider = {
 
     on_finish: data => {
         console.log("Emoji Slider Data:", data);
-        const payload = {
-            video_name:  data.videoId,
-            participantId: window.participantId,
-            matchRating: data.matchRating
-        };
-        console.log("Submitting match:", payload);
-        fetch("https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/UpdateVideosForLabelEmojis", {
-            method:  "POST",
-            headers: { "Content-Type": "application/json" },
-            body:    JSON.stringify(payload)
-        }).catch(console.error);
-
-        let count = parseInt(localStorage.getItem("emojiRatingsDone") || "0", 10);
-        localStorage.setItem("emojiRatingsDone", (count + 1).toString());
-    }
+    
+        // Only send and count rating if user actually submitted a valid rating
+        if (typeof data.matchRating === "number") {
+            const payload = {
+                video_name:  data.videoId,
+                participantId: window.participantId,
+                matchRating: data.matchRating
+            };
+            console.log("Submitting match:", payload);
+    
+            fetch("https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/UpdateVideosForLabelEmojis", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).catch(console.error);
+    
+            let count = parseInt(localStorage.getItem("emojiRatingsDone") || "0", 10);
+            localStorage.setItem("emojiRatingsDone", (count + 1).toString());
+        } else {
+            console.log("No valid rating submitted — not incrementing emojiRatingsDone.");
+        }
+    }    
 };
 
 export { emoji_slider };

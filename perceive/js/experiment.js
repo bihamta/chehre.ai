@@ -1,4 +1,8 @@
-// ## Import all the modules 
+// Record study start time
+const studyStartTime = Date.now();
+localStorage.setItem("studyStartTime", studyStartTime.toString());
+
+// ## Import all the modules
 import { welcome } from './welcome.js';
 import { consent } from './consent.js';
 import { goodbye, honesty } from './thanks.js';
@@ -9,13 +13,13 @@ import { dynamic_slider } from './lable_sliders.js';
 import { down } from './down.js';
 import { demog } from './demographics.js';
 import { medi } from './mindfulness.js';
-import { get_next_video_for_labels, get_next_video_for_emojis }   from './get_next_video.js';
+import { get_next_video_for_labels, get_next_video_for_emojis } from './get_next_video.js';
 import { emoji_slider } from './emoji_slider.js';
-// ## Build the timeline
-// console.log("Call function plugin:", typeof jsPsychHtmlButtonResponse);
 
+// ## Build the timeline
 const timeline = [];
 await loadEmojiLabels();
+
 // timeline.push(down);
 if (!localStorage.getItem("emojiRatingsDone")) {
     localStorage.setItem("emojiRatingsDone", "0");
@@ -29,7 +33,7 @@ if (!localStorage.getItem("labelRatingsDone")) {
 timeline.push(welcome);
 
 const hasConsented = localStorage.getItem("hasConsented");
-if (!hasConsented) { 
+if (!hasConsented) {
     timeline.push(consent);
 }
 
@@ -47,7 +51,7 @@ if (!hasDemog) {
     timeline.push(demog);
 }
 
-//------- Lable Ratings -------//
+// //------- Label Ratings -------//
 let rated_labels = localStorage.getItem("labelRatingsDone");
 console.log("Label ratings completed:", rated_labels);
 const N_REPEATS_LABELS = 30;
@@ -73,13 +77,51 @@ for (let i = 0; i < N_REPEATS_EMOJI_TODO; i++) {
     timeline.push(emoji_slider);
 }
 
-
 //------- Final Steps -------//
 timeline.push(empathy_intro);
 timeline.push(empathy);
-timeline.push(final)
+timeline.push(final);
 timeline.push(honesty);
-timeline.push(goodbye);
+
+// Enhanced goodbye with time tracking
+const enhancedGoodbye = {
+    ...goodbye,
+    on_load: function() {
+        // Call original on_load if it exists
+        if (goodbye.on_load) {
+            goodbye.on_load.call(this);
+        }
+        
+        // Calculate and send study duration
+        const startTime = parseInt(localStorage.getItem("studyStartTime"));
+        const endTime = Date.now();
+        const totalDurationMs = endTime - startTime;
+        const totalDurationMinutes = Math.round(totalDurationMs / (1000 * 60) * 100) / 100;
+        
+        console.log(`Study completed in ${totalDurationMinutes} minutes`);
+        
+        // Send time data to server
+        const timePayload = {
+            participantId: window.participantId,
+            totalDurationMinutes: totalDurationMinutes
+        };
+        
+        fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(timePayload)
+        })
+        .then(r => r.json())
+        .then(serverResp => {
+            console.log("Study time saved successfully:", serverResp);
+        })
+        .catch(err => {
+            console.error("Error saving study time:", err);
+        });
+    }
+};
+
+timeline.push(enhancedGoodbye);
 
 // ## Start the experiment
 jsPsych.run(timeline);

@@ -33,11 +33,11 @@ const honesty = {
         let honestyRating = null;
         let honestyExplain = null;
 
-        console.log(data.response.rating); // Logs both responses for analysis
+        // console.log(data.response.rating); // Logs both responses for analysis
         
         honestyRating = data.response.rating
         honestyExplain = data.response.explanation
-        console.log("SURVEY2", window.surveyId)
+        // console.log("SURVEY2", window.surveyId)
 
         const payload = {
             participantId: window.participantId, 
@@ -45,7 +45,7 @@ const honesty = {
             honestyExplain: honestyExplain,
         };
 
-        console.log("Sending demog payload:", payload);
+        // console.log("Sending demog payload:", payload);
 
         // 3) POST once to your “survey” Lambda for partial update
         fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {

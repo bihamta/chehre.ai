@@ -24,10 +24,18 @@ function addExitButton() {
     exitButton.addEventListener("click", function() {
         const exited = "EXITED";
         exitButton.style.display = "none"; // Hide the button after it's clicked
+    
+        const startTime = parseInt(localStorage.getItem("studyStartTime"));
+        const endTime = Date.now();
+        const totalDurationMs = endTime - startTime;
+        const totalDurationMinutes = Math.round(totalDurationMs / (1000 * 60) * 100) / 100;
+    
         const payload = {
-            exited: exited,
-            participantId: window.participantId,  // Assuming you have a participantId stored somewhere
+            exited,
+            participantId: window.participantId,
+            totalDurationMinutes
         };
+    
         fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -35,14 +43,15 @@ function addExitButton() {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("Consent Data Submitted Successfully:", data);
+                console.log("Exit data submitted successfully:", data);
             })
             .catch(error => {
-                console.error("Error submitting consent data:", error);
+                console.error("Error submitting exit data:", error);
             });
+    
         jsPsych.abortExperiment("You chose to exit the survey. Thank you for your participation. You can close the window.");
-
     });
+    
     
     // Add hover effect for a darker color
     exitButton.addEventListener("mouseover", function() {

@@ -54,7 +54,7 @@ if (!hasDemog) {
 // //------- Label Ratings -------//
 let rated_labels = localStorage.getItem("labelRatingsDone");
 console.log("Label ratings completed:", rated_labels);
-const N_REPEATS_LABELS = 30;
+const N_REPEATS_LABELS = 35;
 if (rated_labels !== N_REPEATS_LABELS) {
     timeline.push(label_intro);
 }
@@ -67,7 +67,7 @@ for (let i = 0; i < N_REPEATS_LABELS_TODO; i++) {
 //------- Emoji Ratings -------//
 let rated_emojis = localStorage.getItem("emojiRatingsDone");
 console.log("Emoji ratings completed:", rated_emojis);
-const N_REPEATS_EMOJI = 30;
+const N_REPEATS_EMOJI = 35;
 if (rated_emojis !== N_REPEATS_EMOJI) {
     timeline.push(emoji_intro);
 }

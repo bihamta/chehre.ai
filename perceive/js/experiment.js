@@ -20,61 +20,92 @@ import { emoji_slider } from './emoji_slider.js';
 const timeline = [];
 await loadEmojiLabels();
 
-// timeline.push(down);
-if (!localStorage.getItem("emojiRatingsDone")) {
-    localStorage.setItem("emojiRatingsDone", "0");
-}
+// Define tiers
+const tier1IDs = ["76123", "75862", "73714", "75574", "74350", "75616", "74074", "74566", "74446", "73810", "75373", "75235"];
+const tier2IDs = ["75175", "74800", "74557", "74386", "75514", "74224", "75526", "75223", "74032", "75253", "74437", "12345"];
 
-if (!localStorage.getItem("labelRatingsDone")) {
-    localStorage.setItem("labelRatingsDone", "0");
-}
+// Initialize counters
+if (!localStorage.getItem("emojiRatingsDone")) localStorage.setItem("emojiRatingsDone", "0");
+if (!localStorage.getItem("labelRatingsDone")) localStorage.setItem("labelRatingsDone", "0");
 
 //------- Welcome and Consent -------//
 timeline.push(welcome);
-
 const hasConsented = localStorage.getItem("hasConsented");
 if (!hasConsented) {
     timeline.push(consent);
 }
 
+//------- Set repeat counts and skip flags -------//
+timeline.push({
+    type: jsPsychCallFunction,
+    func: () => {
+        const id = window.sonaID || localStorage.getItem("sonaID");
+        window.sonaID = id;
+
+        let labelRepeats = 35;
+        let emojiRepeats = 35;
+        let skipDemog = false;
+        let skipMedi = false;
+
+        if (tier1IDs.includes(id)) {
+            labelRepeats = 15;
+            emojiRepeats = 15;
+            skipDemog = true;
+            skipMedi = true;
+        } else if (tier2IDs.includes(id)) {
+            labelRepeats = 20;
+            emojiRepeats = 20;
+            skipDemog = true;
+            skipMedi = true;
+        }
+
+        window.N_REPEATS_LABELS = labelRepeats;
+        window.N_REPEATS_EMOJI = emojiRepeats;
+        window.SKIP_DEMOG = skipDemog;
+        window.SKIP_MEDI = skipMedi;
+
+        console.log("SONA ID:", id,
+                    "| Label Repeat Count:", labelRepeats,
+                    "| Emoji Repeat Count:", emojiRepeats,
+                    "| Skip Demographics:", skipDemog,
+                    "| Skip Meditation:", skipMedi);
+    }
+});
+
 //------- Meditation Questionnaire -------//
 const hasMedi = localStorage.getItem("hasMedi");
-if (!hasMedi) {
+if (!hasMedi && window.SKIP_MEDI) {
     timeline.push(questionnaire_intro);
     timeline.push(medi);
 }
 
-//------- Demographic questions -------//
+//------- Demographic Questions -------//
 const hasDemog = localStorage.getItem("hasDemog");
-if (!hasDemog) {
+if (!hasDemog && window.SKIP_DEMOG) {
     timeline.push(demographic_intro);
     timeline.push(demog);
 }
 
-// //------- Label Ratings -------//
-let rated_labels = localStorage.getItem("labelRatingsDone");
-console.log("Label ratings completed:", rated_labels);
-const N_REPEATS_LABELS = 35;
-if (rated_labels !== N_REPEATS_LABELS) {
+//------- Label Ratings -------//
+let rated_labels = parseInt(localStorage.getItem("labelRatingsDone") || "0");
+const N_REPEATS_LABELS = window.N_REPEATS_LABELS || 35;
+if (rated_labels < N_REPEATS_LABELS) {
     timeline.push(label_intro);
-}
-const N_REPEATS_LABELS_TODO = N_REPEATS_LABELS - rated_labels;
-for (let i = 0; i < N_REPEATS_LABELS_TODO; i++) {
-    timeline.push(get_next_video_for_labels);
-    timeline.push(dynamic_slider);
+    for (let i = 0; i < N_REPEATS_LABELS - rated_labels; i++) {
+        timeline.push(get_next_video_for_labels);
+        timeline.push(dynamic_slider);
+    }
 }
 
 //------- Emoji Ratings -------//
-let rated_emojis = localStorage.getItem("emojiRatingsDone");
-console.log("Emoji ratings completed:", rated_emojis);
-const N_REPEATS_EMOJI = 35;
-if (rated_emojis !== N_REPEATS_EMOJI) {
+let rated_emojis = parseInt(localStorage.getItem("emojiRatingsDone") || "0");
+const N_REPEATS_EMOJI = window.N_REPEATS_EMOJI || 35;
+if (rated_emojis < N_REPEATS_EMOJI) {
     timeline.push(emoji_intro);
-}
-let N_REPEATS_EMOJI_TODO = N_REPEATS_EMOJI - rated_emojis;
-for (let i = 0; i < N_REPEATS_EMOJI_TODO; i++) {
-    timeline.push(get_next_video_for_emojis);
-    timeline.push(emoji_slider);
+    for (let i = 0; i < N_REPEATS_EMOJI - rated_emojis; i++) {
+        timeline.push(get_next_video_for_emojis);
+        timeline.push(emoji_slider);
+    }
 }
 
 //------- Final Steps -------//
@@ -83,44 +114,29 @@ timeline.push(empathy);
 timeline.push(final);
 timeline.push(honesty);
 
-// Enhanced goodbye with time tracking
+//------- Enhanced goodbye with time tracking -------//
 const enhancedGoodbye = {
     ...goodbye,
-    on_load: function() {
-        // Call original on_load if it exists
-        if (goodbye.on_load) {
-            goodbye.on_load.call(this);
-        }
-        
-        // Calculate and send study duration
+    on_load: function () {
+        if (goodbye.on_load) goodbye.on_load.call(this);
         const startTime = parseInt(localStorage.getItem("studyStartTime"));
-        const endTime = Date.now();
-        const totalDurationMs = endTime - startTime;
-        const totalDurationMinutes = Math.round(totalDurationMs / (1000 * 60) * 100) / 100;
-        
-        console.log(`Study completed in ${totalDurationMinutes} minutes`);
-        
-        // Send time data to server
-        const timePayload = {
-            participantId: window.participantId,
-            totalDurationMinutes: totalDurationMinutes
-        };
-        
+        const totalMinutes = Math.round((Date.now() - startTime) / 60000 * 100) / 100;
+
+        console.log(`Study completed in ${totalMinutes} minutes`);
+
         fetch("https://p6r7d2zcl5.execute-api.us-east-2.amazonaws.com/survey/SaveSurveyResponse_phase2", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(timePayload)
+            body: JSON.stringify({
+                participantId: window.participantId,
+                totalDurationMinutes: totalMinutes
+            })
         })
         .then(r => r.json())
-        .then(serverResp => {
-            console.log("Study time saved successfully:", serverResp);
-        })
-        .catch(err => {
-            console.error("Error saving study time:", err);
-        });
+        .then(res => console.log("Study time saved successfully:", res))
+        .catch(err => console.error("Error saving study time:", err));
     }
 };
-
 timeline.push(enhancedGoodbye);
 
 // ## Start the experiment

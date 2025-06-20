@@ -78,6 +78,9 @@ const consentForm = {
         if (!repeatConsent) {
 
             localStorage.setItem("hasConsented", "true");
+            localStorage.setItem("sonaID", sonaID);
+            window.sonaID = sonaID;
+
 
             const payload = {
                 consent: {

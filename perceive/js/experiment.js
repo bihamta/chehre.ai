@@ -21,9 +21,8 @@ const timeline = [];
 await loadEmojiLabels();
 
 // Define tiers
-const tier1IDs = ["76123", "75862", "73714", "75574", "74350", "75616", "74074", "74566", "74446", "73810", "75373", "75235"];
-const tier2IDs = ["75175", "74800", "74557", "74386", "75514", "74224", "75526", "75223", "74032", "75253", "74437", "12345"];
-const tier3IDs = ["74632", "73564", "75556", "75982", "74878", "74710", "75571", "73687", "74953"]
+const tier1IDs = ["75175", "74800", "74557", "74386", "74566", "75514", "75373", "74224", "75526", "75253", "74437"];
+
 
 
 // Initialize counters
@@ -50,21 +49,11 @@ timeline.push({
         let skipMedi = false;
 
         if (tier1IDs.includes(id)) {
-            labelRepeats = 15;
-            emojiRepeats = 15;
+            labelRepeats = 20;
+            emojiRepeats = 20;
             skipDemog = true;
             skipMedi = true;
-        } else if (tier2IDs.includes(id)) {
-            labelRepeats = 25;
-            emojiRepeats = 25;
-            skipDemog = true;
-            skipMedi = true;
-        } else if (tier3IDs.includes(id)) {
-            labelRepeats = 8;
-            emojiRepeats = 8;
-            skipDemog = true;
-            skipMedi = true;
-        } 
+        }
 
         window.N_REPEATS_LABELS = labelRepeats;
         window.N_REPEATS_EMOJI = emojiRepeats;
@@ -95,7 +84,7 @@ if (!hasDemog && window.SKIP_DEMOG) {
 
 //------- Label Ratings -------//
 let rated_labels = parseInt(localStorage.getItem("labelRatingsDone") || "0");
-const N_REPEATS_LABELS = window.N_REPEATS_LABELS || 35;
+const N_REPEATS_LABELS = window.N_REPEATS_LABELS || 40;
 if (rated_labels < N_REPEATS_LABELS) {
     timeline.push(label_intro);
     for (let i = 0; i < N_REPEATS_LABELS - rated_labels; i++) {
@@ -106,7 +95,7 @@ if (rated_labels < N_REPEATS_LABELS) {
 
 //------- Emoji Ratings -------//
 let rated_emojis = parseInt(localStorage.getItem("emojiRatingsDone") || "0");
-const N_REPEATS_EMOJI = window.N_REPEATS_EMOJI || 35;
+const N_REPEATS_EMOJI = window.N_REPEATS_EMOJI || 40;
 if (rated_emojis < N_REPEATS_EMOJI) {
     timeline.push(emoji_intro);
     for (let i = 0; i < N_REPEATS_EMOJI - rated_emojis; i++) {

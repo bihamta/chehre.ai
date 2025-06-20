@@ -43,8 +43,8 @@ timeline.push({
         const id = window.sonaID || localStorage.getItem("sonaID");
         window.sonaID = id;
 
-        let labelRepeats = 35;
-        let emojiRepeats = 35;
+        let labelRepeats = 40;
+        let emojiRepeats = 40;
         let skipDemog = false;
         let skipMedi = false;
 

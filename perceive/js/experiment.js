@@ -22,7 +22,7 @@ await loadEmojiLabels();
 
 // Define tiers
 const tier1IDs = ["75175", "74800", "74557", "74386", "74566", "75514", "75373", "74224", "75526", "75253", "74437"];
-
+const tier2IDs = ["73714", "75574", "74350", "75616", "74074", "74446", "73810", "75373", "75223", "74032", "12345"]
 
 
 // Initialize counters
@@ -51,6 +51,12 @@ timeline.push({
         if (tier1IDs.includes(id)) {
             labelRepeats = 20;
             emojiRepeats = 20;
+            skipDemog = true;
+            skipMedi = true;
+        }
+        else if (tier2IDs.includes(id)) {
+            labelRepeats = 10;
+            emojiRepeats = 10;
             skipDemog = true;
             skipMedi = true;
         }

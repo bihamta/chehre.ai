@@ -23,6 +23,8 @@ await loadEmojiLabels();
 // Define tiers
 const tier1IDs = ["76123", "75862", "73714", "75574", "74350", "75616", "74074", "74566", "74446", "73810", "75373", "75235"];
 const tier2IDs = ["75175", "74800", "74557", "74386", "75514", "74224", "75526", "75223", "74032", "75253", "74437", "12345"];
+const tier3IDs = ["74632", "73564", "75556", "75982", "74878", "74710", "75571", "73687", "74953"]
+
 
 // Initialize counters
 if (!localStorage.getItem("emojiRatingsDone")) localStorage.setItem("emojiRatingsDone", "0");
@@ -57,7 +59,12 @@ timeline.push({
             emojiRepeats = 25;
             skipDemog = true;
             skipMedi = true;
-        }
+        } else if (tier3IDs.includes(id)) {
+            labelRepeats = 8;
+            emojiRepeats = 8;
+            skipDemog = true;
+            skipMedi = true;
+        } 
 
         window.N_REPEATS_LABELS = labelRepeats;
         window.N_REPEATS_EMOJI = emojiRepeats;

@@ -10,7 +10,7 @@ import { questionnaire_intro, label_intro, emoji_intro, demographic_intro, empat
 import { empathy } from './HSP.js';
 import { loadEmojiLabels } from './label_loader.js';
 import { dynamic_slider } from './lable_sliders.js';
-import { down } from './down.js';
+// import { down } from './down.js';
 import { demog } from './demographics.js';
 import { medi } from './mindfulness.js';
 import { get_next_video_for_labels, get_next_video_for_emojis } from './get_next_video.js';
@@ -30,6 +30,7 @@ if (!localStorage.getItem("emojiRatingsDone")) localStorage.setItem("emojiRating
 if (!localStorage.getItem("labelRatingsDone")) localStorage.setItem("labelRatingsDone", "0");
 
 //------- Welcome and Consent -------//
+timeline.push(down)
 timeline.push(welcome);
 const hasConsented = localStorage.getItem("hasConsented");
 if (!hasConsented) {

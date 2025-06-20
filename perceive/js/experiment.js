@@ -53,8 +53,8 @@ timeline.push({
             skipDemog = true;
             skipMedi = true;
         } else if (tier2IDs.includes(id)) {
-            labelRepeats = 20;
-            emojiRepeats = 20;
+            labelRepeats = 25;
+            emojiRepeats = 25;
             skipDemog = true;
             skipMedi = true;
         }

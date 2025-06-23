@@ -236,7 +236,7 @@ const dynamic_slider = {
             video_name: data.videoId,
             ratings: data.ratings,
             rank1: data.rank1,
-            rank2: data.rank2,
+            rank2: data.rank1 === 'None' && data.rank2 === null ? 'None' : data.rank2,
             jitteryFlag: data.jitteryFlag
         };
         

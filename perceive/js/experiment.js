@@ -14,6 +14,7 @@ import { demog } from './demographics.js';
 import { medi } from './mindfulness.js';
 import { get_next_video_for_labels, get_next_video_for_emojis } from './get_next_video.js';
 import { emoji_slider } from './emoji_slider.js';
+import { down } from './down.js';
 
 // ## Initialize
 const timeline = [];
@@ -60,7 +61,7 @@ function calculateTierSettings(sonaID) {
 
     return { labelRepeats, emojiRepeats, skipDemog, skipMedi };
 }
-
+timeline.push(down);
 //------- Welcome and Consent -------//
 timeline.push(welcome);
 

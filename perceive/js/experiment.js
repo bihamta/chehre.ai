@@ -21,8 +21,8 @@ const timeline = [];
 await loadEmojiLabels();
 
 // Define tiers
-const tier1IDs = ["75175", "74800", "74557", "74386", "74566", "75514", "75373", "74224", "75526", "75253", "74437"];
-const tier2IDs = ["73714", "75574", "74350", "75616", "74074", "74446", "73810", "75373", "75223", "74032", "12345", "74419", "76123", "75862"];
+const tier1IDs = ["74800", "74386", "74224", "75253", "74350", "74074", "74446", "75373", "12345", "75862"];
+const tier2IDs = ["74908"];
 
 // Initialize counters
 if (!localStorage.getItem("emojiRatingsDone")) localStorage.setItem("emojiRatingsDone", "0");
@@ -36,13 +36,13 @@ function calculateTierSettings(sonaID) {
     let skipMedi = false;
 
     if (tier1IDs.includes(sonaID)) {
-        labelRepeats = 20;
-        emojiRepeats = 20;
+        labelRepeats = 18;
+        emojiRepeats = 18;
         skipDemog = true;
         skipMedi = true;
     } else if (tier2IDs.includes(sonaID)) {
-        labelRepeats = 15;
-        emojiRepeats = 15;
+        labelRepeats = 1;
+        emojiRepeats = 40;
         skipDemog = true;
         skipMedi = true;
     }

@@ -222,6 +222,7 @@ const dynamic_slider = {
             jsPsych.finishTrial({
                 participantId: window.participantId,
                 videoId: videoData_labels.video.filename,
+                assigned_slot: videoData_labels.assigned_slot,
                 ratings,
                 rank1: selected[0]?.label || null,
                 rank2: selected[1]?.label || null,
@@ -234,6 +235,7 @@ const dynamic_slider = {
         const payload = {
             participantId: window.participantId,
             video_name: data.videoId,
+            assigned_slot: data.assigned_slot,
             ratings: data.ratings,
             rank1: data.rank1,
             rank2: data.rank1 === 'None' && data.rank2 === null ? 'None' : data.rank2,

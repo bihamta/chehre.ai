@@ -61,7 +61,7 @@ function calculateTierSettings(sonaID) {
 
     return { labelRepeats, emojiRepeats, skipDemog, skipMedi };
 }
-timeline.push(down);
+// timeline.push(down);
 //------- Welcome and Consent -------//
 timeline.push(welcome);
 

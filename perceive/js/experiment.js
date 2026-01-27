@@ -49,9 +49,16 @@ function calculateTierSettings(sonaID) {
 
     // Set global variables
     window.N_REPEATS_LABELS = labelRepeats;
-    window.N_REPEATS_EMOJI = emojiRepeats;
+    
     window.SKIP_DEMOG = skipDemog;
     window.SKIP_MEDI = skipMedi;
+
+    if (emojiRepeats % 2 !== 0) {
+        console.warn("emojiRepeats is odd, rounding down to even:", emojiRepeats);
+        emojiRepeats = emojiRepeats - 1;
+      }
+      window.N_REPEATS_EMOJI = emojiRepeats;
+      window.N_PAIRS_EMOJI   = emojiRepeats / 2;
 
     console.log("Tier settings calculated for SONA ID:", sonaID,
                 "| Label Repeats:", labelRepeats,

@@ -210,7 +210,8 @@ function fetchNextVideoForLabels(done) {
 const videoData_emojis = {};
 
 function fetchNextVideoForEmojis(done) {
-    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforEmojiAnnotation?pid=${window.participantId}`)
+    const nPairs = window.N_PAIRS_EMOJI || 40;
+    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforEmojiAnnotation?pid=${window.participantId}&n_pairs=${nPairs}`)
     .then(r => {
         if (!r.ok) throw new Error('No more videos');
         return r.json();

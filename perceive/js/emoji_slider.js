@@ -115,7 +115,9 @@ const emoji_slider = {
             const finalValue = Math.min(3, parseInt(s.value)); // Ensure valid rating 0-3
             jsPsych.finishTrial({
                 videoId:     videoData_emojis.video.filename,
-                matchRating: finalValue
+                assigned_slot: videoData_emojis.assigned_slot,
+                matchRating: finalValue,
+
             });
         });
     },
@@ -127,6 +129,7 @@ const emoji_slider = {
         if (typeof data.matchRating === "number") {
             const payload = {
                 video_name:  data.videoId,
+                assigned_slot: data.assigned_slot,
                 participantId: window.participantId,
                 matchRating: data.matchRating
             };

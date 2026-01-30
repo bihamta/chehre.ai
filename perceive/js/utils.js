@@ -210,10 +210,8 @@ function fetchNextVideoForLabels(done) {
 const videoData_emojis = {};
 
 function fetchNextVideoForEmojis(done) {
-    // Use nullish coalescing (??) instead of || to allow 0 as a valid value
-    const nPairs = window.N_PAIRS_EMOJI ?? 40;
-    console.log('fetchNextVideoForEmojis: window.N_PAIRS_EMOJI =', window.N_PAIRS_EMOJI, '| Using nPairs =', nPairs);
-    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforEmojiAnnotation?pid=${window.participantId}&n_pairs=${nPairs}`)
+    // Use nullish coalescing (??) instead of || to allow 0 as a valid value 
+    return fetch(`https://k6y3d3jhhe.execute-api.us-east-2.amazonaws.com/prod/ChooseVideosforEmojiAnnotation?pid=${window.participantId}`)
     .then(r => {
         if (!r.ok) throw new Error('No more videos');
         return r.json();

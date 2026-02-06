@@ -30,8 +30,8 @@ if (!localStorage.getItem("labelRatingsDone")) localStorage.setItem("labelRating
 
 // Function to calculate tier settings
 function calculateTierSettings(sonaID) {
-    let labelRepeats = 50;
-    let emojiRepeats = 50;
+    let labelRepeats = 80;
+    let emojiRepeats = 80;
     let skipDemog = false;
     let skipMedi = true;
 

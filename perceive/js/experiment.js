@@ -36,8 +36,8 @@ function calculateTierSettings(sonaID) {
     let skipMedi = true;
 
     if (tier1IDs.includes(sonaID)) {
-        labelRepeats = 2;
-        emojiRepeats = 2;
+        labelRepeats = 0;
+        emojiRepeats = 0;
         skipDemog = true;
         skipMedi = true;
     } else if (tier2IDs.includes(sonaID)) {

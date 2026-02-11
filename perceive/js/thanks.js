@@ -72,7 +72,6 @@ const goodbye = {
     html: `
         <p id="thanks">If you have further inquiries, feel free to contact us at <a href="mailto:bazari@sfu.ca">bazari@sfu.ca</a> or <a href="mailto:angelica@sfu.ca">angelica@sfu.ca</a> .</p>
            <p id="credit-info">
-            <strong>Credit Information:</strong><br>
             Research participation credits are assigned manually. 
             Please allow up to <strong>2 weeks</strong> for your credit 
             to appear in the system.

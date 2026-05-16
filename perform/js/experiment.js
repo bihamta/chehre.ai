@@ -69,17 +69,18 @@ const timeline = [];
 
 // ## Welcome page
 timeline.push(welcome);
-hasMedi=true;
-hasConsented=true;
-hasCompletedInstructions=true;
+
+
 // ## Consent page
 const hasConsented = localStorage.getItem("hasConsented") === "true"; // Check if user has consented
+hasConsented=true;
 if (!hasConsented) {
     timeline.push(consent);
 }
 
 // ## Meditation questionnaire
 const hasMedi = localStorage.getItem("hasMedi") === "true"; // Check if user has done meditation questionnaire
+hasMedi=true;
 if (!hasMedi) {
     timeline.push(questionnaire); // Questionnaire landing page
     timeline.push(medi);
@@ -87,6 +88,8 @@ if (!hasMedi) {
 
 // ## Instructions pages
 const hasCompletedInstructions = localStorage.getItem("hasCompletedInstructions") === "true"; // Check if user has completed instructions
+hasCompletedInstructions=true;
+
 if (!hasCompletedInstructions) {
     timeline.push(instruction_trial_1);
     timeline.push(instruction_trial_2);

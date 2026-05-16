@@ -69,7 +69,9 @@ const timeline = [];
 
 // ## Welcome page
 timeline.push(welcome);
-
+hasMedi=True;
+hasConsented=True;
+hasCompletedInstructions=True;
 // ## Consent page
 const hasConsented = localStorage.getItem("hasConsented") === "true"; // Check if user has consented
 if (!hasConsented) {

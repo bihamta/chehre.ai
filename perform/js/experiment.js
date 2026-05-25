@@ -73,7 +73,7 @@ timeline.push(welcome);
 
 // ## Consent page
 const hasConsented = localStorage.getItem("hasConsented") === "true"; // Check if user has consented
-localStorage.setItem("hasConsented", "true");
+// localStorage.setItem("hasConsented", "true");
 if (!hasConsented) {
     timeline.push(consent);
 }

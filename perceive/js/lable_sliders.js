@@ -80,11 +80,23 @@ const dynamic_slider = {
 
             <div id="label-list" class="label-list">${labelOptionsHtml}</div>
 
-            <div class="jittery-flag" style="margin-top:24px; text-align:center;">
-                <input type="checkbox" id="jitteryFlag" name="jitteryFlag">
-                <label for="jitteryFlag">
-                    Flag this video as jittery or glitchy, if it seems unstable.
-                </label>
+            <div class="slider-block slider-container slider-untouched realism-block" id="slider-container-${labels.length}" style="margin-top:24px;">
+                <p class="slider-label" style="text-align:center;">
+                    <strong>How real and natural does this video look?</strong><br>
+                    <span class="choice-display" id="choice-display-${labels.length}"></span>
+                </p>
+                <em style="color: green; text-align: center; display: block; font-size: 0.9em;">
+                    (0 - something looks uncanny or wrong &mdash;
+                    3 - looks real and natural)
+                </em>
+                <input
+                    type="range" id="realismRating" name="realismRating"
+                    min="0" max="3" step="1" value="0"
+                    class="styled-slider slider-large"
+                >
+                <div class="tick-labels">
+                    ${[0,1,2,3].map(n => `<span>${n}</span>`).join('')}
+                </div>
             </div>
 
             <button id="confirmButton" class="jspsych-btn" style="margin-top:20px;" disabled>
@@ -217,7 +229,7 @@ const dynamic_slider = {
                 }
             });
 
-            const jittery = document.getElementById('jitteryFlag').checked;
+            const realismRating = +document.getElementById('realismRating').value;
 
             jsPsych.finishTrial({
                 participantId: window.participantId,
@@ -226,7 +238,7 @@ const dynamic_slider = {
                 ratings,
                 rank1: selected[0]?.label || null,
                 rank2: selected[1]?.label || null,
-                jitteryFlag: jittery
+                realismRating: realismRating
             });
         });
     },
@@ -239,7 +251,7 @@ const dynamic_slider = {
             ratings: data.ratings,
             rank1: data.rank1,
             rank2: data.rank1 === 'None' && data.rank2 === null ? 'None' : data.rank2,
-            jitteryFlag: data.jitteryFlag
+            realismRating: data.realismRating
         };
         
         console.log("Submitting:", payload);

@@ -30,15 +30,15 @@ if (!localStorage.getItem("labelRatingsDone")) localStorage.setItem("labelRating
 
 // Function to calculate tier settings
 function calculateTierSettings(sonaID) {
-    let labelRepeats = 60;
-    let emojiRepeats = 60;
+    let labelRepeats = 50;
+    let emojiRepeats = 50;
     let skipDemog = false;
     let skipMedi = true;
 
     if (tier1IDs.includes(sonaID)) {
-        labelRepeats = 1;
-        emojiRepeats = 0;
-        skipDemog = true;
+        labelRepeats = 2;
+        emojiRepeats = 2;
+        skipDemog = false;
         skipMedi = true;
     } else if (tier2IDs.includes(sonaID)) {
         labelRepeats = 1;
@@ -61,7 +61,7 @@ function calculateTierSettings(sonaID) {
 
     return { labelRepeats, emojiRepeats, skipDemog, skipMedi };
 }
-timeline.push(down);
+// timeline.push(down);
 //------- Welcome and Consent -------//
 timeline.push(welcome);
 

@@ -58,9 +58,8 @@ const demog_html = `
       <input type="radio" name="age" value="18-21"> 18-21<br>
       <input type="radio" name="age" value="22-25"> 22-25<br>
       <input type="radio" name="age" value="26-29"> 26-29<br>
-      <input type="radio" name="age" value="27-29"> 27-29<br>
       <input type="radio" name="age" value="30-33"> 30-33<br>
-      <input type="radio" name="age" value="35-39"> 35-39<br>
+      <input type="radio" name="age" value="34-39"> 35-39<br>
       <input type="radio" name="age" value="40-49"> 40-49<br>
       <input type="radio" name="age" value="50-64"> 50-64<br>
       <input type="radio" name="age" value="65 and older"> 65 and older
